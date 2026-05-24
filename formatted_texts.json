@@ -1,0 +1,537 @@
+{
+  "2": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de la Vela (Timo normal)",
+    "explanation": "<p>Corresponde a una opacidad triangular del tejido tímico que se proyecta hacia la derecha o izquierda y a veces en ambas direcciones.</p><p>💡 <strong>Nota:</strong> Es fisiológico en niños. La involución de la sombra tímica comienza al final del primer año de vida y se completa alrededor de los 3 años.</p>"
+  },
+  "3": {
+    "prompt": "Nombre el signo:",
+    "answer": "Signo de Fleischner",
+    "explanation": "<p>Indicativo para TEP, es</p><p>un agrandamiento proximal de la arteria</p><p>pulmonar.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> Tomografia computada sin contraste</div>"
+  },
+  "4": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Absceso pulmonar",
+    "explanation": "<p>Signo del aire creciente.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar</div><p>sin contraste</p>"
+  },
+  "5": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia de la lingula",
+    "explanation": "<p>Opacidad homogénea que</p><p>compromete a la lingula, que si es</p><p>de gran tamaño, termina</p><p>sobresaliendo del borde cardíaco</p><p>izquierdo</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de torax de frente</div>"
+  },
+  "6": {
+    "prompt": "Nombre el Signo:",
+    "answer": "Signo de la S de Golden",
+    "explanation": "<p>Atelectasia del lóbulo superior</p><p>derecho</p>"
+  },
+  "7": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Hamartoma pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC ventana mediastinica, se</div><p>observa imagen nodular ubicada</p><p>en situación parahiliar derecha</p><p>que presenta area cálcicas en su</p><p>interior (aspect pop corn)</p>"
+  },
+  "8": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Metástasis pulmonar",
+    "explanation": "<p>SUELTA DE GLOBOS.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar con contraste</div>"
+  },
+  "9": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Enfisema",
+    "explanation": "<p>Bullas</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar con</div><p>contraste</p>"
+  },
+  "10": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Enfisema",
+    "explanation": "<p>Bullas.</p>"
+  },
+  "11": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Bronquiectasias",
+    "explanation": "<p>Anillo de Sello.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar con contraste</div>"
+  },
+  "12": {
+    "prompt": "Cual Patrón se puede visualizar en las imágenes abajo?",
+    "answer": "Patrón en vidrio esmerilado",
+    "explanation": "<p>Se puede ver bien las</p><p>estructuras vasculares y</p><p>los bronquios, pero no</p><p>tengo nitidez.</p><div class=\"exp-dx\">🎯 <strong>Diagnóstico:</strong> Neumonia Atipica</div>"
+  },
+  "13": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Linfangioleiomiomatosis",
+    "explanation": "<p>El parénquima con patrón quístico, bilateral.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar sin contraste</div>"
+  },
+  "14": {
+    "prompt": "Cual Patrón se visualiza en la TC abajo?",
+    "answer": "Reticular o pañal de abejas",
+    "explanation": "<p>Sugiere destrucción,</p><p>alteración masiva del</p><p>intersticio.</p><p>Se ve en pacientes con EPOC</p><p>avanzado.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar con contraste</div>"
+  },
+  "15": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "El siguiente patrón tiene mayor probabilidad de",
+    "explanation": "<p>ser benigno o maligno?</p><p>Maligno</p><p>Espiculado.</p>"
+  },
+  "16": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumotórax izquierdo",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx torax frente</div>"
+  },
+  "17": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Linfangitis",
+    "explanation": "<p>Patrón intersticial lineal:</p><p>Engrosamiento intersticial de los</p><p>septos (tabiques intersticiales</p><p>engrosados), así que empiezo a ver</p><p>muchas líneas y eso llama Linfangitis</p><p>(producto de diseminación de un</p><p>cáncer, como el cáncer de mama y de</p><p>tubo digestivo). Lineas B Kerley</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana pulmonar sin contraste</div>"
+  },
+  "18": {
+    "prompt": "Qué tipo de Patrón tumoral es?",
+    "answer": "Patrón maligno",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TAC ventana mediastínica sin</div><p>contraste</p>"
+  },
+  "19": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Patrón pañal de abejas (fibrosis)",
+    "explanation": "<p>Patrón intersticial reticular.</p>"
+  },
+  "20": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Metastasis pulmonar",
+    "explanation": "<p>Patrón nodular producto</p><p>de la metástasis lo cual</p><p>llamamos SUELTA DE</p><p>GLOBOS.</p>"
+  },
+  "21": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Derrame pleural izquierdo",
+    "explanation": "<p>linea de damoiseau</p>"
+  },
+  "22": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumotórax derecho",
+    "explanation": ""
+  },
+  "23": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Bronquiectasias",
+    "explanation": ""
+  },
+  "24": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "COVID-19",
+    "explanation": "<p>El COVID 19 tiene ese</p><p>tipo de patrón con</p><p>estas opacidades en</p><p>vidrio esmerilado</p><p>periféricas y</p><p>subpleurales.</p>"
+  },
+  "25": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Patrón intersticial reticular",
+    "explanation": "<p>Fibrosis.</p>"
+  },
+  "26": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonía Atípica",
+    "explanation": "<p>Por Legionella pneumophila.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC una afectación del espacio</div><p>aéreo de distribución</p><p>parcheada, bilateral y</p><p>asimétrica, en forma de</p><p>opacidades en vidrio</p><p>deslustrado, junto a</p><p>engrosamiento del intersticio</p><p>interlobulillar, conformando un</p><p>patrón en empedrado.</p>"
+  },
+  "27": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Tuberculosis",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Cortes axiales de TC de tórax</div><p>en ventana de</p><p>pulmón. Consolidación</p><p>cavitada de localización</p><p>periférica en el LII con</p><p>afectación del parénquima</p><p>pulmonar adyacente en forma</p><p>de nódulos centrilobulillares y</p><p>opacidades en árbol en brote</p><p>(círculo rojo).</p>"
+  },
+  "28": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia de lóbulo superior derecho",
+    "explanation": "<p>Produce una radioopacidad en</p><p>topografía del lóbulo superior</p><p>derecho,</p><p>que adquiere una morfología de</p><p>S invertida, también llamado</p><p>Signo de la “S de golden”.</p><p>Elevación del hemidiafragma e</p><p>hiliohomolateral.</p><p>Limite bien abrupto a nivel de</p><p>donde va a terminar la lesión.</p><p>La cisura esta un poco elevada.</p><p>Desviación de la tráquea hacia</p><p>el lado afectado. Aumento de la</p><p>radiolucidez de los pulmones</p><p>(insuflación).</p>"
+  },
+  "29": {
+    "prompt": "Cual Patrón intersticial está representado en las imagenes abajo?",
+    "answer": "Patrón Reticular",
+    "explanation": "<p>Se observan opacidades</p><p>lineales que forman</p><p>redes de encaje</p><p>con predominio en</p><p>zonas periféricas del</p><p>pulmón y leve</p><p>predilección a lóbulos</p><p>inferiores.</p><div class=\"exp-causes\">⚠️ <strong>Causas comuns:</strong> Fibrosis</div><p>pulmonar idiopática,</p><p>colagenopatías,</p><p>enfermedades</p><p>inhalatorias</p><p>(neumoconiosis).</p>"
+  },
+  "30": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Absceso pulmonar",
+    "explanation": ""
+  },
+  "31": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Quiste pulmonar (TC de tórax)",
+    "explanation": "<p>En la TC de tórax, um quiste se visualiza como un espacio de bordes bien definidos de tamaño variable con una pared de grosor fino.</p><p>💡 <strong>Nota:</strong> Es importante diferenciarlo de otras estructuras como cavidades (pared gruesa) o bullas (pared extremadamente delgada o ausente).</p>"
+  },
+  "32": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signos radiológicos de Hiperinsuflación (Enfisema)",
+    "explanation": "<p>Los principales hallazgos de hiperinsuflación pulmonar en la radiografía son:</p><ul><li>Tórax en tonel</li><li>Aplanamiento de las cúpulas diafragmáticas</li><li>Horizontalización de las costillas</li><li>Aumento de los espacios intercostales</li><li>Hiperclaridade pulmonar (atrapamiento de aire)</li></ul>"
+  },
+  "33": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonía Atípica",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Tc de tórax, ventana pulmonar. Patrón intersticio-alveolar</div><p>donde se observan hiperdensidades heterogeneas difusas (por</p><p>parches que empiezan en la periferia hacia el centro) que</p><p>corresponde en</p><p>VIDRIO ESMERILADO.</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC axial y TC Sagital torax sin contraste</div>"
+  },
+  "34": {
+    "prompt": "Cual Patrón intersticial está representado en las imagenes abajo?",
+    "answer": "Patrón Lineal",
+    "explanation": "<p>Se caracteriza por la presencia de líneas delgadas y alargadas</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> en la radiografía o tomografía de tórax, que reflejan un</div><p>engrosamiento de los septos interlobulares o intersticiales.</p><div class=\"exp-causes\">⚠️ <strong>Causas comuns:</strong> Edema pulmonar, linfangitis carcinomatosa.</div>"
+  },
+  "35": {
+    "prompt": "Describir el Rx y la TC de tórax:",
+    "answer": "Absceso pulmonar (Nivel hidroaéreo)",
+    "explanation": "<p>📸 <strong>Estudios de Imagen:</strong></p><ul><li><strong>A (Radiografía de tórax frente):</strong> En el pulmón izquierdo se observa una imagen redondeada radiopaca de pared gruesa que presenta un <strong>nivel hidroaéreo</strong>.</li><li><strong>B (TC de tórax ventana pulmonar, corte axial con contraste):</strong> En el pulmón derecho, se observa una gran cavidad de paredes gruesas que en su interior presenta también un nivel hidroaéreo característico.</li></ul>"
+  },
+  "36": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Diagnóstico: Signo de la Silueta Negativo",
+    "explanation": "<p>Opacidad mediastinal y paracardiaca izquierda de localización</p><p>posterior en el hemitórax izquierdo.</p><p>NO HAY BORRAMIENTO, las estructuras son de densidades</p><p>diferentes.</p>"
+  },
+  "37": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Líneas B de Kerley",
+    "explanation": "<p>Finas opacidades lineales periféricas visibles en las bases pulmonares en radiografías de tórax, características de edema agudo de pulmón (EAP) o congestión linfática.</p><p>💡 <strong>Patogenia:</strong> Representan el engrosamiento del intersticio interlobulillar por la congestión de los vasos pulmonares o acumulación de líquido en los septos.</p>"
+  },
+  "38": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de la S de Golden",
+    "explanation": "<p>Producido por la <strong>atelectasia del lóbulo superior derecho</strong> secundaria a una masa que obstruye el bronquio lobar superior.</p><p>💡 <strong>Morfología:</strong> La cisura menor se desplaza medial y superiormente, pero se encuentra con la resistencia de la masa tumoral en la zona proximal. Esto dibuja una línea con forma de \"S itálica\" o \"S invertida\" (S de Golden).</p>"
+  },
+  "39": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Lesión intrapleural",
+    "explanation": "<p>Las lesiones intrapulmonares, por</p><p>el contrario, tienen bordes</p><p>imprecisos, con ángulos agudos</p><p>hacia la pleura. Es una lesión</p><p>redondeada de menor campo</p><p>pegada a la pleura parietal. El</p><p>espacio que existe entre la pleura</p><p>parietal y visceral es el espacio</p><p>intrapleural o cavidad pleural.</p><p>Ejemplo: Mesotelioma.</p>"
+  },
+  "40": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de Fleischner (TEP)",
+    "explanation": "<p>Agrandamiento de una arteria pulmonar proximal en la radiografía de tórax, generalmente secundario a un embolismo pulmonar agudo (TEP).</p><p>💡 <strong>Patogenia:</strong> La obstrucción embólica del vaso provoca una dilatación proximal refleja o mecánica debido al trombo impactado.</p>"
+  },
+  "41": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonía con Derrame pleural y zona de atelectasia a nivel",
+    "explanation": "<p>de la cisura</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC tórax, ventana pulmonar. Hiperdensidad heterogénea con</div><p>broncograma aéreo (compatible</p><p>con neumonía). Hiperdensidad homogéneas a nivel periférico</p><p>con concavidad hacia arriba por el derrame pleural en pulmón</p><p>derecho. Hiperdensidad homogénea en forma triangular</p><p>compatible con atelectasia.</p>"
+  },
+  "42": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de lesión Extrapulmonar (Signo de la Embarazada)",
+    "explanation": "<p>Las lesiones extrapulmonares de origen pleural, extrapleural o costal presentan <strong>bordes nítidos</strong> (al estar delimitadas por la pleura visceral) y forman una **curva convexa con ángulos obtusos** con respecto a la pared costal.</p><p>💡 <strong>Diagnóstico Diferencial:</strong> Por el contrario, las lesiones intrapulmonares tienen bordes imprecisos y forman ángulos agudos con la pleura.</p>"
+  },
+  "43": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Cavitación pulmonar",
+    "explanation": "<p>En la radiografía o TC de tórax, una cavitación pulmonar suele presentarse con una pared gruesa y un margen interno irregular.</p><p>⚠️ <strong>Diferenciación:</strong> No confundir con el absceso pulmonar, donde se observa un nivel hidroaéreo marcado debido a la presencia de contenido líquido activo (pus, necrosis).</p>"
+  },
+  "44": {
+    "prompt": "Cómo se observa el Signo del diafragma contínuo en el Rx tórax?",
+    "answer": "Se observa una línea continua de hiperlucidez extendiéndose",
+    "explanation": "<p>a lo largo de la línea media, por encima del diafragma</p><p>Característico de</p><p>NEUMOMEDIASTINO (presencia de</p><p>aire a nivel del mediastino)</p>"
+  },
+  "45": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Caverna pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> CAVERNA: Rx de tórax frente donde</div><p>se observan</p><p>en ambos campos pulmonares</p><p>varias lesiones radiolucentes con</p><p>halo radiopaco que corresponde</p><p>probablemente a MTS, embolia</p><p>séptica o TBC.</p>"
+  },
+  "46": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de la Silueta Negativo",
+    "explanation": "<p>Ocurre cuando duas estruturas de densidades diferentes ou em planos anatômicos diferentes (anterior/posterior) apresentam uma interface nítida e visível entre elas.</p><p>💡 <strong>Exemplo:</strong> Uma opacidade mediastinal posterior em contato aparente com o coração (que é anterior) não apaga o bordo cardíaco.</p><p>⚠️ <strong>Signo de la Silueta Positivo:</strong> Duas estruturas com a mesma densidade radiológica em contato direto apagam seus limites recíprocos.</p>"
+  },
+  "47": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Multiples fracturas costales y neumotórax",
+    "explanation": ""
+  },
+  "48": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo del hilio oculto",
+    "explanation": "<p>Sirve para diferenciar una <strong>cardiomegalia genuina</strong> de una <strong>masa en el mediastino anterior</strong>.</p><ul><li><strong>Cardiomegalia:</strong> El agrandamiento cardíaco desplaza lateralmente los vasos hiliares. Os hilos são vistos \"por fora\" da silhueta cardíaca.</li><li><strong>Masa mediastínica anterior:</strong> La masa se superpone a los vasos hiliares sin desplazarlos, por lo que los vasos siguen siendo visibles a través de la masa (Signo del hilio oculto).</li></ul>"
+  },
+  "49": {
+    "prompt": "Describir que se ve en la TC de tórax abajo:",
+    "answer": "Bronconeumonía (Signo de Árbol en Brote)",
+    "explanation": "<p>📸 <strong>TC de tórax (ventana pulmonar):</strong></p><p>A nivel de la flecha se observa un patrón típico de **Árbol en Brote** (tree-in-bud), que representa la impactación mucoide o purulenta en los bronquiolos terminales con engrosamiento de sus paredes.</p><p>💡 <strong>Diagnóstico:</strong> Bronconeumonía infecciosa activa.</p>"
+  },
+  "50": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo Cervicotorácico",
+    "explanation": "<p>Permite determinar si una masa del mediastino superior se localiza en el compartimento anterior o posterior.</p><ul><li><strong>Mediastino Anterior:</strong> La masa no sobrepasa el nivel de las clavículas (o sus bordes se desvanecen al entrar en contacto con las partes blandas del cuello).</li><li><strong>Mediastino Posterior:</strong> Si los contornos de la masa son visibles por encima de las clavículas, la masa es posterior, ya que está rodeada por el aire de los ápex pulmonares.</li></ul>"
+  },
+  "51": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonía redonda",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx tórax frente. Presencia de una</div><p>densidad oval o redonda que</p><p>presenta límites. Es más frecuente</p><p>en la infancia (es dx diferencial con</p><p>nódulo).</p>"
+  },
+  "52": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Prótesis mamária",
+    "explanation": "<p>No es una placa</p><p>patológica, sino que la</p><p>paciente tiene prótesis.</p><p>Importante preguntar al</p><p>realizar el exámen.</p>"
+  },
+  "53": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo del aire creciente (Aspergiloma)",
+    "explanation": "<p>Se observa una colección semilunar de aire en la periferia que rodea una masa central redondeada de tejido necrótico o micetoma.</p><p>💡 <strong>Asociación:</strong> Característico de infecciones por **Aspergilosis Pulmonar Invasiva** en fase de recuperación, o un **Aspergiloma** (bola de hongos) dentro de una cavidad preexistente.</p><p>📸 <strong>Estudios:</strong></p><ul><li><strong>Izquierda (Radiografía):</strong> Muestra una radiopacidad redondeada con una medialuna radiolúcida superior.</li><li><strong>Derecha (TC):</strong> Muestra una cavidad aérea con un nódulo interno y el halo hipodenso aéreo semilunar.</li></ul>"
+  },
+  "54": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonía",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx tórax frente. Hay un</div><p>BLOQUE NEUMÓNICO</p><p>que indica consolidación</p><p>(opacidad heterogénea)</p><p>con broncograma aereo a</p><p>nivel del Lóbulo Superior</p><p>(en su segmento</p><p>posterior).</p>"
+  },
+  "55": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de la suelta de globos (Metástasis pulmonar)",
+    "explanation": "<p>Presencia de múltiples nódulos y masas pulmonares bien definidos, redondeados, de distribución bilateral, aleatoria y de diferentes tamaños.</p><p>💡 <strong>Diagnóstico:</strong> Característico de **metástasis pulmonares por vía hematógena** (ej. coriocarcinoma, osteosarcoma, cáncer de tiroides, renal ou de mama).</p>"
+  },
+  "56": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo de Westermark (TEP)",
+    "explanation": "<p>Área focal de hiperlucidez (oligoemia focal) en la periferia del pulmão, secundaria a la obstrucción de la arteria pulmonar por un tromboembolismo (TEP).</p><ul><li><strong>Rx de tórax:</strong> Se ve un área localizada más negra (radiolúcida) debido a la disminución del flujo vascular y de la sangre.</li><li><strong>TC de tórax:</strong> Se observa una zona de marcada hipodensidade del parénquima por hipoperfusión.</li></ul>"
+  },
+  "57": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Diagnóstico: Signo de la Silueta Positivo",
+    "explanation": "<p>Opacidad pulmonar, radioopacidad intratorácica, que está en</p><p>contacto anatómico con el borde cardíaco, la aorta o el</p><p>diafragma, y borrará su contorno.</p>"
+  },
+  "58": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonía Atípica",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Tc de tórax con ventana</div><p>pulmonar, corte axial.</p><p>Patrón en vidrio</p><p>esmerilado (opacidades</p><p>heterogéneas en ambos</p><p>campos pulmonares con</p><p>predominio intersticio-</p><p>alveolar).</p>"
+  },
+  "59": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Bullas pulmonares",
+    "explanation": "<p>Espacios aéreos mayores a 1 cm delimitados por una pared epitelizada extremadamente fina (menor a 1 mm) o incluso ausente.</p><p>💡 <strong>Diagnóstico Diferencial:</strong> Debe diferenciarse de quistes (paredes finas pero definidas, de 1-3 mm) y cavidades (paredes gruesas, mayores a 3 mm). Común en enfisema bulloso.</p>"
+  },
+  "60": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia lóbulo medio derecho",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> El Rx de perfil es de</div><p>gran utilidad para</p><p>identificarlo (se</p><p>observa entre las</p><p>cisuras).</p>"
+  },
+  "61": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo del broncograma aéreo",
+    "explanation": "<p>Visualización de los bronquios llenos de aire (estructuras tubulares oscuras/radiolúcidas) dentro de una zona de pulmón consolidado y denso (blanco/radiopaco).</p><p>💡 <strong>Fisiopatología:</strong> Los alvéolos que rodean los bronquios están ocupados por líquido, sangre o pus (consolidación), haciendo contraste con el aire que aún circula en los bronquios.</p>"
+  },
+  "62": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Embolia séptica",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC de tórax, ventana</div><p>pulmonar, corte coronal.</p><p>Múltiples nódulos</p><p>diseminados en ambos</p><p>pulmones con CAVIDADES</p><p>(halo hiperdenso y interior</p><p>hipodenso) y nódulos</p><p>sólidos (hiperdenso).</p>"
+  },
+  "63": {
+    "prompt": "Cual Patrón intersticial está representado en las imagenes abajo?",
+    "answer": "Patrón Nodular",
+    "explanation": "<p>Se caracteriza por la</p><p>presencia de múltiples</p><p>nódulos (muy</p><p>chiquititos), que son</p><p>opacidades redondeadas</p><p>y pequeñas, distribuidas</p><p>en el pulmón.</p><div class=\"exp-causes\">⚠️ <strong>Causas comuns:</strong> Neumoconiosis,</div><p>TBC miliar, sarcoidosis,</p><p>histiocitosis, hongos.</p>"
+  },
+  "64": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Histiocitosis pulmonar",
+    "explanation": "<p>Más común en varones y está relacionada a hábito tabáquico,</p><p>caracterizada por la presencia de múltiples imágenes quísticas</p><p>de paredes finas con distribución a predominio en lóbulos</p><p>superiores.</p><p>La linfangioleiomiomatosis es a predominio en mujeres</p><p>y lóbulos inferiores.</p>"
+  },
+  "65": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Signo del dedo de guante",
+    "explanation": "<p>Representa bronquios dilatados (bronquiectasias de localización central) impactados por secreciones mucosas densas.</p><p>💡 <strong>Clínica:</strong> Típico de patologias como a **Aspergilosis Broncopulmonar Alérgica (ABPA)**, asma crónico, fibrosis quística o neoplasia obstructiva proximal.</p>"
+  },
+  "66": {
+    "prompt": "Qué es el Signo de la Silueta POSITIVO?",
+    "answer": "Borramiento de límites por contacto directo de estructuras de igual densidad",
+    "explanation": "<p>Ocurre cuando dos estructuras de la **misma densidad radiológica** están en **contacto anatómico directo**, lo que produce el borramiento y pérdida de definición de sus bordes limítrofes.</p><p>💡 <strong>Importancia:</strong> Permite localizar la lesión. Por ejemplo, una neumonía que borra el borde derecho del corazón está en el Lóbulo Medio.</p>"
+  },
+  "67": {
+    "prompt": "Rx tórax:",
+    "answer": "Diagnóstico presuntivo:",
+    "explanation": "<p>Derrame pleural</p>"
+  },
+  "68": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Nódulo pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Tc con ventana</div><p>pulmonar, se</p><p>visualiza en pulmón</p><p>bordes lobulados</p>"
+  },
+  "69": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia del lóbulo superior derecho",
+    "explanation": "<p>Signo de Golden. Imagen en S invertida</p>"
+  },
+  "70": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Tumor fantasma",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> RX de tórax con</div><p>Radiopacidad basal derecha</p><p>de bordes definidos</p>"
+  },
+  "71": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Bronquiectasia",
+    "explanation": "<p>Patrón intersticial, se puede observar un patrón de panal de</p><p>abejas con signo de anillo de sello</p>"
+  },
+  "72": {
+    "prompt": "Porque se toma radiografia de tórax de un paciente parado?",
+    "answer": "Para ayudar en la visualización de líquido (derrame pleural por",
+    "explanation": "<p>ejemplo) y aire (en neumotórax por otro ejemplo)</p><p>Recuerde que el liquido se va a</p><p>la base pulmonar y el aire sube</p><p>al ápice</p>"
+  },
+  "73": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Enfisema pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de tórax frente y perfil, presentan signos semiológicos de la</div><p>enfermedad obstructiva cronica con hiperinsuflación y tórax</p><p>en tonel</p>"
+  },
+  "74": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Hamartoma pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC ventana mediastínica, se ve una</div><p>imagen nodular ubicada en la base</p><p>izquierda que presenta áreas grasas</p><p>en su interior</p>"
+  },
+  "75": {
+    "prompt": "Descripción de la imagen:",
+    "answer": "TC ventana pulmonar broncograma aéreo",
+    "explanation": "<p>En la consolidación parenquimatosa los bronquios se ven</p><p>porque el aire de sus luces hace contraste con el pulmón</p><p>opaco que los rodea. Se ve en neumonía, edema pulmonar,</p><p>infarto pulmonar, linfoma pulmonar y adenocarcionoma</p><p>bronquioloalveolar</p>"
+  },
+  "76": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumotórax",
+    "explanation": "<p>Patrón intersticial en el lóbulo derecho se ve la presencia de</p><p>aire en la cavidad pleural con posterior colapso pulmonar</p>"
+  },
+  "77": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Bullas pulmonares",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC ventana pulmonar, se observa un patrón intersticial y</div><p>visualiza bullas en el lóbulo inferior derecho. Imágenes aéreas</p><p>redondeadas mal delimitadas, pared muy fina</p>"
+  },
+  "78": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Caverna tuberculosa",
+    "explanation": "<p>Se ve en el lóbulo pulmonar derecho, en zona parahiliar un</p><p>imagen redondeada con paredes gruesas y presencia de aire,</p><p>indicativo de caverna tuberculosa</p>"
+  },
+  "79": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Patrón intersticial",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de tórax frente</div>"
+  },
+  "80": {
+    "prompt": "Como se llama el siguiente signo?",
+    "answer": "Signo de la vela",
+    "explanation": "<p>Opacidad triangular de tejido tímico que se proyecta hacia la</p><p>derecha o izquierda y a veces ambas direcciones</p>"
+  },
+  "81": {
+    "prompt": "Nombre el signo:",
+    "answer": "Dedo de guante",
+    "explanation": "<p>Aumento de radiopacidad por infecciones, lo que generan</p><p>hipersecreción bronquial</p>"
+  },
+  "82": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "¿Cuánto tiempo debe mantenerse un nódulo estable para considerarse benigno?",
+    "explanation": "<p>💡 <strong>Respuesta:</strong> Un nódulo pulmonar debe permanecer sin cambios de tamaño o características de forma estable durante un período de **2 años (24 meses)** en estudios comparativos de TC para ser clasificado como benigno.</p>"
+  },
+  "83": {
+    "prompt": "Nombre el siguiente signo:",
+    "answer": "Signo del aire creciente",
+    "explanation": "<p>Presente en abscesos pulmonares, neoplasias cavitadas,</p><p>infecciones por TBC</p>"
+  },
+  "84": {
+    "prompt": "Nombre el siguiente signo:",
+    "answer": "Signo del diafragma continuo",
+    "explanation": "<p>Línea continua de hiperlucidez extendiéndose a lo largo de la</p><p>línea media, por encima del diafragma</p>"
+  },
+  "85": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "TBC miliar",
+    "explanation": ""
+  },
+  "86": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "TBC postprimaria",
+    "explanation": "<p>Opacidades en Arbol en brote</p>"
+  },
+  "87": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumomediastino",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Tomografia computada</div>"
+  },
+  "88": {
+    "prompt": "Nombre el signo:",
+    "answer": "Líneas B de kerley",
+    "explanation": "<p>Engrosamiento del</p><p>intesticio interlobulillar por</p><p>la congestión de vasos</p><p>pulmonares</p>"
+  },
+  "89": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Caverna pulmonar",
+    "explanation": "<p>Extensa consolidación en el lobulo superior derecho,</p><p>parcialmente cavitada, que asocia a pérdida de volumen de</p><p>dicho lóbulo</p>"
+  },
+  "90": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia masiva",
+    "explanation": ""
+  },
+  "91": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumonia de lobulo superior derecho",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de tórax de frente con radiopacidad en el lóbulo superior</div><p>derecho, con signo del broncograma aéreo. Indicativo de</p><p>neumonia LSD</p>"
+  },
+  "92": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumomediastino",
+    "explanation": "<p>Línea continua de hiperlucidez extendiéndose a lo largo de la</p><p>línea media, por encima del diafragma. Signo del diafragma</p><p>continuo, característico de neumomediastino.</p>"
+  },
+  "93": {
+    "prompt": "Nombre el signo:",
+    "answer": "Joroba de Hampton",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> En RX de tórax, presenta una imagen radiopaca. Se genera un</div><p>pico en la zona de la pleura más cercana al diafragma, se</p><p>puede observar en infarto pulmonar, neoplasia pulmonar y</p><p>derrame</p>"
+  },
+  "94": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia lobulo superior izquierdo",
+    "explanation": "<p>Radiopacidad homogenea</p>"
+  },
+  "95": {
+    "prompt": "Identifique o achado / diagnóstico:",
+    "answer": "Hamartoma pulmonar (Calcificación en Popcorn)",
+    "explanation": "<p>📸 <strong>TC de tórax (ventana mediastínica):</strong></p><p>Se observa una imagen nodular bien delimitada en la región parahiliar derecha que presenta áreas internas con densidad grasa y focos de calcificación en parches gruesos, conocidos como <strong>calcificaciones en popcorn (pochoclo)</strong>.</p><p>💡 <strong>Nota:</strong> Es el tumor benigno más común del pulmón.</p>"
+  },
+  "96": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Edema de pulmón",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> RX de tórax, se observa patrón intersticial con radioopacidad</div><p>de bordes algodonosos bilaterales</p>"
+  },
+  "97": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Fibrosis pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de tórax frente patrón intersticial</div>"
+  },
+  "98": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Granuloma secuelar",
+    "explanation": "<p>Se ve una imagen nodular, de etiologia secuelar, con</p><div class=\"exp-modality\">📸 <strong>Estudio:</strong> calcificación difusa. En Tc, se recomienda visualizar la</div><p>calcificación en ventana mediastino o ventana ósea</p>"
+  },
+  "99": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Tubercolosis miliar",
+    "explanation": "<p>Patrón intersticial micronodular</p>"
+  },
+  "100": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Patología pulmonar intersticial RETICULAR",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de tórax frente y perfil, hallazgos compatibles con</div><p>patología intersticial reticular</p>"
+  },
+  "101": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Linfangioleiomiomatosis",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC de ventana pulmonar</div>"
+  },
+  "102": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Bronquiectasias",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC de ventana pulmonar</div><p>Recordar: Las bronquiectasias son dilataciones patológicas</p><p>irreversibles de vía aérea periférica.</p>"
+  },
+  "103": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Atelectasia",
+    "explanation": "<p>En lóbulo medio derecho entre las cisuras.</p><div class=\"exp-obs\">💡 <strong>Nota:</strong> Una atelectasia pequeña de lóbulo medio ni siempre</div><p>tiene tracción suficiente para desviar la tráquea.</p>"
+  },
+  "104": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "TEP",
+    "explanation": "<p>Signo de Fleischner, indicativo para TEP.</p>"
+  },
+  "105": {
+    "prompt": "Nombre el signo:",
+    "answer": "Signo de Westermark",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx de tórax, presenta una menor visualización del</div><p>parénquima pulmonar, indicativo de una oligoemia focal</p>"
+  },
+  "106": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Neumotórax",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> Rx tórax frente. Neumotorax a tensión, corrimiento del</div><p>mediastino contralateral a la lesión</p>"
+  },
+  "107": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Empiema pleural (derrame pleural)",
+    "explanation": "<p>No es posible confirmar un empiema sin toracocentesis, pero</p><p>es indicativo. Se observa una radiopacidad en la base del</p><p>pulmón derecho</p>"
+  },
+  "108": {
+    "prompt": "Diagnóstico presuntivo:",
+    "answer": "Hemartoma pulmonar",
+    "explanation": "<div class=\"exp-modality\">📸 <strong>Estudio:</strong> TC ventana mediastinica, se observa imagen nodular ubicada</div><p>en la base izquierda que presenta áreas grasas en su interior.</p>"
+  }
+}
