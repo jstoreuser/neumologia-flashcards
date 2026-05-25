@@ -123,11 +123,12 @@ body {
 .blur-sphere {
     position: absolute;
     border-radius: 50%;
-    filter: blur(130px);
-    opacity: 0.12;
-    mix-blend-mode: screen;
+    filter: blur(90px);
+    opacity: 0.08;
+    will-change: transform;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
+    transform: translate3d(0, 0, 0);
 }
 
 .sphere-1 {
@@ -158,18 +159,18 @@ body {
 }
 
 @keyframes drift-1 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(12vw, 8vh) scale(1.15); }
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(12vw, 8vh, 0) scale(1.15); }
 }
 
 @keyframes drift-2 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-8vw, -12vh) scale(0.9); }
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(-8vw, -12vh, 0) scale(0.9); }
 }
 
 @keyframes drift-3 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(6vw, 10vh) scale(1.1); }
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(6vw, 10vh, 0) scale(1.1); }
 }
 
 /* Scrollbar Slim */
