@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. ELEMENTOS DO DOM
     const cardPanel = document.getElementById("card-panel");
+    const welcomePanel = document.getElementById("welcome-panel");
+    const startSessionBtn = document.getElementById("start-session-btn");
+    const cardLoader = document.getElementById("card-loader");
     const cardMetaStudy = document.getElementById("card-meta-study");
     const cardMetaPage = document.getElementById("card-meta-page");
     const cardImagesGrid = document.getElementById("card-images-grid");
@@ -238,17 +241,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 7. CARREGAR E EXIBIR OS FLASHCARDS NO CONSOLE PACS
     function loadCard(card) {
+        // Mostrar o loader sutil de escaneamento
+        cardLoader.classList.remove("hidden");
+        
+        // Esconder os elementos de conteúdo temporariamente para animar
+        const cardHeader = cardPanel.querySelector(".pacs-card-header");
+        const imageWrapper = cardPanel.querySelector(".web-image-wrapper");
+        const promptSection = cardPanel.querySelector(".prompt-section");
+        const cardActionBar = cardPanel.querySelector(".card-action-bar");
+        
+        cardHeader.style.opacity = "0";
+        imageWrapper.style.opacity = "0";
+        promptSection.style.opacity = "0";
+        cardActionBar.style.opacity = "0";
+        
         // Resetar visualização do verso (ocultar laudo)
         answerDivider.style.display = "none";
         answerBox.style.display = "none";
         revealBtn.style.display = "flex";
         recallButtonsBar.style.display = "none";
         
-        // Resetar classes do painel para animação suave
-        cardPanel.style.animation = "none";
-        cardPanel.offsetHeight; // Truque para reiniciar animação CSS
-        cardPanel.style.animation = "slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
-
         // Setar cabeçalho
         cardMetaPage.textContent = `PÁGINA ${card.pageNumber}`;
         
@@ -272,7 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
             imgEl.className = "card-image-web";
             imgEl.alt = `Radiografia/TC da página ${card.pageNumber}`;
             
-            // Habilitar click para Zoom (Lightbox)
             imgEl.addEventListener("click", (e) => {
                 e.stopPropagation();
                 openLightbox(imgUrl);
@@ -283,6 +294,21 @@ document.addEventListener("DOMContentLoaded", () => {
         // Preparar conteúdo do Verso (Oculto até revelação)
         cardAnswer.textContent = card.answer;
         cardExplanation.innerHTML = card.explanation;
+
+        // Simular um carregamento sutil PACS de alta fidelidade
+        setTimeout(() => {
+            cardLoader.classList.add("hidden");
+            
+            cardHeader.style.transition = "opacity 0.3s ease";
+            imageWrapper.style.transition = "opacity 0.3s ease";
+            promptSection.style.transition = "opacity 0.3s ease";
+            cardActionBar.style.transition = "opacity 0.3s ease";
+            
+            cardHeader.style.opacity = "1";
+            imageWrapper.style.opacity = "1";
+            promptSection.style.opacity = "1";
+            cardActionBar.style.opacity = "1";
+        }, 320);
     }
 
     // Atualiza contadores na fila
@@ -467,8 +493,15 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Progresso apagado com sucesso. Bons estudos!");
         }
     });
-
     // 13. INICIALIZAÇÃO INICIAL DO APP
-    initStudySession("Todos");
+    // Não inicia os cartões automaticamente; espera o clique no Painel de Boas-Vindas
+    updateSidebarStats();
     updateStreak();
+
+    // Evento de clique para Iniciar Sessão de Estudo
+    startSessionBtn.addEventListener("click", () => {
+        welcomePanel.classList.add("hidden");
+        cardPanel.classList.remove("hidden");
+        initStudySession(currentFilter);
+    });
 });

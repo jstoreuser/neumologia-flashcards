@@ -12,11 +12,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="pacs-theme-dark">
-    <!-- Fundo de Gradiente Fluido Animado (Ambient Noise & Motion) -->
+    <!-- Fundo de Gradiente Fluido Animado (Ambient Video & Fallback) -->
     <div class="ambient-fluid-bg">
-        <div class="blur-sphere sphere-1"></div>
-        <div class="blur-sphere sphere-2"></div>
-        <div class="blur-sphere sphere-3"></div>
+        <video class="bg-video" autoplay loop muted playsinline aria-hidden="true">
+            <source src="https://player.vimeo.com/external/538571059.hd.mp4?s=b6fbdf4dfd23b20757c9172cc77114620f329972&profile_id=172&oauth2_token_id=57447761" type="video/mp4">
+        </video>
     </div>
 
     <!-- Overlay de Blur para o Zoom da Imagem (Lightbox Lightroom) -->
@@ -195,8 +195,27 @@
 
             <!-- Card Ativo -->
             <div class="flashcard-container" id="flashcard-box">
-                <div class="pacs-card glassmorphism" id="card-panel">
-                    
+                <!-- Painel de Boas-Vindas Minimalista (Landing State) -->
+                <div class="pacs-card glassmorphism welcome-panel" id="welcome-panel">
+                    <div class="welcome-content">
+                        <div class="welcome-symbol">N</div>
+                        <h2>NEUMA</h2>
+                        <p>Plataforma estética de estudo ativo de pneumologia por imagem.</p>
+                        <button id="start-session-btn" class="btn btn-primary btn-large">
+                            <span>Iniciar Estudo</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Painel Principal de Estudo (Escondido inicialmente) -->
+                <div class="pacs-card glassmorphism hidden" id="card-panel">
+                    <!-- Micro-Loader de Carregamento de Imagem Médica -->
+                    <div class="card-loader hidden" id="card-loader">
+                        <div class="spinner"></div>
+                        <span class="loader-text">Acessando banco de imagens...</span>
+                    </div>
+
                     <!-- Cabeçalho PACS Minimalista -->
                     <div class="pacs-card-header">
                         <div class="header-col">
@@ -245,7 +264,7 @@
 
                     <!-- Rodapé de Ações do Card -->
                     <div class="card-action-bar">
-                        <!-- Botão Inicial: Revelar Resposta (Sem emoji, limpo e direto) -->
+                        <!-- Botão Inicial: Revelar Resposta -->
                         <button id="reveal-btn" class="btn btn-primary btn-large btn-full-width">
                             <span>Ver Resposta</span>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
