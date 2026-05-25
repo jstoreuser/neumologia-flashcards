@@ -109,19 +109,19 @@ body {
 }
 
 .ambient-video-bg {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    z-index: -1; /* Placed above ambient gradient but behind all panels */
+    z-index: 1; /* Placed above ambient gradient but behind hero content (which has z-index: 10) */
     pointer-events: none;
     opacity: var(--hero-video-opacity, 0.45);
     /* Sub-conscious radial mask for vignette */
     mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 90%);
     -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 90%);
-    transition: opacity var(--motion-medium);
+    /* Transition removed to support high-performance scroll-linked JS opacity updates */
 }
 
 /* Scrollbar Slim */
@@ -529,6 +529,14 @@ body {
 /* ==========================================================================
    WORKSPACE / FLASHCARD ATIVO
    ========================================================================== */
+
+.study-workspace-container {
+    position: relative;
+    z-index: 5;
+    background-color: var(--bg-primary); /* Solid canvas base to fully mask the fixed background video */
+    box-shadow: 0 -30px 60px rgba(2, 3, 6, 0.95); /* Deep dark vignette fade into the hero section */
+    border-top: var(--border-thin);
+}
 
 .session-bar {
     border: 1px solid var(--border-color);
@@ -1414,6 +1422,7 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+}
 /* ==========================================================================
    ACESSENCE & PERFORMANCE (Phase 4)
    ========================================================================== */

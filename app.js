@@ -490,4 +490,23 @@ document.addEventListener("DOMContentLoaded", () => {
             initStudySession(currentFilter);
         });
     }
+
+    // 14. EFEITO DE FADE DO VÍDEO DE FUNDO CONFORME ROLAMOS A PÁGINA (Scroll-driven ambient video fade)
+    const ambientVideo = document.querySelector(".ambient-video-bg");
+    if (ambientVideo) {
+        window.addEventListener("scroll", () => {
+            const scrollPos = window.scrollY;
+            const heroHeight = window.innerHeight || 800;
+            // O vídeo começa a esmaecer e atinge opacidade 0 quando chega a 80% do fold (heroHeight)
+            const fadeThreshold = heroHeight * 0.8;
+            if (scrollPos <= fadeThreshold) {
+                // Opacidade máxima original do CSS é 0.45
+                const maxOpacity = 0.45;
+                const newOpacity = maxOpacity * (1 - scrollPos / fadeThreshold);
+                ambientVideo.style.opacity = newOpacity;
+            } else {
+                ambientVideo.style.opacity = 0;
+            }
+        });
+    }
 });
