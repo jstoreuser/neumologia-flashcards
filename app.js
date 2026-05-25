@@ -238,13 +238,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Setar cabeçalho
         cardMetaPage.textContent = `PÁGINA ${card.pageNumber}`;
         
-        // Detectar o estudo primário (Rx ou TC)
+        // Detectar el estudio primario (Rx o TC)
         if (card.tags.includes("Tomografía")) {
             cardMetaStudy.textContent = "TC PULMONAR - AXIAL";
         } else if (card.tags.includes("Radiografía")) {
             cardMetaStudy.textContent = "RX DE TÓRAX - FRENTE";
         } else {
-            cardMetaStudy.textContent = "IMAGEM PULMONAR";
+            cardMetaStudy.textContent = "IMAGEN PULMONAR";
         }
 
         // Exibir prompt da pergunta
@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const imgEl = document.createElement("img");
             imgEl.src = imgUrl;
             imgEl.className = "card-image-web";
-            imgEl.alt = `Radiografia/TC da página ${card.pageNumber}`;
+            imgEl.alt = `Radiografía/TC de la página ${card.pageNumber}`;
             
             imgEl.addEventListener("click", (e) => {
                 e.stopPropagation();
@@ -453,18 +453,18 @@ document.addEventListener("DOMContentLoaded", () => {
         initStudySession(selectedFilter);
     });
 
-    // 12. APAGAR TODO O PROGRESSO (RESET GLOBAL INDIVIDUAL)
+    // 12. RESTABLECER TODO EL PROGRESO (REINICIO GLOBAL INDIVIDUAL)
     resetProgressBtn.addEventListener("click", () => {
-        const confirmReset = confirm("Deseja apagar todo o seu progresso neste console de flashcards? Isso limpará seus dados de aprendizado individual.");
+        const confirmReset = confirm("¿Desea restablecer todo su progreso en esta consola de tarjetas de estudio? Esto borrará sus datos de aprendizaje individual.");
         if (confirmReset) {
             localStorage.removeItem("pacs_progress_data");
             localStorage.removeItem("pacs_streak_data");
             userProgress = {};
             streakState = { count: 0, lastDate: null };
             
-            // Reiniciar sessão atual
+            // Reiniciar sesión actual
             initStudySession(currentFilter);
-            alert("Progresso apagado com sucesso. Bons estudos!");
+            alert("¡Progreso restablecido con éxito! Buen estudio.");
         }
     });
     // 13. INICIALIZAÇÃO INICIAL DO APP
