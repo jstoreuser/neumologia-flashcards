@@ -101,11 +101,27 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: -1;
-    background: radial-gradient(circle at 15% 20%, rgba(249, 115, 22, 0.05) 0%, transparent 45%),
-                radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.05) 0%, transparent 45%),
+    z-index: -2; /* Placed behind the video for ambient compositing */
+    background: radial-gradient(circle at 15% 20%, rgba(255, 42, 95, 0.04) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(0, 229, 255, 0.04) 0%, transparent 45%),
                 var(--bg-primary);
     overflow: hidden;
+}
+
+.ambient-video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1; /* Placed above ambient gradient but behind all panels */
+    pointer-events: none;
+    opacity: var(--hero-video-opacity, 0.45);
+    /* Sub-conscious radial mask for vignette */
+    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 90%);
+    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 90%);
+    transition: opacity var(--motion-medium);
 }
 
 /* Scrollbar Slim */
@@ -302,6 +318,7 @@ body {
     border-radius: 16px;
     padding: 24px;
     box-shadow: var(--shadow-premium);
+    background-color: var(--bg-secondary); /* Matte solid surface to cover background video */
     transition: all var(--transition-normal);
 }
 
@@ -520,6 +537,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background-color: var(--bg-secondary); /* Matte solid surface to cover background video */
 }
 
 .session-info {
@@ -1267,40 +1285,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background-color: var(--bg-primary);
-}
-
-.hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: var(--hero-bg-opacity, 0.25);
-    z-index: 2; /* Layer on top of video, blended via screen */
-    pointer-events: none;
-    /* Soft peripheral mask that retains background details */
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.15) 85%);
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.15) 85%);
-    mix-blend-mode: screen; /* Medical screen blend depth */
-    transition: opacity var(--motion-medium);
-}
-
-.hero-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: var(--hero-video-opacity, 0.30);
-    z-index: 1;
-    pointer-events: none;
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.1) 85%);
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.1) 85%);
-    transition: opacity var(--motion-medium);
+    background-color: transparent; /* Made transparent for fullscreen fixed background video parallax */
 }
 
 .hero-content {
