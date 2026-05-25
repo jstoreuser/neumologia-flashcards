@@ -1,0 +1,22 @@
+{
+  "name": "barcl-pacs",
+  "version": "1.0.0",
+  "description": "BARCL Medical Control Console & Flashcard System",
+  "main": "src/js/app.js",
+  "type": "module",
+  "scripts": {
+    "provision": "node scripts/provision-firebase.js",
+    "generate-env": "node scripts/generate-env.js",
+    "seed": "node scripts/seed-firestore.js",
+    "bootstrap-admin": "node scripts/bootstrap-admin.js",
+    "dev": "npm run generate-env && firebase emulators:start",
+    "start": "npm run dev",
+    "deploy": "firebase deploy"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "firebase-admin": "^12.0.0",
+    "firebase-tools": "^13.3.0"
+  }
+}

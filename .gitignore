@@ -1,6 +1,8 @@
 # Ambiente Virtual do Python
 .venv/
 .env
+.env.local
+runtime-env.js
 
 # Builds e Distribuições locais do Anki
 dist/

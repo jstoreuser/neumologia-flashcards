@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BARCL — Login</title>
+    <!-- Reaproveita os mesmos tokens CSS, mas estrutura simplificada -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/css/style.css">
+    <!-- Adicionar um CSS específico para o admin/login futuramente se necessário -->
+</head>
+<body class="pacs-theme-dark">
+    <!-- Cyberpunk Auth Error Overlay (Inicialmente oculto) -->
+    <div id="auth-error-overlay" class="hidden" style="position: absolute; top: 0; width: 100%; background: rgba(255,0,0,0.2); color: #ff4444; text-align: center; padding: 10px; border-bottom: 1px solid #ff0000; z-index: 100;">
+        [AUTHENTICATION FAILED] SECURE CHANNEL REJECTED
+    </div>
+
+    <div class="study-workspace-container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+        <div class="pacs-panel glassmorphism" style="width: 100%; max-width: 400px; padding: 30px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="barcl-hero-logo"><path d="M4 4h16v16H4z"/><path d="M12 4v16"/><path d="M4 12h16"/></svg>
+                <h1 style="margin-top: 10px;">Identificación</h1>
+                <p style="color: var(--text-secondary);">Acceso al sistema PACS</p>
+            </div>
+
+            <form id="login-form">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">E-mail</label>
+                    <input type="email" id="login-email" required style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Contraseña</label>
+                    <input type="password" id="login-password" required style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                </div>
+                <button type="submit" class="btn btn-primary btn-large btn-full-width">
+                    <span>Acceder</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="runtime-env.js"></script>
+    <script type="module" src="src/js/pages/login.js"></script>
+</body>
+</html>
