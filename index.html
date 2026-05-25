@@ -3,25 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PACS Diagnostic Console - Flashcards de Neumología</title>
+    <title>Neuma — Flashcards de Neumología</title>
     <meta name="description" content="Estude diagnósticos por imagem em pneumologia de forma fácil, interativa e profissional. Console PACS com sistema de repetição espaçada.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="pacs-theme-dark">
-    <!-- Overlay de Blur para o Zoom da Imagem (Lightbox) -->
+    <!-- Fundo de Gradiente Fluido Animado (Ambient Noise & Motion) -->
+    <div class="ambient-fluid-bg">
+        <div class="blur-sphere sphere-1"></div>
+        <div class="blur-sphere sphere-2"></div>
+        <div class="blur-sphere sphere-3"></div>
+    </div>
+
+    <!-- Overlay de Blur para o Zoom da Imagem (Lightbox Lightroom) -->
     <div id="lightbox" class="lightbox" aria-hidden="true">
         <div class="lightbox-content">
             <button id="lightbox-close" class="lightbox-close-btn" aria-label="Fechar zoom">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
             <div class="lightbox-img-container">
                 <img id="lightbox-img" src="" alt="Imagem Médica Ampliada">
             </div>
-            <div class="lightbox-caption">Role para dar zoom / Arraste para mover</div>
+            <div class="lightbox-caption">Arraste ou role para ampliar a visualização</div>
         </div>
     </div>
 
@@ -29,15 +36,15 @@
     <div id="completion-screen" class="completion-screen hidden">
         <div class="completion-box">
             <div class="completion-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-large"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-large"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </div>
-            <h2>Sessão Concluída!</h2>
-            <p>Excelente trabalho! Você revisou todos os cartões agendados para esta sessão.</p>
+            <h2>Sessão Concluída</h2>
+            <p>Excelente! Você revisou todos os cartões desta sessão.</p>
             
             <div class="completion-stats">
                 <div class="stat-card">
                     <span class="comp-stat-val" id="comp-total-cards">0</span>
-                    <span class="comp-stat-lbl">Cards Estudados</span>
+                    <span class="comp-stat-lbl">Estudados</span>
                 </div>
                 <div class="stat-card">
                     <span class="comp-stat-val" id="comp-success-rate">0%</span>
@@ -49,15 +56,15 @@
         </div>
     </div>
 
-    <!-- Header Principal -->
+    <!-- Header Principal Minimalista -->
     <header class="pacs-header-nav">
         <div class="header-logo">
             <div class="logo-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </div>
             <div class="logo-text">
-                <h1>PACS <span>DIAGNOSTIC CONSOLE</span></h1>
-                <span class="logo-sub">NEUMOLOGÍA IMAGING SYSTEM v2.0</span>
+                <h1>NEUMA</h1>
+                <span class="logo-sub">STUDY SYSTEM</span>
             </div>
         </div>
 
@@ -71,7 +78,7 @@
             <!-- Botão de Reiniciar Progresso -->
             <button id="reset-all-progress" class="btn btn-icon btn-outline" title="Apagar todo o progresso individual">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
-                <span>Resetar Progresso</span>
+                <span>Resetar</span>
             </button>
 
             <!-- Toggle de Tema (Dark/Light) -->
@@ -90,7 +97,7 @@
             <div class="pacs-panel glassmorphism">
                 <div class="panel-header">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="panel-icon"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                    <h2>Progresso Individual</h2>
+                    <h2>Progresso</h2>
                 </div>
                 
                 <!-- Gráfico de Rosca de Progresso -->
@@ -110,21 +117,21 @@
                     <div class="stat-item">
                         <div class="stat-item-lbl">
                             <span class="dot dot-mastered"></span>
-                            Aprendidos (Fácil)
+                            Fáceis (Fixado)
                         </div>
                         <span class="stat-item-val" id="stats-mastered">0</span>
                     </div>
                     <div class="stat-item">
                         <div class="stat-item-lbl">
                             <span class="dot dot-learning"></span>
-                            Em aprendizado (Difícil)
+                            Difíceis (Revisar)
                         </div>
                         <span class="stat-item-val" id="stats-learning">0</span>
                     </div>
                     <div class="stat-item">
                         <div class="stat-item-lbl">
                             <span class="dot dot-new"></span>
-                            Não visualizados (Novos)
+                            Novos
                         </div>
                         <span class="stat-item-val" id="stats-new">0</span>
                     </div>
@@ -132,10 +139,12 @@
 
                 <!-- Painel Extra: Metas do dia -->
                 <div class="streak-banner">
-                    <div class="streak-icon">🔥</div>
+                    <div class="streak-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-mini text-orange"><path d="M12 2c1.78 2.37 3 5.37 3 8s-1.22 5.63-3 8-3-5.37-3-8 1.22-5.63 3-8zm0 0c2-2 6 2 6 6s-4 6-6 6-6-2-6-6 4-8 6-8z"></path></svg>
+                    </div>
                     <div class="streak-text">
-                        <div class="streak-title"><span id="streak-count">0</span> Dias Seguidos</div>
-                        <div class="streak-sub">Estude diariamente para fixar!</div>
+                        <div class="streak-title"><span id="streak-count">0</span> dias seguidos</div>
+                        <div class="streak-sub">Mantenha a frequência de estudo</div>
                     </div>
                 </div>
             </div>
@@ -144,7 +153,7 @@
             <div class="pacs-panel glassmorphism">
                 <div class="panel-header">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="panel-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                    <h2>Filtros de Estudo</h2>
+                    <h2>Filtros</h2>
                 </div>
                 <div class="filter-pills-container" id="filter-container">
                     <button class="filter-pill active" data-filter="Todos">
@@ -152,15 +161,15 @@
                         <span class="pill-count" id="count-Todos">0</span>
                     </button>
                     <button class="filter-pill" data-filter="Radiografía">
-                        <span>Radiografias (Rx)</span>
+                        <span>Radiografías (Rx)</span>
                         <span class="pill-count" id="count-Radiografía">0</span>
                     </button>
                     <button class="filter-pill" data-filter="Tomografía">
-                        <span>Tomografias (TC/TAC)</span>
+                        <span>Tomografias (TC)</span>
                         <span class="pill-count" id="count-Tomografía">0</span>
                     </button>
                     <button class="filter-pill" data-filter="Signo_Radiológico">
-                        <span>Sinais Clínicos / Epônimos</span>
+                        <span>Signos Clínicos</span>
                         <span class="pill-count" id="count-Signo_Radiológico">0</span>
                     </button>
                     <button class="filter-pill" data-filter="Patrón_Intersticial">
@@ -173,46 +182,44 @@
 
         <!-- Coluna Direita / Centro: Console do Flashcard Ativo -->
         <section class="pacs-main-content">
-            <!-- Barra de Sessão e Controle Superior -->
-            <div class="session-bar">
+            <!-- Barra de Fila Superior -->
+            <div class="session-bar glassmorphism">
                 <div class="session-info">
-                    <span class="session-mode">SESSÃO DE REVISÃO ATIVA</span>
-                    <span class="session-progress-text">Fila de estudos: <strong id="current-queue-count">0</strong> cards restantes</span>
+                    <span class="session-mode">ESTUDO ATIVO</span>
+                    <span class="session-progress-text"><span id="current-queue-count">0</span> cards restantes</span>
                 </div>
                 <div class="session-progress-bg">
                     <div id="session-progress-bar" class="session-progress-fill" style="width: 0%;"></div>
                 </div>
             </div>
 
-            <!-- Card Ativo com Transições -->
+            <!-- Card Ativo -->
             <div class="flashcard-container" id="flashcard-box">
-                <!-- Parte da Pergunta (Front) -->
-                <div class="pacs-card" id="card-panel">
+                <div class="pacs-card glassmorphism" id="card-panel">
                     
-                    <!-- Cabeçalho PACS do Exame -->
+                    <!-- Cabeçalho PACS Minimalista -->
                     <div class="pacs-card-header">
                         <div class="header-col">
-                            <span class="meta-label">Estudo</span>
+                            <span class="meta-label">Modalidad</span>
                             <span class="meta-val" id="card-meta-study">IMAGEM PULMONAR</span>
                         </div>
                         <div class="header-col">
-                            <span class="meta-label">Origem</span>
+                            <span class="meta-label">Estudio</span>
                             <span class="meta-val" id="card-meta-page">PÁGINA 00</span>
                         </div>
                         <div class="header-col">
-                            <span class="meta-label">Dep</span>
+                            <span class="meta-label">Área</span>
                             <span class="meta-val">NEUMOLOGÍA</span>
                         </div>
                     </div>
 
-                    <!-- Visualizador de Imagem (Monitor PACS) -->
+                    <!-- Visualizador de Imagem (Monitor Slim) -->
                     <div class="web-image-wrapper">
-                        <div class="pacs-monitor-label">PACS MONITOR - HIGH CONTRAST</div>
                         <div class="web-images-grid" id="card-images-grid">
                             <!-- Injetado dinamicamente -->
                         </div>
                         <div class="zoom-instruction">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-mini"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-mini"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                             Clique na imagem para ampliar
                         </div>
                     </div>
@@ -222,12 +229,12 @@
                         <div class="prompt-badge" id="card-prompt">Identifique o achado / diagnóstico:</div>
                     </div>
 
-                    <!-- Divisor e Seção de Resposta (Oculta na Pergunta) -->
+                    <!-- Divisor e Seção de Resposta -->
                     <div class="card-divider-line" id="answer-divider" style="display: none;"></div>
 
                     <div class="answer-section" id="answer-box" style="display: none;">
                         <!-- Resposta Badge -->
-                        <div class="impress-diagnosis-title">IMPRESIÓN DIAGNÓSTICA</div>
+                        <div class="impress-diagnosis-title">DIAGNÓSTICO</div>
                         <div class="impress-badge" id="card-answer">Diagnóstico / Sinal Clínico</div>
 
                         <!-- Laudo / Explicação -->
@@ -238,30 +245,30 @@
 
                     <!-- Rodapé de Ações do Card -->
                     <div class="card-action-bar">
-                        <!-- Botão Inicial: Revelar Resposta -->
+                        <!-- Botão Inicial: Revelar Resposta (Sem emoji, limpo e direto) -->
                         <button id="reveal-btn" class="btn btn-primary btn-large btn-full-width">
-                            <span>Revelar Laudo Médico</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-right"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            <span>Ver Resposta</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </button>
 
-                        <!-- Botões de Spaced Repetition (Ocultos inicialmente) -->
+                        <!-- Botões de Spaced Repetition -->
                         <div class="active-recall-buttons" id="recall-buttons-bar" style="display: none;">
                             <button class="btn btn-danger recall-btn" data-rating="wrong">
                                 <div class="recall-btn-content">
-                                    <span class="btn-top-lbl">ERREI</span>
+                                    <span class="btn-top-lbl">Errei</span>
                                     <span class="btn-sub-lbl">Rever agora</span>
                                 </div>
                             </button>
                             <button class="btn btn-warning recall-btn" data-rating="hard">
                                 <div class="recall-btn-content">
-                                    <span class="btn-top-lbl">DIFÍCIL</span>
+                                    <span class="btn-top-lbl">Difícil</span>
                                     <span class="btn-sub-lbl">Rever em breve</span>
                                 </div>
                             </button>
                             <button class="btn btn-success recall-btn" data-rating="easy">
                                 <div class="recall-btn-content">
-                                    <span class="btn-top-lbl">FÁCIL</span>
-                                    <span class="btn-sub-lbl">Concluído</span>
+                                    <span class="btn-top-lbl">Fácil</span>
+                                    <span class="btn-sub-lbl">Fixado</span>
                                 </div>
                             </button>
                         </div>
@@ -271,7 +278,7 @@
 
             <!-- Navegação Rápida Adicional -->
             <div class="keyboard-legend">
-                <span class="key-shortcut">Espaço</span> ou clique no botão para revelar o verso.
+                Aperte <span class="key-shortcut">Espaço</span> para ver a resposta.
             </div>
         </section>
     </main>
