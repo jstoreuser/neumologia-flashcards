@@ -51,35 +51,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const compTotalCards = document.getElementById("comp-total-cards");
     const compSuccessRate = document.getElementById("comp-success-rate");
     const resetProgressBtn = document.getElementById("reset-all-progress");
-    const themeToggleBtn = document.getElementById("theme-toggle");
-    
-    const sunIcon = document.getElementById("sun-icon");
-    const moonIcon = document.getElementById("moon-icon");
+    // 3. SISTEMA DE TEMA (UNIFICADO DARK-ONLY)
+    // O sistema visual BARCL opera exclusivamente em Obsidian Dark para máxima fidelidade e foco clínico.
 
-    // 3. SISTEMA DE TEMA (CLARO/ESCURO)
-    const activeTheme = localStorage.getItem("pacs_theme") || "dark";
-    applyTheme(activeTheme);
-
-    themeToggleBtn.addEventListener("click", () => {
-        const isDark = document.body.classList.contains("pacs-theme-dark");
-        const nextTheme = isDark ? "light" : "dark";
-        applyTheme(nextTheme);
-    });
-
-    function applyTheme(theme) {
-        if (theme === "dark") {
-            document.body.classList.remove("pacs-theme-light");
-            document.body.classList.add("pacs-theme-dark");
-            sunIcon.classList.add("hidden");
-            moonIcon.classList.remove("hidden");
-        } else {
-            document.body.classList.remove("pacs-theme-dark");
-            document.body.classList.add("pacs-theme-light");
-            moonIcon.classList.add("hidden");
-            sunIcon.classList.remove("hidden");
-        }
-        localStorage.setItem("pacs_theme", theme);
-    }
 
     // 4. ATUALIZAÇÃO DO STREAK (DIAS SEGUIDOS DE ESTUDO)
     function updateStreak() {

@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neuma — Flashcards de Neumología</title>
-    <meta name="description" content="Estude diagnósticos por imagem em pneumologia de forma fácil, interativa e profissional. Console PACS com sistema de repetição espaçada.">
+    <title>BARCL — Diagnostic Flashcard Console</title>
+    <meta name="description" content="Medical diagnostic workstation for pneumology imaging. Professional, matte-first, and highly focused active recall system.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="pacs-theme-dark">
-    <!-- Fundo de Gradiente Fluido Animado (Ambient Video & Fallback) -->
-    <div class="ambient-fluid-bg">
-        <video class="bg-video" autoplay loop muted playsinline aria-hidden="true">
-            <source src="https://player.vimeo.com/external/538571059.hd.mp4?s=b6fbdf4dfd23b20757c9172cc77114620f329972&profile_id=172&oauth2_token_id=57447761" type="video/mp4">
-        </video>
-    </div>
+    <!-- Fundo removido para garantir foco na camada HEROPHOTO e prioridade de performance -->
+    <div class="ambient-fluid-bg"></div>
 
     <!-- SEÇÃO HERO DE ENTRADA (100vh Landing Screen) -->
     <section class="hero-section">
-        <div class="hero-bg" style="background-image: url('images/hero_bg.png');"></div>
+        <video class="hero-video" autoplay loop muted playsinline>
+            <source src="0525.mp4" type="video/mp4">
+        </video>
+        <div class="hero-bg" style="background-image: url('HEROPHOTO.webp');"></div>
         <div class="hero-content">
-            <div class="hero-symbol">N</div>
-            <h1 class="hero-title">NEUMA</h1>
-            <p class="hero-tagline">Estudo ativo de diagnóstico por imagem em pneumologia. Sem distrações.</p>
+            <div class="hero-symbol">
+                <!-- Cinematic Hero Version Logo Placeholder -->
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="barcl-hero-logo"><path d="M4 4h16v16H4z"/><path d="M12 4v16"/><path d="M4 12h16"/></svg>
+            </div>
+            <h1 class="hero-title">BARCL</h1>
+            <p class="hero-tagline">Clinical workstation for active recall in pneumology.</p>
             <button id="scroll-to-study-btn" class="btn btn-primary btn-large">
-                <span>Iniciar Estudo</span>
+                <span>Access Console</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-right"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
             </button>
         </div>
@@ -83,11 +85,12 @@
         <header class="pacs-header-nav">
             <div class="header-logo">
                 <div class="logo-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <!-- Compact Navbar Version Logo Placeholder -->
+                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="barcl-nav-logo"><path d="M4 4h16v16H4z"/><path d="M12 4v16"/></svg>
                 </div>
                 <div class="logo-text">
-                    <h1>NEUMA</h1>
-                    <span class="logo-sub">STUDY SYSTEM</span>
+                    <h1>BARCL</h1>
+                    <span class="logo-sub">CLINICAL WORKSTATION</span>
                 </div>
             </div>
 
@@ -104,11 +107,7 @@
                     <span>Resetar</span>
                 </button>
 
-                <!-- Toggle de Tema (Dark/Light) -->
-                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar tema claro/escuro">
-                    <svg id="sun-icon" class="svg-icon hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                    <svg id="moon-icon" class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-                </button>
+
             </div>
         </header>
 
@@ -219,10 +218,12 @@
                 <!-- Card Ativo -->
                 <div class="flashcard-container" id="flashcard-box">
                     <!-- Painel Principal de Estudo -->
-                    <div class="pacs-card glassmorphism" id="card-panel">
+                    <div class="pacs-card" id="card-panel">
                         <!-- Micro-Loader de Carregamento de Imagem Médica -->
                         <div class="card-loader hidden" id="card-loader">
-                            <div class="spinner"></div>
+                            <div class="diagnostic-scanner">
+                                <div class="scanner-bar"></div>
+                            </div>
                             <span class="loader-text">Acessando banco de imagens...</span>
                         </div>
 
