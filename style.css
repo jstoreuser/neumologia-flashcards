@@ -49,6 +49,7 @@
     --glass-bg: rgba(10, 13, 23, 0.5);
     --glass-border: rgba(255, 255, 255, 0.04);
     --shadow-premium: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 50px -10px rgba(249, 115, 22, 0.03);
+    --hero-bg-opacity: 0.25;
 }
 
 /* Tema Claro (Clean Cream Studio) */
@@ -87,6 +88,7 @@
     --glass-bg: rgba(255, 255, 255, 0.6);
     --glass-border: rgba(0, 0, 0, 0.04);
     --shadow-premium: 0 20px 40px -10px rgba(15, 23, 42, 0.06);
+    --hero-bg-opacity: 0.15;
 }
 
 /* Reset Global */
@@ -1267,4 +1269,164 @@ body {
 
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   HERO LANDING SECTION AESTHETICS (100vh Full Viewport)
+   ========================================================================== */
+
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--bg-primary);
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: var(--hero-bg-opacity, 0.25);
+    z-index: 1;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%);
+    transition: opacity var(--transition-normal);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 0 24px;
+    max-width: 600px;
+    animation: fade-in-up 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-symbol {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-orange);
+    color: var(--accent-orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-family: var(--font-heading);
+    font-weight: 800;
+    background-color: var(--accent-orange-transparent);
+    box-shadow: 0 0 35px rgba(249, 115, 22, 0.2), inset 0 0 15px rgba(249, 115, 22, 0.1);
+    margin-bottom: 8px;
+    user-select: none;
+    transition: transform var(--transition-fast);
+}
+
+.hero-symbol:hover {
+    transform: scale(1.05);
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    color: var(--text-primary);
+    margin-right: -0.25em; /* Compensate for final letter spacing gap */
+    text-shadow: 0 0 40px rgba(249, 115, 22, 0.15);
+}
+
+.hero-tagline {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+}
+
+.hero-scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.6;
+    transition: opacity var(--transition-normal);
+    z-index: 10;
+    cursor: pointer;
+}
+
+.hero-scroll-indicator:hover {
+    opacity: 1;
+}
+
+.mouse-icon {
+    width: 24px;
+    height: 40px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 12px;
+    position: relative;
+}
+
+.mouse-wheel {
+    width: 4px;
+    height: 8px;
+    background-color: var(--accent-orange);
+    border-radius: 2px;
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll-wheel 1.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes scroll-wheel {
+    0% {
+        top: 8px;
+        opacity: 1;
+        height: 4px;
+    }
+    50% {
+        top: 16px;
+        opacity: 0.5;
+        height: 8px;
+    }
+    100% {
+        top: 24px;
+        opacity: 0;
+        height: 4px;
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

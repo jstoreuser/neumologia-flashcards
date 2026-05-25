@@ -494,14 +494,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
     // 13. INICIALIZAÇÃO INICIAL DO APP
-    // Não inicia os cartões automaticamente; espera o clique no Painel de Boas-Vindas
+    // Inicia os cartões automaticamente abaixo do fold e configura o scroll do Hero
     updateSidebarStats();
     updateStreak();
+    initStudySession(currentFilter);
 
-    // Evento de clique para Iniciar Sessão de Estudo
-    startSessionBtn.addEventListener("click", () => {
-        welcomePanel.classList.add("hidden");
-        cardPanel.classList.remove("hidden");
-        initStudySession(currentFilter);
-    });
+    const scrollToStudyBtn = document.getElementById("scroll-to-study-btn");
+    if (scrollToStudyBtn) {
+        scrollToStudyBtn.addEventListener("click", () => {
+            const studyWorkspace = document.getElementById("study-workspace");
+            if (studyWorkspace) {
+                studyWorkspace.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    }
+
+    if (startSessionBtn && welcomePanel) {
+        startSessionBtn.addEventListener("click", () => {
+            welcomePanel.classList.add("hidden");
+            cardPanel.classList.remove("hidden");
+            initStudySession(currentFilter);
+        });
+    }
 });
