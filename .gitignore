@@ -4,6 +4,9 @@
 .env.local
 runtime-env.js
 
+# Node
+node_modules/
+
 # Builds e Distribuições locais do Anki
 dist/
 build/
