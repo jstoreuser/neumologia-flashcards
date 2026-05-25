@@ -118,10 +118,7 @@ body {
     z-index: 1; /* Placed above ambient gradient but behind hero content (which has z-index: 10) */
     pointer-events: none;
     opacity: var(--hero-video-opacity, 0.45);
-    /* Sub-conscious radial mask for vignette */
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 90%);
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.25) 90%);
-    /* Transition removed to support high-performance scroll-linked JS opacity updates */
+    will-change: opacity; /* Composite layer promotion for lag-free opacity updates */
 }
 
 /* Scrollbar Slim */
@@ -1294,6 +1291,19 @@ body {
     justify-content: center;
     overflow: hidden;
     background-color: transparent; /* Made transparent for fullscreen fixed background video parallax */
+}
+
+/* High-performance vignette mask overlaying the absolute video */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 0%, rgba(4, 6, 11, 0.75) 100%);
+    z-index: 2; /* Sits in front of the video (z-index: 1) but behind the text content (z-index: 10) */
+    pointer-events: none;
 }
 
 .hero-content {

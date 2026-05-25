@@ -494,19 +494,31 @@ document.addEventListener("DOMContentLoaded", () => {
     // 14. EFEITO DE FADE DO VÍDEO DE FUNDO CONFORME ROLAMOS A PÁGINA (Scroll-driven ambient video fade)
     const ambientVideo = document.querySelector(".ambient-video-bg");
     if (ambientVideo) {
+        // Cache da altura do hero para evitar acessos custosos ao DOM no loop de scroll
+        let heroHeight = window.innerHeight || 800;
+        window.addEventListener("resize", () => {
+            heroHeight = window.innerHeight || 800;
+        }, { passive: true });
+
+        let ticking = false;
         window.addEventListener("scroll", () => {
-            const scrollPos = window.scrollY;
-            const heroHeight = window.innerHeight || 800;
-            // O vídeo começa a esmaecer e atinge opacidade 0 quando chega a 80% do fold (heroHeight)
-            const fadeThreshold = heroHeight * 0.8;
-            if (scrollPos <= fadeThreshold) {
-                // Opacidade máxima original do CSS é 0.45
-                const maxOpacity = 0.45;
-                const newOpacity = maxOpacity * (1 - scrollPos / fadeThreshold);
-                ambientVideo.style.opacity = newOpacity;
-            } else {
-                ambientVideo.style.opacity = 0;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollPos = window.scrollY;
+                    const fadeThreshold = heroHeight * 0.8;
+                    
+                    if (scrollPos <= fadeThreshold) {
+                        const maxOpacity = 0.45;
+                        const newOpacity = maxOpacity * (1 - scrollPos / fadeThreshold);
+                        ambientVideo.style.opacity = newOpacity;
+                    } else if (ambientVideo.style.opacity !== "0") {
+                        // Evita gravações redundantes no DOM se o vídeo já estiver totalmente oculto
+                        ambientVideo.style.opacity = 0;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
             }
-        });
+        }, { passive: true });
     }
 });
