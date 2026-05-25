@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body class="pacs-theme-dark">
     <!-- Fundo removido para garantir foco na camada HEROPHOTO e prioridade de performance -->
@@ -18,8 +18,8 @@
     <!-- SEÇÃO HERO DE ENTRADA (100vh Landing Screen) -->
     <section class="hero-section">
         <!-- Vídeo na Hero (Aesthetic Parallax Reveal) -->
-        <video class="ambient-video-bg" autoplay loop muted playsinline poster="HEROPHOTO.webp">
-            <source src="0525.mp4" type="video/mp4">
+        <video class="ambient-video-bg" autoplay loop muted playsinline poster="assets/images/hero/HEROPHOTO.webp">
+            <source src="assets/video/0525.mp4" type="video/mp4">
         </video>
         <div class="hero-content">
             <div class="hero-symbol">
@@ -96,7 +96,7 @@
 
             <div class="header-actions">
                 <!-- Botão de Baixar Deck do Anki -->
-                <a href="Diagnostico_Imagens.apkg" download="Diagnostico_Imagens.apkg" class="btn btn-icon btn-outline" style="text-decoration: none;" title="Descargar paquete de Anki (.apkg) para estudio local">
+                <a href="anki/Diagnostico_Imagens.apkg" download="Diagnostico_Imagens.apkg" class="btn btn-icon btn-outline" style="text-decoration: none;" title="Descargar paquete de Anki (.apkg) para estudio local">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     <span>Descargar para Anki</span>
                 </a>
@@ -312,8 +312,7 @@
         </main>
     </div>
 
-    <!-- scripts carregados no final -->
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <!-- scripts carregados no final (Native ES Modules) -->
+    <script type="module" src="src/js/app.js"></script>
 </body>
 </html>

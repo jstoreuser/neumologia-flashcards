@@ -1,0 +1,31 @@
+# Ambiente Virtual do Python
+.venv/
+.env
+
+# Builds e Distribuições locais do Anki
+dist/
+build/
+/anki/*.apkg
+*.apkg
+
+# Configurações de IDEs
+.vscode/
+.idea/
+
+# Mídias Pesadas e Arquivos de Design
+*.mp4
+*.mov
+*.psd
+*.pdf
+
+# Caches do compilador Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de sistema operacional (Mac/Windows)
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db

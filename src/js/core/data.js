@@ -1,10 +1,10 @@
-// Banco de dados dos flashcards médicos
-const FLASHCARD_DATA = [
+// Banco de dados dos flashcards médicos compilado de forma automática
+export const FLASHCARD_DATA = [
   {
     "id": 2,
     "pageNumber": "2",
     "images": [
-      "images/img_pagina_2_1.jpeg"
+      "assets/images/img_pagina_2_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la Vela (Timo Fisiológico)",
@@ -18,7 +18,7 @@ const FLASHCARD_DATA = [
     "id": 3,
     "pageNumber": "3",
     "images": [
-      "images/img_pagina_3_1.jpeg"
+      "assets/images/img_pagina_3_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de Fleischner (TEP)",
@@ -33,7 +33,7 @@ const FLASHCARD_DATA = [
     "id": 4,
     "pageNumber": "4",
     "images": [
-      "images/img_pagina_4_1.jpeg"
+      "assets/images/img_pagina_4_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Absceso Pulmonar",
@@ -48,7 +48,7 @@ const FLASHCARD_DATA = [
     "id": 5,
     "pageNumber": "5",
     "images": [
-      "images/img_pagina_5_1.jpeg"
+      "assets/images/img_pagina_5_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia de la Lígula",
@@ -62,7 +62,7 @@ const FLASHCARD_DATA = [
     "id": 6,
     "pageNumber": "6",
     "images": [
-      "images/img_pagina_6_1.jpeg"
+      "assets/images/img_pagina_6_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la S de Golden",
@@ -76,7 +76,7 @@ const FLASHCARD_DATA = [
     "id": 7,
     "pageNumber": "7",
     "images": [
-      "images/img_pagina_7_1.jpeg"
+      "assets/images/img_pagina_7_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Hamartoma Pulmonar",
@@ -91,7 +91,7 @@ const FLASHCARD_DATA = [
     "id": 8,
     "pageNumber": "8",
     "images": [
-      "images/img_pagina_8_1.jpeg"
+      "assets/images/img_pagina_8_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Metástasis Pulmonar (Suelta de Globos)",
@@ -105,7 +105,7 @@ const FLASHCARD_DATA = [
     "id": 9,
     "pageNumber": "9",
     "images": [
-      "images/img_pagina_9_1.jpeg"
+      "assets/images/img_pagina_9_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Enfisema Pulmonar (Bullas)",
@@ -119,7 +119,7 @@ const FLASHCARD_DATA = [
     "id": 10,
     "pageNumber": "10",
     "images": [
-      "images/img_pagina_10_1.jpeg"
+      "assets/images/img_pagina_10_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Enfisema Pulmonar (Bullas)",
@@ -132,7 +132,7 @@ const FLASHCARD_DATA = [
     "id": 11,
     "pageNumber": "11",
     "images": [
-      "images/img_pagina_11_1.jpeg"
+      "assets/images/img_pagina_11_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Bronquiectasias (Signo de Anillo de Sello)",
@@ -147,7 +147,7 @@ const FLASHCARD_DATA = [
     "id": 12,
     "pageNumber": "12",
     "images": [
-      "images/img_pagina_12_1.jpeg"
+      "assets/images/img_pagina_12_1.jpeg"
     ],
     "prompt": "¿Qué patrón intersticial se observa en las imágenes?",
     "answer": "Patrón en Vidrio Esmerilado",
@@ -161,7 +161,7 @@ const FLASHCARD_DATA = [
     "id": 13,
     "pageNumber": "13",
     "images": [
-      "images/img_pagina_13_1.jpeg"
+      "assets/images/img_pagina_13_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Linfangioleiomiomatosis (LAM)",
@@ -175,7 +175,7 @@ const FLASHCARD_DATA = [
     "id": 14,
     "pageNumber": "14",
     "images": [
-      "images/img_pagina_14_1.jpeg"
+      "assets/images/img_pagina_14_1.jpeg"
     ],
     "prompt": "¿Qué patrón se observa en la tomografía computada?",
     "answer": "Patrón Reticular (Panal de Abejas)",
@@ -190,7 +190,7 @@ const FLASHCARD_DATA = [
     "id": 15,
     "pageNumber": "15",
     "images": [
-      "images/img_pagina_15_1.jpeg"
+      "assets/images/img_pagina_15_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Nódulo Pulmonar Espiculado (Maligno)",
@@ -203,7 +203,7 @@ const FLASHCARD_DATA = [
     "id": 16,
     "pageNumber": "16",
     "images": [
-      "images/img_pagina_16_1.jpeg"
+      "assets/images/img_pagina_16_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumotórax Izquierdo",
@@ -217,7 +217,7 @@ const FLASHCARD_DATA = [
     "id": 17,
     "pageNumber": "17",
     "images": [
-      "images/img_pagina_17_1.jpeg"
+      "assets/images/img_pagina_17_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Linfangitis Carcinomatosa (Líneas B de Kerley)",
@@ -233,7 +233,7 @@ const FLASHCARD_DATA = [
     "id": 18,
     "pageNumber": "18",
     "images": [
-      "images/img_pagina_18_1.jpeg"
+      "assets/images/img_pagina_18_1.jpeg"
     ],
     "prompt": "¿Qué tipo de patrón tumoral se observa?",
     "answer": "Nódulo Pulmonar Maligno",
@@ -248,7 +248,7 @@ const FLASHCARD_DATA = [
     "id": 19,
     "pageNumber": "19",
     "images": [
-      "images/img_pagina_19_1.jpeg"
+      "assets/images/img_pagina_19_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Fibrosis Pulmonar (Panal de Abejas)",
@@ -262,7 +262,7 @@ const FLASHCARD_DATA = [
     "id": 20,
     "pageNumber": "20",
     "images": [
-      "images/img_pagina_20_1.jpeg"
+      "assets/images/img_pagina_20_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Metástasis Pulmonar (Suelta de Globos)",
@@ -276,7 +276,7 @@ const FLASHCARD_DATA = [
     "id": 21,
     "pageNumber": "21",
     "images": [
-      "images/img_pagina_21_1.jpeg"
+      "assets/images/img_pagina_21_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Derrame Pleural Izquierdo (Línea de Damoiseau)",
@@ -289,7 +289,7 @@ const FLASHCARD_DATA = [
     "id": 22,
     "pageNumber": "22",
     "images": [
-      "images/img_pagina_22_1.jpeg"
+      "assets/images/img_pagina_22_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumotórax Derecho",
@@ -302,7 +302,7 @@ const FLASHCARD_DATA = [
     "id": 23,
     "pageNumber": "23",
     "images": [
-      "images/img_pagina_23_1.jpeg"
+      "assets/images/img_pagina_23_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Bronquiectasias",
@@ -316,7 +316,7 @@ const FLASHCARD_DATA = [
     "id": 24,
     "pageNumber": "24",
     "images": [
-      "images/img_pagina_24_1.jpeg"
+      "assets/images/img_pagina_24_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía por COVID-19 (Vidrio Esmerilado)",
@@ -330,7 +330,7 @@ const FLASHCARD_DATA = [
     "id": 25,
     "pageNumber": "25",
     "images": [
-      "images/img_pagina_25_1.jpeg"
+      "assets/images/img_pagina_25_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Patrón Intersticial Reticular (Fibrosis)",
@@ -344,7 +344,7 @@ const FLASHCARD_DATA = [
     "id": 26,
     "pageNumber": "26",
     "images": [
-      "images/img_pagina_26_1.jpeg"
+      "assets/images/img_pagina_26_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía Atípica (Legionella pneumophila)",
@@ -359,7 +359,7 @@ const FLASHCARD_DATA = [
     "id": 27,
     "pageNumber": "27",
     "images": [
-      "images/img_pagina_27_1.jpeg"
+      "assets/images/img_pagina_27_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Tuberculosis Cavitada (Árbol en Brote)",
@@ -373,7 +373,7 @@ const FLASHCARD_DATA = [
     "id": 28,
     "pageNumber": "28",
     "images": [
-      "images/img_pagina_28_1.jpeg"
+      "assets/images/img_pagina_28_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia del Lóbulo Superior Derecho (S de Golden)",
@@ -387,7 +387,7 @@ const FLASHCARD_DATA = [
     "id": 29,
     "pageNumber": "29",
     "images": [
-      "images/img_pagina_29_1.jpeg"
+      "assets/images/img_pagina_29_1.jpeg"
     ],
     "prompt": "¿Qué patrón intersticial se observa en las imágenes?",
     "answer": "Patrón Intersticial Reticular (Fibrosis Pulmonar)",
@@ -401,7 +401,7 @@ const FLASHCARD_DATA = [
     "id": 30,
     "pageNumber": "30",
     "images": [
-      "images/img_pagina_30_1.jpeg"
+      "assets/images/img_pagina_30_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Absceso Pulmonar",
@@ -416,7 +416,7 @@ const FLASHCARD_DATA = [
     "id": 31,
     "pageNumber": "31",
     "images": [
-      "images/img_pagina_31_1.jpeg"
+      "assets/images/img_pagina_31_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Quiste Pulmonar (TC de Tórax)",
@@ -430,7 +430,7 @@ const FLASHCARD_DATA = [
     "id": 32,
     "pageNumber": "32",
     "images": [
-      "images/img_pagina_32_1.jpeg"
+      "assets/images/img_pagina_32_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Hiperinsuflación Pulmonar (Enfisema)",
@@ -444,7 +444,7 @@ const FLASHCARD_DATA = [
     "id": 33,
     "pageNumber": "33",
     "images": [
-      "images/img_pagina_33_1.jpeg"
+      "assets/images/img_pagina_33_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía Atípica (Vidrio Esmerilado)",
@@ -459,7 +459,7 @@ const FLASHCARD_DATA = [
     "id": 34,
     "pageNumber": "34",
     "images": [
-      "images/img_pagina_34_1.jpeg"
+      "assets/images/img_pagina_34_1.jpeg"
     ],
     "prompt": "¿Qué patrón intersticial se observa en las imágenes?",
     "answer": "Patrón Intersticial Lineal (Líneas B de Kerley)",
@@ -475,7 +475,7 @@ const FLASHCARD_DATA = [
     "id": 35,
     "pageNumber": "35",
     "images": [
-      "images/img_pagina_35_1.jpeg"
+      "assets/images/img_pagina_35_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Absceso Pulmonar (Nivel Hidroaéreo)",
@@ -490,7 +490,7 @@ const FLASHCARD_DATA = [
     "id": 36,
     "pageNumber": "36",
     "images": [
-      "images/img_pagina_36_1.jpeg"
+      "assets/images/img_pagina_36_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la Silueta Negativo",
@@ -504,7 +504,7 @@ const FLASHCARD_DATA = [
     "id": 37,
     "pageNumber": "37",
     "images": [
-      "images/img_pagina_37_1.jpeg"
+      "assets/images/img_pagina_37_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Líneas B de Kerley (Edema Agudo de Pulmón)",
@@ -519,7 +519,7 @@ const FLASHCARD_DATA = [
     "id": 38,
     "pageNumber": "38",
     "images": [
-      "images/img_pagina_38_1.jpeg"
+      "assets/images/img_pagina_38_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la S de Golden",
@@ -533,7 +533,7 @@ const FLASHCARD_DATA = [
     "id": 39,
     "pageNumber": "39",
     "images": [
-      "images/img_pagina_39_1.jpeg"
+      "assets/images/img_pagina_39_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Lesión Intrapleural (Mesotelioma)",
@@ -546,7 +546,7 @@ const FLASHCARD_DATA = [
     "id": 40,
     "pageNumber": "40",
     "images": [
-      "images/img_pagina_40_1.jpeg"
+      "assets/images/img_pagina_40_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de Fleischner (TEP)",
@@ -562,7 +562,7 @@ const FLASHCARD_DATA = [
     "id": 41,
     "pageNumber": "41",
     "images": [
-      "images/img_pagina_41_1.jpeg"
+      "assets/images/img_pagina_41_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía con Derrame Pleural y Atelectasia",
@@ -576,7 +576,7 @@ const FLASHCARD_DATA = [
     "id": 42,
     "pageNumber": "42",
     "images": [
-      "images/img_pagina_42_1.jpeg"
+      "assets/images/img_pagina_42_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de Lesión Extrapulmonar (Signo de la Embarazada)",
@@ -590,7 +590,7 @@ const FLASHCARD_DATA = [
     "id": 43,
     "pageNumber": "43",
     "images": [
-      "images/img_pagina_43_1.jpeg"
+      "assets/images/img_pagina_43_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Cavitación Pulmonar (Diagnóstico Diferencial)",
@@ -605,7 +605,7 @@ const FLASHCARD_DATA = [
     "id": 44,
     "pageNumber": "44",
     "images": [
-      "images/img_pagina_44_1.jpeg"
+      "assets/images/img_pagina_44_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Diafragma Continuo (Neumomediastino)",
@@ -620,7 +620,7 @@ const FLASHCARD_DATA = [
     "id": 45,
     "pageNumber": "45",
     "images": [
-      "images/img_pagina_45_1.jpeg"
+      "assets/images/img_pagina_45_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Caverna Pulmonar",
@@ -634,7 +634,7 @@ const FLASHCARD_DATA = [
     "id": 46,
     "pageNumber": "46",
     "images": [
-      "images/img_pagina_46_1.jpeg"
+      "assets/images/img_pagina_46_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la Silueta Negativo",
@@ -649,7 +649,7 @@ const FLASHCARD_DATA = [
     "id": 47,
     "pageNumber": "47",
     "images": [
-      "images/img_pagina_47_1.jpeg"
+      "assets/images/img_pagina_47_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Múltiples Fracturas Costales y Neumotórax",
@@ -662,7 +662,7 @@ const FLASHCARD_DATA = [
     "id": 48,
     "pageNumber": "48",
     "images": [
-      "images/img_pagina_48_1.jpeg"
+      "assets/images/img_pagina_48_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Hilio Oculto (Diagnóstico Diferencial)",
@@ -676,7 +676,7 @@ const FLASHCARD_DATA = [
     "id": 49,
     "pageNumber": "49",
     "images": [
-      "images/img_pagina_49_1.jpeg"
+      "assets/images/img_pagina_49_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Bronconeumonía (Signo de Árbol en Brote)",
@@ -692,7 +692,7 @@ const FLASHCARD_DATA = [
     "id": 50,
     "pageNumber": "50",
     "images": [
-      "images/img_pagina_50_1.jpeg"
+      "assets/images/img_pagina_50_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo Cervicotorácico (Mediastino Anterior vs Posterior)",
@@ -707,7 +707,7 @@ const FLASHCARD_DATA = [
     "id": 51,
     "pageNumber": "51",
     "images": [
-      "images/img_pagina_51_1.jpeg"
+      "assets/images/img_pagina_51_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía Redonda",
@@ -721,7 +721,7 @@ const FLASHCARD_DATA = [
     "id": 52,
     "pageNumber": "52",
     "images": [
-      "images/img_pagina_52_1.jpeg"
+      "assets/images/img_pagina_52_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Prótesis Mamarias (Hallazgo Fisiológico)",
@@ -734,7 +734,7 @@ const FLASHCARD_DATA = [
     "id": 53,
     "pageNumber": "53",
     "images": [
-      "images/img_pagina_53_1.jpeg"
+      "assets/images/img_pagina_53_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Aire Creciente (Aspergiloma)",
@@ -750,7 +750,7 @@ const FLASHCARD_DATA = [
     "id": 54,
     "pageNumber": "54",
     "images": [
-      "images/img_pagina_54_1.jpeg"
+      "assets/images/img_pagina_54_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía (Bloque Neumónico)",
@@ -764,7 +764,7 @@ const FLASHCARD_DATA = [
     "id": 55,
     "pageNumber": "55",
     "images": [
-      "images/img_pagina_55_1.jpeg"
+      "assets/images/img_pagina_55_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la Suelta de Globos (Metástasis Pulmonar)",
@@ -778,7 +778,7 @@ const FLASHCARD_DATA = [
     "id": 56,
     "pageNumber": "56",
     "images": [
-      "images/img_pagina_56_1.jpeg"
+      "assets/images/img_pagina_56_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de Westermark (TEP)",
@@ -794,7 +794,7 @@ const FLASHCARD_DATA = [
     "id": 57,
     "pageNumber": "57",
     "images": [
-      "images/img_pagina_57_1.jpeg"
+      "assets/images/img_pagina_57_1.jpeg"
     ],
     "prompt": "¿Qué es el Signo de la Silueta Positivo?",
     "answer": "Signo de la Silueta Positivo",
@@ -809,7 +809,7 @@ const FLASHCARD_DATA = [
     "id": 58,
     "pageNumber": "58",
     "images": [
-      "images/img_pagina_58_1.jpeg"
+      "assets/images/img_pagina_58_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía Atípica",
@@ -824,7 +824,7 @@ const FLASHCARD_DATA = [
     "id": 59,
     "pageNumber": "59",
     "images": [
-      "images/img_pagina_59_1.jpeg"
+      "assets/images/img_pagina_59_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Bullas Pulmonares",
@@ -837,7 +837,7 @@ const FLASHCARD_DATA = [
     "id": 60,
     "pageNumber": "60",
     "images": [
-      "images/img_pagina_60_1.jpeg"
+      "assets/images/img_pagina_60_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia del Lóbulo Medio Derecho",
@@ -851,7 +851,7 @@ const FLASHCARD_DATA = [
     "id": 61,
     "pageNumber": "61",
     "images": [
-      "images/img_pagina_61_1.jpeg"
+      "assets/images/img_pagina_61_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Broncograma Aéreo",
@@ -865,7 +865,7 @@ const FLASHCARD_DATA = [
     "id": 62,
     "pageNumber": "62",
     "images": [
-      "images/img_pagina_62_1.jpeg"
+      "assets/images/img_pagina_62_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Embolia Séptica",
@@ -879,7 +879,7 @@ const FLASHCARD_DATA = [
     "id": 63,
     "pageNumber": "63",
     "images": [
-      "images/img_pagina_63_1.jpeg"
+      "assets/images/img_pagina_63_1.jpeg"
     ],
     "prompt": "¿Qué patrón intersticial se observa en las imágenes?",
     "answer": "Patrón Intersticial Nodular",
@@ -893,7 +893,7 @@ const FLASHCARD_DATA = [
     "id": 64,
     "pageNumber": "64",
     "images": [
-      "images/img_pagina_64_1.jpeg"
+      "assets/images/img_pagina_64_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Histiocitosis Pulmonar (Células de Langerhans)",
@@ -906,7 +906,7 @@ const FLASHCARD_DATA = [
     "id": 65,
     "pageNumber": "65",
     "images": [
-      "images/img_pagina_65_1.jpeg"
+      "assets/images/img_pagina_65_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Dedo de Guante (Impactación Mucosa)",
@@ -921,7 +921,7 @@ const FLASHCARD_DATA = [
     "id": 66,
     "pageNumber": "66",
     "images": [
-      "images/img_pagina_66_1.jpeg"
+      "assets/images/img_pagina_66_1.jpeg"
     ],
     "prompt": "¿Qué es el Signo de la Silueta Positivo?",
     "answer": "Signo de la Silueta Positivo",
@@ -936,7 +936,7 @@ const FLASHCARD_DATA = [
     "id": 67,
     "pageNumber": "67",
     "images": [
-      "images/img_pagina_67_1.jpeg"
+      "assets/images/img_pagina_67_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Derrame Pleural",
@@ -950,7 +950,7 @@ const FLASHCARD_DATA = [
     "id": 68,
     "pageNumber": "68",
     "images": [
-      "images/img_pagina_68_1.jpeg"
+      "assets/images/img_pagina_68_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Nódulo Pulmonar Lobulado",
@@ -964,7 +964,7 @@ const FLASHCARD_DATA = [
     "id": 69,
     "pageNumber": "69",
     "images": [
-      "images/img_pagina_69_1.jpeg"
+      "assets/images/img_pagina_69_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia del Lóbulo Superior Derecho",
@@ -978,7 +978,7 @@ const FLASHCARD_DATA = [
     "id": 70,
     "pageNumber": "70",
     "images": [
-      "images/img_pagina_70_1.jpeg"
+      "assets/images/img_pagina_70_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Tumor Fantasma (Derrame Cisural)",
@@ -992,7 +992,7 @@ const FLASHCARD_DATA = [
     "id": 71,
     "pageNumber": "71",
     "images": [
-      "images/img_pagina_71_1.jpeg"
+      "assets/images/img_pagina_71_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Bronquiectasias (Anillo de Sello)",
@@ -1007,7 +1007,7 @@ const FLASHCARD_DATA = [
     "id": 72,
     "pageNumber": "72",
     "images": [
-      "images/img_pagina_72_1.jpeg"
+      "assets/images/img_pagina_72_1.jpeg"
     ],
     "prompt": "¿Por qué se realiza la radiografía de tórax en bipedestación?",
     "answer": "Bipedestación en Radiografía de Tórax (Importancia)",
@@ -1022,7 +1022,7 @@ const FLASHCARD_DATA = [
     "id": 73,
     "pageNumber": "73",
     "images": [
-      "images/img_pagina_73_1.jpeg"
+      "assets/images/img_pagina_73_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Enfisema Pulmonar",
@@ -1037,7 +1037,7 @@ const FLASHCARD_DATA = [
     "id": 74,
     "pageNumber": "74",
     "images": [
-      "images/img_pagina_74_1.jpeg"
+      "assets/images/img_pagina_74_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Hamartoma Pulmonar",
@@ -1052,7 +1052,7 @@ const FLASHCARD_DATA = [
     "id": 75,
     "pageNumber": "75",
     "images": [
-      "images/img_pagina_75_1.jpeg"
+      "assets/images/img_pagina_75_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Broncograma Aéreo (Consolidación Parenquimatosa)",
@@ -1066,7 +1066,7 @@ const FLASHCARD_DATA = [
     "id": 76,
     "pageNumber": "76",
     "images": [
-      "images/img_pagina_76_1.jpeg"
+      "assets/images/img_pagina_76_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumotórax (Colapso Pulmonar)",
@@ -1080,7 +1080,7 @@ const FLASHCARD_DATA = [
     "id": 77,
     "pageNumber": "77",
     "images": [
-      "images/img_pagina_77_1.jpeg"
+      "assets/images/img_pagina_77_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Bullas Pulmonares",
@@ -1095,7 +1095,7 @@ const FLASHCARD_DATA = [
     "id": 78,
     "pageNumber": "78",
     "images": [
-      "images/img_pagina_78_1.jpeg"
+      "assets/images/img_pagina_78_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Caverna Tuberculosa",
@@ -1108,7 +1108,7 @@ const FLASHCARD_DATA = [
     "id": 79,
     "pageNumber": "79",
     "images": [
-      "images/img_pagina_79_1.jpeg"
+      "assets/images/img_pagina_79_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Patrón Intersticial",
@@ -1124,7 +1124,7 @@ const FLASHCARD_DATA = [
     "id": 80,
     "pageNumber": "80",
     "images": [
-      "images/img_pagina_80_1.jpeg"
+      "assets/images/img_pagina_80_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de la Vela (Timo Fisiológico)",
@@ -1138,7 +1138,7 @@ const FLASHCARD_DATA = [
     "id": 81,
     "pageNumber": "81",
     "images": [
-      "images/img_pagina_81_1.jpeg"
+      "assets/images/img_pagina_81_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Dedo de Guante (Impactación Mucosa)",
@@ -1153,7 +1153,7 @@ const FLASHCARD_DATA = [
     "id": 82,
     "pageNumber": "82",
     "images": [
-      "images/img_pagina_82_1.jpeg"
+      "assets/images/img_pagina_82_1.jpeg"
     ],
     "prompt": "¿Cuánto tiempo debe permanecer estable un nódulo pulmonar para considerarse benigno?",
     "answer": "2 años (24 meses) de estabilidad",
@@ -1167,7 +1167,7 @@ const FLASHCARD_DATA = [
     "id": 83,
     "pageNumber": "83",
     "images": [
-      "images/img_pagina_83_1.jpeg"
+      "assets/images/img_pagina_83_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Aire Creciente",
@@ -1181,7 +1181,7 @@ const FLASHCARD_DATA = [
     "id": 84,
     "pageNumber": "84",
     "images": [
-      "images/img_pagina_84_1.jpeg"
+      "assets/images/img_pagina_84_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo del Diafragma Continuo",
@@ -1195,7 +1195,7 @@ const FLASHCARD_DATA = [
     "id": 85,
     "pageNumber": "85",
     "images": [
-      "images/img_pagina_85_1.jpeg"
+      "assets/images/img_pagina_85_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Tuberculosis (TBC) Miliar",
@@ -1208,7 +1208,7 @@ const FLASHCARD_DATA = [
     "id": 86,
     "pageNumber": "86",
     "images": [
-      "images/img_pagina_86_1.jpeg"
+      "assets/images/img_pagina_86_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Tuberculosis (TBC) Postprimaria (Árbol en Brote)",
@@ -1221,7 +1221,7 @@ const FLASHCARD_DATA = [
     "id": 87,
     "pageNumber": "87",
     "images": [
-      "images/img_pagina_87_1.jpeg"
+      "assets/images/img_pagina_87_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumomediastino",
@@ -1235,7 +1235,7 @@ const FLASHCARD_DATA = [
     "id": 88,
     "pageNumber": "88",
     "images": [
-      "images/img_pagina_88_1.jpeg"
+      "assets/images/img_pagina_88_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Líneas B de Kerley",
@@ -1249,7 +1249,7 @@ const FLASHCARD_DATA = [
     "id": 89,
     "pageNumber": "89",
     "images": [
-      "images/img_pagina_89_1.jpeg"
+      "assets/images/img_pagina_89_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Caverna Pulmonar (TBC)",
@@ -1262,7 +1262,7 @@ const FLASHCARD_DATA = [
     "id": 90,
     "pageNumber": "90",
     "images": [
-      "images/img_pagina_90_1.jpeg"
+      "assets/images/img_pagina_90_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia Masiva",
@@ -1275,7 +1275,7 @@ const FLASHCARD_DATA = [
     "id": 91,
     "pageNumber": "91",
     "images": [
-      "images/img_pagina_91_1.jpeg"
+      "assets/images/img_pagina_91_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumonía del Lóbulo Superior Derecho (LSD)",
@@ -1290,7 +1290,7 @@ const FLASHCARD_DATA = [
     "id": 92,
     "pageNumber": "92",
     "images": [
-      "images/img_pagina_92_1.jpeg"
+      "assets/images/img_pagina_92_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumomediastino",
@@ -1304,7 +1304,7 @@ const FLASHCARD_DATA = [
     "id": 93,
     "pageNumber": "93",
     "images": [
-      "images/img_pagina_93_1.jpeg"
+      "assets/images/img_pagina_93_1.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Joroba de Hampton (TEP)",
@@ -1319,7 +1319,7 @@ const FLASHCARD_DATA = [
     "id": 94,
     "pageNumber": "94",
     "images": [
-      "images/img_pagina_94_1.jpeg"
+      "assets/images/img_pagina_94_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia del Lóbulo Superior Izquierdo",
@@ -1333,7 +1333,7 @@ const FLASHCARD_DATA = [
     "id": 95,
     "pageNumber": "95",
     "images": [
-      "images/img_pagina_95_1.jpeg"
+      "assets/images/img_pagina_95_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Hamartoma Pulmonar (Calcificación en Popcorn)",
@@ -1348,7 +1348,7 @@ const FLASHCARD_DATA = [
     "id": 96,
     "pageNumber": "96",
     "images": [
-      "images/img_pagina_96_1.jpeg"
+      "assets/images/img_pagina_96_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Edema Agudo de Pulmón",
@@ -1363,7 +1363,7 @@ const FLASHCARD_DATA = [
     "id": 97,
     "pageNumber": "97",
     "images": [
-      "images/img_pagina_97_1.jpeg"
+      "assets/images/img_pagina_97_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Fibrosis Pulmonar",
@@ -1378,7 +1378,7 @@ const FLASHCARD_DATA = [
     "id": 98,
     "pageNumber": "98",
     "images": [
-      "images/img_pagina_98_1.jpeg"
+      "assets/images/img_pagina_98_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Granuloma Secuelar Calcificado",
@@ -1393,7 +1393,7 @@ const FLASHCARD_DATA = [
     "id": 99,
     "pageNumber": "99",
     "images": [
-      "images/img_pagina_99_1.jpeg"
+      "assets/images/img_pagina_99_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Tuberculosis (TBC) Miliar",
@@ -1407,7 +1407,7 @@ const FLASHCARD_DATA = [
     "id": 100,
     "pageNumber": "100",
     "images": [
-      "images/img_pagina_100_1.jpeg"
+      "assets/images/img_pagina_100_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Patología Pulmonar Intersticial Reticular",
@@ -1422,7 +1422,7 @@ const FLASHCARD_DATA = [
     "id": 101,
     "pageNumber": "101",
     "images": [
-      "images/img_pagina_101_1.jpeg"
+      "assets/images/img_pagina_101_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Linfangioleiomiomatosis (LAM)",
@@ -1436,7 +1436,7 @@ const FLASHCARD_DATA = [
     "id": 102,
     "pageNumber": "102",
     "images": [
-      "images/img_pagina_102_1.jpeg"
+      "assets/images/img_pagina_102_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Bronquiectasias",
@@ -1450,7 +1450,7 @@ const FLASHCARD_DATA = [
     "id": 103,
     "pageNumber": "103",
     "images": [
-      "images/img_pagina_103_1.jpeg"
+      "assets/images/img_pagina_103_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Atelectasia del Lóbulo Medio Derecho",
@@ -1463,7 +1463,7 @@ const FLASHCARD_DATA = [
     "id": 104,
     "pageNumber": "104",
     "images": [
-      "images/img_pagina_104_1.jpeg"
+      "assets/images/img_pagina_104_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Tromboembolismo Pulmonar (TEP)",
@@ -1477,8 +1477,8 @@ const FLASHCARD_DATA = [
     "id": 105,
     "pageNumber": "105",
     "images": [
-      "images/img_pagina_105_1.jpeg",
-      "images/img_pagina_105_2.jpeg"
+      "assets/images/img_pagina_105_1.jpeg",
+      "assets/images/img_pagina_105_2.jpeg"
     ],
     "prompt": "Nombre el siguiente signo radiológico:",
     "answer": "Signo de Westermark (TEP)",
@@ -1493,7 +1493,7 @@ const FLASHCARD_DATA = [
     "id": 106,
     "pageNumber": "106",
     "images": [
-      "images/img_pagina_106_1.jpeg"
+      "assets/images/img_pagina_106_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Neumotórax a Tensión",
@@ -1507,7 +1507,7 @@ const FLASHCARD_DATA = [
     "id": 107,
     "pageNumber": "107",
     "images": [
-      "images/img_pagina_107_1.jpeg"
+      "assets/images/img_pagina_107_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Empiema Pleural (Derrame Pleural)",
@@ -1520,7 +1520,7 @@ const FLASHCARD_DATA = [
     "id": 108,
     "pageNumber": "108",
     "images": [
-      "images/img_pagina_108_1.jpeg"
+      "assets/images/img_pagina_108_1.jpeg"
     ],
     "prompt": "Identifique el hallazgo o diagnóstico presuntivo:",
     "answer": "Hamartoma Pulmonar",

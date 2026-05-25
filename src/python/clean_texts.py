@@ -1,5 +1,12 @@
 import json
 import re
+import sys
+import os
+
+# Adiciona o diretório atual do script ao path para permitir imports do 'shared'
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from shared.config import RAW_TEXTS_PATH, FORMATTED_TEXTS_PATH
 
 # Dicionário de substituições de digitação gerais
 REPLACEMENTS = {
@@ -318,7 +325,7 @@ def merge_broken_lines(raw_text):
     return merged_blocks
 
 # Executar o re-processamento completo
-with open("raw_texts.json", "r", encoding="utf-8") as f:
+with open(RAW_TEXTS_PATH, "r", encoding="utf-8") as f:
     raw_data = json.load(f)
 
 formatted_data = {}
@@ -416,7 +423,7 @@ for page_num_str, raw_text in raw_data.items():
     }
 
 # Gravar no arquivo JSON final
-with open("formatted_texts.json", "w", encoding="utf-8") as f:
+with open(FORMATTED_TEXTS_PATH, "w", encoding="utf-8") as f:
     json.dump(formatted_data, f, ensure_ascii=False, indent=2)
 
 print("SUCESSO TOTAL: Todos os 107 flashcards foram formatados com as novas regras inteligentes, eliminando linhas cortadas com sucesso!")
