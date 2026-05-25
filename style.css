@@ -74,7 +74,7 @@
     --glass-border: var(--border-color);
     --shadow-premium: var(--shadow-low);
     --hero-bg-opacity: 0.25; /* Elevated for background detail visibility */
-    --hero-video-opacity: 0.30; /* Clear diagnostic motion display */
+    --hero-video-opacity: 0.45; /* Clear diagnostic motion display */
 }
 
 /* Reset Global */
