@@ -1,21 +1,17 @@
-import { createStore } from 'zustand/vanilla';
+import { createStore } from '@/core/store';
 
 interface LayoutState {
   isDrawerOpen: boolean;
-  toggleDrawer: () => void;
-  openDrawer: () => void;
-  closeDrawer: () => void;
 }
 
-export const useLayoutStore = createStore<LayoutState>((set) => ({
+const initialState: LayoutState = {
   isDrawerOpen: false,
-  toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
-  openDrawer: () => set({ isDrawerOpen: true }),
-  closeDrawer: () => set({ isDrawerOpen: false }),
-}));
+};
+
+export const useLayoutStore = createStore<LayoutState>(initialState);
 
 export const layoutActions = {
-  toggleDrawer: () => useLayoutStore.getState().toggleDrawer(),
-  openDrawer: () => useLayoutStore.getState().openDrawer(),
-  closeDrawer: () => useLayoutStore.getState().closeDrawer(),
+  toggleDrawer: () => useLayoutStore.setState((state: LayoutState) => ({ isDrawerOpen: !state.isDrawerOpen })),
+  openDrawer: () => useLayoutStore.setState({ isDrawerOpen: true }),
+  closeDrawer: () => useLayoutStore.setState({ isDrawerOpen: false }),
 };

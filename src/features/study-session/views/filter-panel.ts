@@ -12,13 +12,13 @@ export class FilterPanel extends LitElement {
 
   private unsubscribe?: () => void;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
-    this.unsubscribe = useFlashcardStore.subscribe((state) => {
+    this.unsubscribe = useFlashcardStore.subscribe((state: any) => {
       const cards = state.cards;
       this.countTodos = cards.length;
       
-      const getCount = (cat: string) => cards.filter(c => c.category === cat || c.category?.toLowerCase() === cat.toLowerCase()).length;
+      const getCount = (cat: string) => cards.filter((c: any) => c.category === cat || c.category?.toLowerCase() === cat.toLowerCase()).length;
       
       this.countRadiografia = getCount('Radiografía');
       this.countTomografia = getCount('Tomografía');
@@ -27,17 +27,17 @@ export class FilterPanel extends LitElement {
     });
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback();
     this.unsubscribe?.();
   }
 
   // Disable shadow DOM to inherit styles
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     return this;
   }
 
-  render() {
+  override render() {
     return html`
       <div class="pacs-panel">
           <div class="panel-header">

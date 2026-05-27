@@ -219,8 +219,88 @@ body {
     margin: 0 auto;
 }
 
-.pacs-sidebar {
-    display: none; /* Sidebar antiga desativada, usando drawer agora */
+/* ==========================================================================
+   DRAWER / SIDEBAR (Novo Layout)
+   ========================================================================== */
+
+barcl-study-drawer {
+    display: block;
+}
+
+.drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.drawer-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.drawer-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 340px;
+    max-width: 85vw;
+    background-color: var(--bg-primary, #04060b);
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+    border-right: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+    overflow-y: auto;
+    gap: 24px;
+}
+
+.drawer-container.open {
+    transform: translateX(0);
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.drawer-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary, #fff);
+    font-family: var(--font-mono, monospace);
+    letter-spacing: 0.05em;
+}
+
+.btn-close {
+    background: transparent;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    color: var(--text-secondary, #aaa);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-close:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
 }
 
 .pacs-main-content {
@@ -1507,8 +1587,7 @@ textarea:focus-visible {
 /* Glassmorphism utility (used by login panel + card editor) */
 .glassmorphism {
     background: rgba(10, 12, 18, 0.85) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    /* Removed backdrop-filter to dramatically improve scroll performance on solid backgrounds */
 }
 
 /* ==========================================================================

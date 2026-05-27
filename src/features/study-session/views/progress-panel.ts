@@ -12,9 +12,9 @@ export class ProgressPanel extends LitElement {
 
   private unsubscribe?: () => void;
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
-    this.unsubscribe = useSessionStore.subscribe((state) => {
+    this.unsubscribe = useSessionStore.subscribe((state: any) => {
       const total = state.stats.total;
       const reviewed = state.stats.reviewed;
       this.percent = total === 0 ? 0 : Math.round((reviewed / total) * 100);
@@ -39,17 +39,17 @@ export class ProgressPanel extends LitElement {
     });
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback();
     this.unsubscribe?.();
   }
 
   // Disable shadow DOM so it inherits global styles
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     return this;
   }
 
-  render() {
+  override render() {
     return html`
       <div class="pacs-panel">
           <div class="panel-header">
