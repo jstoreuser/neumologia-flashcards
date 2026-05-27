@@ -13,6 +13,7 @@ import { customElement } from 'lit/decorators.js';
 import { StoreController } from '@/shared/utils/lit-helpers';
 import { useSessionStore, sessionSelectors } from '@/features/study-session/store';
 import { sanitizeHtml } from '@/shared/utils/sanitizer';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 @customElement('barcl-card')
 export class BarclCard extends LitElement {
@@ -27,7 +28,7 @@ export class BarclCard extends LitElement {
     if (state.error) {
       return html`
         <div class="pacs-panel" style="text-align: center; padding: 40px; color: var(--error-color, #ff5555);">
-          <p>${sanitizeHtml(state.error)}</p>
+          <p>${unsafeHTML(sanitizeHtml(state.error))}</p>
         </div>
       `;
     }
@@ -105,7 +106,7 @@ export class BarclCard extends LitElement {
             line-height: 1.6;
             color: var(--text-primary);
           ">
-            ${sanitizeHtml(card.question)}
+            ${unsafeHTML(sanitizeHtml(card.question))}
           </div>
         </div>
 
@@ -122,7 +123,7 @@ export class BarclCard extends LitElement {
               line-height: 1.6;
               color: var(--primary);
             ">
-              ${sanitizeHtml(card.answer)}
+              ${unsafeHTML(sanitizeHtml(card.answer))}
             </div>
 
             ${card.explanation ? html`
@@ -137,7 +138,7 @@ export class BarclCard extends LitElement {
                 line-height: 1.5;
               ">
                 <strong style="display: block; margin-bottom: 6px; color: var(--text-primary); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px;">Explicação</strong>
-                ${sanitizeHtml(card.explanation)}
+                ${unsafeHTML(sanitizeHtml(card.explanation))}
               </div>
             ` : ''}
           </div>
