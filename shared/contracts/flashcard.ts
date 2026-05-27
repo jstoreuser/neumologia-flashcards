@@ -16,7 +16,7 @@ export const FlashcardSchema = z.object({
   question: z.string().min(1, 'La pregunta es obligatoria'),
   answer: z.string().min(1, 'La respuesta es obligatoria'),
   explanation: z.string().default(''),                            // Separate from answer
-  imageUrl: z.string().url('URL de imagen inválida').optional().nullable(),
+  imageUrl: z.string().optional().nullable(),
   specialty: z.string().min(1).default('neumologia'),             // Multi-module ready
   category: z.string().min(1, 'Categoría es obligatoria'),
   subcategory: z.string().default(''),
