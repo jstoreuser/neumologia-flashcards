@@ -59,6 +59,7 @@ const lifecycle = createAppLifecycle({
       logoutBtn.addEventListener('click', async () => {
         try {
           await logout();
+          window.location.href = '/login.html';
         } catch (err) {
           console.error('[BARCL] Logout failed:', err);
         }

@@ -41,7 +41,7 @@ async function boot() {
     logoutBtn.addEventListener('click', async () => {
       try {
         await logout();
-        window.location.replace('/login.html');
+        window.location.href = '/login.html';
       } catch (err) {
         console.error('[BARCL ADMIN] Logout failed:', err);
       }
