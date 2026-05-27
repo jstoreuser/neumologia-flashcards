@@ -16,6 +16,7 @@ import { createUserProfile, logout } from '@/features/auth/auth.service';
 import { getFlashcardsPage } from '@/features/flashcards/repository';
 import { flashcardActions } from '@/features/flashcards/store';
 import { startStudySession } from '@/features/study-session/session.service';
+import { initSidebarController } from '@/features/study-session/sidebar.controller';
 import { db } from '@/core/services/firebase';
 
 // Register Lit components (side-effect imports)
@@ -31,6 +32,9 @@ const lifecycle = createAppLifecycle({
     flashcardActions.setLoading(true);
     const { data: cards, hasMore } = await getFlashcardsPage(db, 20);
     flashcardActions.setCards(cards, hasMore);
+
+    // Initialize sidebar controller to sync store data with DOM
+    initSidebarController();
 
     // 3. Start study session — builds due queue from loaded cards + progress
     await startStudySession(user);
