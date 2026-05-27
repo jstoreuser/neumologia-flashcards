@@ -230,8 +230,7 @@ barcl-study-drawer {
 .drawer-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 199;
     opacity: 0;
     pointer-events: none;
@@ -921,8 +920,6 @@ barcl-study-drawer {
     display: none;
     align-items: center;
     justify-content: center;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
 }
 
 .lightbox[aria-hidden="false"] {
@@ -1597,8 +1594,7 @@ textarea:focus-visible {
 .barcl-lightbox-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.92);
-    backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.98);
     z-index: 9000;
     display: flex;
     align-items: center;
