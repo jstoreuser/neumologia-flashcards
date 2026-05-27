@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isAuthenticated() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      // Admin status is derived from a custom claim set server-side only.
+      // NEVER trust a Firestore field for authorization.
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ── Users ─────────────────────────────────────────────────────────────────
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+
+      // Only allow creating your own profile with role locked to 'student'
+      // and only whitelisted fields.
+      allow create: if isOwner(userId)
+        && request.resource.data.role == 'student'
+        && request.resource.data.keys().hasOnly([
+          'uid', 'email', 'displayName', 'role', 'preferences',
+          'createdAt', 'lastLoginAt'
+        ]);
+
+      // Users can update only their own safe fields (cannot change role).
+      // Admins can update anything.
+      allow update: if (
+        isOwner(userId)
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.keys().hasOnly([
+          'displayName', 'preferences', 'lastLoginAt'
+        ])
+      ) || isAdmin();
+
+      allow delete: if isAdmin();
+
+      // Progress subcollection: owner or admin, email verified required.
+      match /progress/{cardId} {
+        allow read, write: if isEmailVerified() && (isOwner(userId) || isAdmin());
+      }
+    }
+
+    // ── Flashcards ───────────────────────────────────────────────────────────
+
+    match /flashcards/{cardId} {
+      // Students can only read published, non-deleted cards.
+      allow read: if isEmailVerified()
+        && resource.data.isPublished == true
+        && resource.data.isDeleted == false;
+
+      // Admins can read everything (including unpublished/deleted).
+      allow read: if isAdmin();
+
+      // Admins can write flashcards, but only with whitelisted fields.
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'question', 'answer', 'explanation', 'imageUrl',
+          'specialty', 'category', 'subcategory', 'tags',
+          'difficulty', 'order', 'isPublished', 'isDeleted',
+          'schemaVersion', 'createdAt', 'updatedAt', 'authorId'
+        ]);
+
+      allow update: if isAdmin()
+        && request.resource.data.keys().hasOnly([
+          'question', 'answer', 'explanation', 'imageUrl',
+          'specialty', 'category', 'subcategory', 'tags',
+          'difficulty', 'order', 'isPublished', 'isDeleted',
+          'updatedAt'
+        ]);
+
+      // Hard deletes forbidden; use isDeleted: true (soft delete).
+      allow delete: if false;
+    }
+
+    // ── System ───────────────────────────────────────────────────────────────
+
+    match /system/{document=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // ── Audit Logs ───────────────────────────────────────────────────────────
+    // Written server-side by Cloud Function triggers; clients cannot write.
+
+    match /audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
+    }
+  }
+}
+

@@ -3,45 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BARCL — Login</title>
-    <!-- Reaproveita os mesmos tokens CSS, mas estrutura simplificada -->
+    <title>BARCL — Identificación</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/css/style.css">
-    <!-- Adicionar um CSS específico para o admin/login futuramente se necessário -->
+    
+    <link rel="stylesheet" href="src/css/login.css">
 </head>
 <body class="pacs-theme-dark">
-    <!-- Cyberpunk Auth Error Overlay (Inicialmente oculto) -->
-    <div id="auth-error-overlay" class="hidden" style="position: absolute; top: 0; width: 100%; background: rgba(255,0,0,0.2); color: #ff4444; text-align: center; padding: 10px; border-bottom: 1px solid #ff0000; z-index: 100;">
-        [AUTHENTICATION FAILED] SECURE CHANNEL REJECTED
-    </div>
+    <!-- Ambient fluid gradient & video background -->
+    <div class="ambient-fluid-bg"></div>
+    <video class="ambient-video-bg" autoplay loop muted playsinline poster="assets/images/hero/HEROPHOTO.webp">
+        <source src="assets/video/0525.mp4" type="video/mp4">
+    </video>
 
-    <div class="study-workspace-container" style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
-        <div class="pacs-panel glassmorphism" style="width: 100%; max-width: 400px; padding: 30px;">
-            <div style="text-align: center; margin-bottom: 30px;">
-                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="barcl-hero-logo"><path d="M4 4h16v16H4z"/><path d="M12 4v16"/><path d="M4 12h16"/></svg>
-                <h1 style="margin-top: 10px;">Identificación</h1>
-                <p style="color: var(--text-secondary);">Acceso al sistema PACS</p>
+    <div id="auth-root" style="position: relative; z-index: 10; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
+        <div class="pacs-panel glassmorphism auth-panel">
+            
+            <!-- LOGO & BANNER GLOBAL -->
+            <div style="text-align: center; margin-bottom: 25px;">
+                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="barcl-hero-logo" style="filter: drop-shadow(0 0 5px var(--primary-glow));"><path d="M4 4h16v16H4z"/><path d="M12 4v16"/><path d="M4 12h16"/></svg>
+                <h1 style="margin-top: 10px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; letter-spacing: 1px;">BARCL</h1>
+                <p id="auth-panel-subtitle" style="color: var(--text-secondary); font-size: 0.9rem;">Acceso al sistema PACS</p>
             </div>
 
+            <!-- AVISOS DINÂMICOS -->
+            <div id="auth-error-container" class="hidden"></div>
+            <div id="auth-success-container" class="hidden"></div>
+
+            <!-- 1. TABS (SEÇÃO DE SELEÇÃO) -->
+            <div id="auth-tabs-container" class="auth-tabs" style="display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                <button type="button" id="tab-login" class="auth-tab-btn active" style="flex: 1; padding: 10px; background: none; border: none; color: white; cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Acceder</button>
+                <button type="button" id="tab-register" class="auth-tab-btn" style="flex: 1; padding: 10px; background: none; border: none; color: var(--text-secondary); cursor: pointer; font-family: 'Space Grotesk', sans-serif; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Registrarse</button>
+            </div>
+
+            <!-- 2. FORMULÁRIO DE LOGIN -->
             <form id="login-form">
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">E-mail</label>
-                    <input type="email" id="login-email" required style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                    <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">E-mail</label>
+                    <input type="email" id="login-email" class="auth-field" required placeholder="ejemplo@gmail.com">
                 </div>
                 <div style="margin-bottom: 30px;">
-                    <label style="display: block; margin-bottom: 5px; color: var(--text-secondary);">Contraseña</label>
-                    <input type="password" id="login-password" required style="width: 100%; padding: 12px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                    <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Contraseña</label>
+                    <input type="password" id="login-password" class="auth-field" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="btn btn-primary btn-large btn-full-width">
+                <button type="submit" id="btn-login-submit" class="btn btn-primary btn-large btn-full-width">
                     <span>Acceder</span>
                 </button>
             </form>
+
+            <!-- 3. FORMULÁRIO DE CADASTRO -->
+            <form id="register-form" class="hidden">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Usuario</label>
+                    <input type="text" id="register-name" class="auth-field" required placeholder="usuario123">
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">E-mail</label>
+                    <input type="email" id="register-email" class="auth-field" required placeholder="ejemplo@gmail.com">
+                </div>
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Contraseña (Min. 6 caracteres)</label>
+                    <input type="password" id="register-password" class="auth-field" required minlength="6" placeholder="••••••••">
+                </div>
+                <button type="submit" id="btn-register-submit" class="btn btn-primary btn-large btn-full-width">
+                    <span>Crear Cuenta</span>
+                </button>
+            </form>
+
+            <!-- 4. TELA DE E-MAIL PENDENTE (VERIFICATION SECTION) -->
+            <div id="verification-pending-section" class="hidden" style="text-align: center; padding: 10px 0;">
+                <div style="background: rgba(0, 242, 254, 0.05); border: 1px dashed var(--primary); padding: 20px; border-radius: 4px; margin-bottom: 25px;">
+                    <svg viewBox="0 0 24 24" width="36" height="36" stroke="var(--primary)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; filter: drop-shadow(0 0 3px var(--primary-glow));"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    <h3 style="font-family: 'Space Grotesk', sans-serif; color: white; margin-bottom: 10px; text-transform: uppercase;">Verificación Requerida</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.4;">
+                        Hemos enviado un enlace de confirmación a tu e-mail. Por favor, revisa tu bandeja de entrada (y la carpeta de spam).
+                    </p>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <button id="btn-verify-refresh" class="btn btn-primary btn-large btn-full-width">
+                        <span>He verificado mi cuenta (Actualizar)</span>
+                    </button>
+                    
+                    <button id="btn-verify-resend" class="btn btn-secondary btn-full-width" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: white;">
+                        <span>Reenviar E-mail de Verificación</span>
+                    </button>
+
+                    <button id="btn-verify-logout" class="btn btn-danger btn-full-width" style="margin-top: 10px; background: rgba(255, 51, 51, 0.1); border: 1px solid #ff3333; color: #ff5555;">
+                        <span>Salir / Iniciar con otra cuenta</span>
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <script src="runtime-env.js"></script>
-    <script type="module" src="src/js/pages/login.js"></script>
+    <script type="module" src="/src/login.main.ts"></script>
 </body>
 </html>

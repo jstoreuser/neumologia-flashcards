@@ -1390,3 +1390,178 @@ body {
         transition: none;
     }
 }
+
+/* ==========================================================================
+   ACESSIBILIDADE — focus-visible, reduced-motion
+   ========================================================================== */
+
+/* Keyboard focus ring — visível apenas com navegação por teclado */
+:focus-visible {
+    outline: 2px solid var(--primary, #00f2fe);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Remove outline do mouse/touch sem prejudicar teclado */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Botões com foco por teclado */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--primary, #00f2fe);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 242, 254, 0.15);
+}
+
+/* Kill all non-essential motion for users who opt out */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .ambient-video-bg {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   AUTH FORM STYLES  (used by <barcl-login-form>)
+   ========================================================================== */
+
+.auth-field {
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color, rgba(255,255,255,0.08));
+    color: white;
+    border-radius: 4px;
+    font-family: var(--font-primary, 'Plus Jakarta Sans', sans-serif);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.auth-field:focus {
+    border-color: var(--primary, #00f2fe);
+    box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.12);
+    outline: none;
+}
+.auth-field:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.auth-error-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    background: rgba(255, 51, 51, 0.08);
+    border: 1px solid rgba(255, 51, 51, 0.25);
+    border-radius: 4px;
+    color: #ff6b6b;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 16px;
+}
+
+.auth-success-banner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 14px;
+    background: rgba(0, 255, 102, 0.07);
+    border: 1px solid rgba(0, 255, 102, 0.2);
+    border-radius: 4px;
+    color: #00ff66;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 16px;
+}
+
+/* Spinner (used by loading states across Lit components) */
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Glassmorphism utility (used by login panel + card editor) */
+.glassmorphism {
+    background: rgba(10, 12, 18, 0.85) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* ==========================================================================
+   LIGHTBOX
+   ========================================================================== */
+
+.barcl-lightbox-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(8px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    animation: lightbox-in 0.18s ease;
+}
+
+@keyframes lightbox-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.barcl-lightbox-img {
+    max-width: 92vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8);
+    cursor: default;
+}
+
+.barcl-lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    z-index: 9001;
+}
+.barcl-lightbox-close:hover {
+    background: rgba(255,255,255,0.18);
+}
+

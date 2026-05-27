@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -15,77 +15,106 @@ initializeApp({
 
 const db = getFirestore();
 
-// Carrega os dados antigos (Se existir um data.json exportado ou simulamos)
+// Maps a legacy difficulty number or string to the schema enum
+function normalizeDifficulty(raw) {
+    if (typeof raw === 'string' && ['easy', 'medium', 'hard'].includes(raw)) return raw;
+    if (raw === 1) return 'easy';
+    if (raw === 2) return 'medium';
+    if (raw === 3) return 'hard';
+    return 'medium';
+}
+
 async function seedFirestore() {
-    console.log("=== INICIANDO SEED DO FIRESTORE ===");
-    
-    // Tenta ler o data.js antigo ou um JSON. 
-    // Como o app.js tinha FLASHCARD_DATA nativamente no escopo da window, 
-    // precisaremos extrair de lá ou do src/js/data.js
-    
-    // Simulando a leitura de um arquivo hipotético de dados exportados
-    const dataPath = path.resolve(__dirname, '../src/js/data/flashcards.json');
-    
+    console.log('=== INICIANDO SEED DO FIRESTORE ===');
+
+    // Reads from the canonical source — src/data/formatted_texts.json
+    const dataPath = path.resolve(__dirname, '../src/data/formatted_texts.json');
+
     if (!fs.existsSync(dataPath)) {
-        console.error(`ERRO: Arquivo ${dataPath} não encontrado para importar.`);
-        console.log(`Você precisa extrair os dados do 'FLASHCARD_DATA' para um arquivo JSON antes de rodar o seed.`);
+        console.error(`ERRO: Arquivo não encontrado: ${dataPath}`);
         process.exit(1);
     }
 
+    let flashcards;
     try {
         const rawData = fs.readFileSync(dataPath, 'utf-8');
-        const flashcards = JSON.parse(rawData);
+        flashcards = JSON.parse(rawData);
+    } catch (err) {
+        console.error('Erro ao ler/parsear JSON:', err.message);
+        process.exit(1);
+    }
 
-        console.log(`Lidos ${flashcards.length} flashcards. Iniciando migração...`);
+    if (!Array.isArray(flashcards)) {
+        if (typeof flashcards === 'object' && flashcards !== null) {
+            flashcards = Object.values(flashcards);
+        } else {
+            console.error('ERRO: O JSON não é um array nem um objeto válido.');
+            process.exit(1);
+        }
+    }
 
-        const batch = db.batch();
-        let count = 0;
+    console.log(`Lidos ${flashcards.length} flashcards. Iniciando migração...`);
 
-        // Helper simples para gerar slug/id determinístico
-        const generateId = (text) => {
-            return text.toString().toLowerCase().trim()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/[\s_-]+/g, '-')
-                .replace(/^-+|-+$/g, '');
+    // Batch size must stay below Firestore's 500-operation limit.
+    // 400 gives a safe margin for any set() + update() combos.
+    const BATCH_SIZE = 400;
+    let batch = db.batch();
+    let batchCount = 0;
+    let totalCount = 0;
+
+    for (let i = 0; i < flashcards.length; i++) {
+        const card = flashcards[i];
+
+        const specialty = card.specialty || 'neumologia';
+        const deterministicId = card.id
+            ? String(card.id)
+            : `${specialty.toLowerCase().replace(/\s+/g, '-')}_${i.toString().padStart(4, '0')}`;
+
+        const cardRef = db.collection('flashcards').doc(deterministicId);
+
+        const docData = {
+            question: card.prompt || card.question || '',
+            answer: card.answer || '',
+            explanation: card.explanation || '',
+            imageUrl: (card.images && card.images[0]) || card.imageUrl || null,
+            specialty: specialty,
+            category: card.category || 'General',
+            subcategory: card.subcategory || '',
+            tags: Array.isArray(card.tags) ? card.tags : [],
+            difficulty: normalizeDifficulty(card.difficulty),
+            order: i,
+            isPublished: card.isPublished === true,
+            isDeleted: false,
+            schemaVersion: 1,
+            authorId: 'seed-script',
+            createdAt: FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
         };
 
-        for (const card of flashcards) {
-            const deterministicId = card.id ? String(card.id) : generateId(card.prompt || 'card');
-            const cardRef = db.collection('flashcards').doc(deterministicId);
-            
-            // Tratamento do documento para adequar ao novo schema
-            const docData = {
-                question: card.prompt || '',
-                answer: card.answer || '',
-                explanation: card.explanation || '',
-                imageUrl: card.images ? card.images[0] : '', // Simplesmente pegando a primeira
-                tags: card.tags || [],
-                specialty: 'Neumología', // Default
-                difficulty: 1, // Default
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                published: true,
-                deleted: false
-            };
+        batch.set(cardRef, docData, { merge: true });
+        batchCount++;
+        totalCount++;
 
-            batch.set(cardRef, docData);
-            count++;
-
-            // O limite do batch no Firestore é 500
-            if (count % 400 === 0) {
-                await batch.commit();
-                console.log(`Batch gravado (${count} cards)`);
-            }
-        }
-
-        if (count % 400 !== 0) {
+        // Commit and reset the batch before hitting the limit
+        if (batchCount === BATCH_SIZE) {
             await batch.commit();
+            console.log(`Batch gravado (${totalCount} cards processados)`);
+            batch = db.batch();
+            batchCount = 0;
         }
-
-        console.log(`=== SEED CONCLUÍDO COM SUCESSO (${count} flashcards migrados) ===`);
-    } catch (error) {
-        console.error("Erro rodando o seed:", error);
     }
+
+    // Commit any remaining documents in the last partial batch
+    if (batchCount > 0) {
+        await batch.commit();
+    }
+
+    console.log(`=== SEED CONCLUÍDO COM SUCESSO (${totalCount} flashcards) ===`);
 }
 
-seedFirestore();
+seedFirestore().catch((err) => {
+    console.error('Seed falhou:', err);
+    process.exit(1);
+});
+
+

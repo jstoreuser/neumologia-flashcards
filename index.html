@@ -12,34 +12,6 @@
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body class="pacs-theme-dark">
-    <!-- Fundo removido para garantir foco na camada HEROPHOTO e prioridade de performance -->
-    <div class="ambient-fluid-bg"></div>
-
-    <!-- SEÇÃO HERO DE ENTRADA (100vh Landing Screen) -->
-    <section class="hero-section">
-        <!-- Vídeo na Hero (Aesthetic Parallax Reveal) -->
-        <video class="ambient-video-bg" autoplay loop muted playsinline poster="assets/images/hero/HEROPHOTO.webp">
-            <source src="assets/video/0525.mp4" type="video/mp4">
-        </video>
-        <div class="hero-content">
-            <div class="hero-symbol">
-                <!-- Cinematic Hero Version Logo Placeholder -->
-                <svg viewBox="0 0 24 24" width="48" height="48" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="barcl-hero-logo"><path d="M4 4h16v16H4z"/><path d="M12 4v16"/><path d="M4 12h16"/></svg>
-            </div>
-            <h1 class="hero-title">BARCL</h1>
-            <p class="hero-tagline">Flashcards de Neumología y Diagnóstico por Imágenes.</p>
-            <button id="scroll-to-study-btn" class="btn btn-primary btn-large">
-                <span>Acceder</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-right"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
-            </button>
-        </div>
-        <div class="hero-scroll-indicator">
-            <span>Desplácese para estudiar</span>
-            <div class="mouse-icon">
-                <div class="mouse-wheel"></div>
-            </div>
-        </div>
-    </section>
 
     <!-- Overlay de Blur para o Zoom da Imagem (Lightbox Lightroom) -->
     <div id="lightbox" class="lightbox" aria-hidden="true">
@@ -79,7 +51,7 @@
     </div>
 
     <!-- ÂNCORA DE ESTUDO (Header e Dashboard abaixo do fold) -->
-    <div id="study-workspace" class="study-workspace-container">
+    <div id="study-workspace" class="study-workspace-container" style="opacity: 0; pointer-events: none; transition: opacity 0.4s ease-in-out;">
         
         <!-- Header Principal Minimalista -->
         <header class="pacs-header-nav">
@@ -105,6 +77,12 @@
                 <button id="reset-all-progress" class="btn btn-icon btn-outline" title="Restablecer todo el progreso individual">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
                     <span>Reiniciar</span>
+                </button>
+
+                <!-- Botão de Logout -->
+                <button id="btn-logout" class="btn btn-icon btn-outline" style="border-color: #ff3333; color: #ff5555;" title="Cerrar sesión">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    <span>Salir</span>
                 </button>
             </div>
         </header>
@@ -314,6 +292,6 @@
 
     <!-- scripts carregados no final (Native ES Modules) -->
     <script src="runtime-env.js"></script>
-    <script type="module" src="src/js/app.js"></script>
+    <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
