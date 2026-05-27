@@ -31,7 +31,7 @@ import { StudyProgressSchema, type StudyProgress } from '@shared/contracts';
 import { telemetry } from '@/core/services/telemetry';
 import { ProgressCache } from '@/core/cache/cache-manager';
 
-const SESSION_SIZE = 20; // cards per session
+
 
 // ── Session Initialization ────────────────────────────────────────────────────
 
@@ -81,15 +81,14 @@ export async function startStudySession(
       }
     }
 
-    // Prioritize due cards, fill remainder with new cards, cap at SESSION_SIZE
-    const queue = [...dueCards, ...newCards].slice(0, SESSION_SIZE);
+    const pool = [...dueCards, ...newCards];
 
-    if (queue.length === 0) {
+    if (pool.length === 0) {
       sessionActions.setError('Parabéns! Nenhum card pendente para hoje. Volte amanhã.');
       return;
     }
 
-    sessionActions.startSession(queue);
+    sessionActions.startSession(pool);
   } catch (err) {
     telemetry.captureError(err, { phase: 'startStudySession' });
     sessionActions.setError('Erro ao carregar sessão. Tente novamente.');
@@ -117,8 +116,13 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
   try {
     const { card, progress } = current;
     if (!card.id) throw new Error('Card missing ID');
+    const now = new Date();
 
-    const sm2 = calculateSm2(progress, rating);
+    const { intervalDays, intervalMinutes, easeFactor, repetitions, status, nextReviewDate } = calculateSm2(
+      progress,
+      rating,
+      now,
+    );
 
     const updatedProgress: Omit<StudyProgress, 'cardId' | 'userId'> & {
       cardId: string;
@@ -127,11 +131,12 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
     } = {
       cardId: card.id,
       userId: user.uid,
-      easeFactor: sm2.easeFactor,
-      intervalDays: sm2.intervalDays,
-      repetitions: sm2.repetitions,
-      status: sm2.status,
-      nextReviewDate: sm2.nextReviewDate,
+      easeFactor,
+      intervalDays,
+      intervalMinutes,
+      repetitions,
+      status,
+      nextReviewDate,
       totalReviews: (progress?.totalReviews ?? 0) + 1,
       correctStreak: rating !== 'wrong'
         ? (progress?.correctStreak ?? 0) + 1
@@ -149,7 +154,8 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
     ProgressCache.invalidate(user.uid);
 
     // Advance session state
-    sessionActions.recordRating(rating);
+    const isCorrect = rating !== 'wrong';
+    sessionActions.recordRating(card.id, updatedProgress as StudyProgress, isCorrect);
   } catch (err) {
     telemetry.captureError(err, { phase: 'submitRating' });
     sessionActions.setError('Erro ao salvar progresso. Sua resposta não foi registrada.');

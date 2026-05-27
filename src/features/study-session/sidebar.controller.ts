@@ -19,7 +19,7 @@ export function initSidebarController() {
     let learning = 0;
     let newCards = 0;
     
-    for (const item of state.queue) {
+    for (const item of state.pool) {
       if (!item.progress) {
         newCards++;
       } else if (item.progress.easeFactor > 2.5 && item.progress.intervalDays > 3) {

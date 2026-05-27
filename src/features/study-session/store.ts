@@ -1,16 +1,13 @@
 /**
  * Study Session Store
  *
- * Tracks the active study session: which cards are queued,
- * current card index, answer state, and session stats.
- *
- * Separate from the FlashcardStore (which owns the full card list).
- * This store owns the session-specific runtime state only.
+ * Tracks the active study session with dynamic re-queueing.
+ * Cards are evaluated based on their nextReviewDate relative to 'now'.
  */
 
 import { createStore } from '@/core/store';
 import type { Flashcard, StudyProgress } from '@shared/contracts';
-import type { Rating } from './domain/sm2';
+import { isDue } from './domain/sm2';
 
 export interface SessionCard {
   card: Flashcard;
@@ -18,10 +15,12 @@ export interface SessionCard {
 }
 
 export interface SessionState {
-  /** Cards queued for this session in order */
-  queue: SessionCard[];
-  /** Index of the currently shown card */
-  currentIndex: number;
+  /** All cards available in this study session */
+  pool: SessionCard[];
+  /** Current time, updated periodically to trigger due cards */
+  now: number;
+  /** Index of the card currently being reviewed. If null, we might be waiting or done. */
+  currentCardId: string | null;
   /** Whether the answer side is visible */
   isAnswerRevealed: boolean;
   /** Whether a rating is being submitted */
@@ -33,18 +32,16 @@ export interface SessionState {
     correct: number;
     wrong: number;
   };
-  /** Non-null when session is complete */
-  completedAt: Date | null;
   error: string | null;
 }
 
 const initialState: SessionState = {
-  queue: [],
-  currentIndex: 0,
+  pool: [],
+  now: Date.now(),
+  currentCardId: null,
   isAnswerRevealed: false,
   isSubmitting: false,
   stats: { total: 0, reviewed: 0, correct: 0, wrong: 0 },
-  completedAt: null,
   error: null,
 };
 
@@ -53,15 +50,64 @@ export const useSessionStore = createStore<SessionState>(initialState);
 // ── Actions ───────────────────────────────────────────────────────────────────
 
 export const sessionActions = {
-  startSession: (queue: SessionCard[]) => {
+  startSession: (pool: SessionCard[]) => {
     useSessionStore.setState({
-      queue,
-      currentIndex: 0,
+      pool,
+      now: Date.now(),
+      currentCardId: null,
       isAnswerRevealed: false,
       isSubmitting: false,
-      stats: { total: queue.length, reviewed: 0, correct: 0, wrong: 0 },
-      completedAt: null,
+      stats: { total: pool.length, reviewed: 0, correct: 0, wrong: 0 },
       error: null,
+    });
+    sessionActions.pickNextCard();
+  },
+
+  tick: () => {
+    useSessionStore.setState({ now: Date.now() });
+    // Try to pick next card if we are currently waiting for one
+    const state = useSessionStore.getState();
+    if (!state.currentCardId) {
+      sessionActions.pickNextCard();
+    }
+  },
+
+  pickNextCard: () => {
+    useSessionStore.setState((state) => {
+      // Find cards that are due or new
+      const dueCards = state.pool.filter(c => {
+        if (!c.progress) return true; // new
+        const nextDate = c.progress.nextReviewDate
+          ? (c.progress.nextReviewDate instanceof Date
+            ? c.progress.nextReviewDate
+            : typeof c.progress.nextReviewDate === 'string'
+              ? new Date(c.progress.nextReviewDate)
+              : (c.progress.nextReviewDate as { toDate: () => Date }).toDate())
+          : null;
+        return isDue(nextDate, new Date(state.now));
+      });
+
+      if (dueCards.length > 0) {
+        // Sort by nextReviewDate ascending (most overdue first), new cards (null) at the end
+        dueCards.sort((a, b) => {
+          if (!a.progress) return 1;
+          if (!b.progress) return -1;
+          const aDate = a.progress.nextReviewDate instanceof Date ? a.progress.nextReviewDate : new Date(a.progress.nextReviewDate as string);
+          const bDate = b.progress.nextReviewDate instanceof Date ? b.progress.nextReviewDate : new Date(b.progress.nextReviewDate as string);
+          return aDate.getTime() - bDate.getTime();
+        });
+
+        // Optimization: prevent same card from showing up twice in a row if there are other due cards
+        let nextCard = dueCards[0]!;
+        if (dueCards.length > 1 && nextCard.card.id === state.currentCardId) {
+          nextCard = dueCards[1]!;
+        }
+
+        return { currentCardId: nextCard.card.id ?? null, isAnswerRevealed: false };
+      }
+
+      // No due cards right now, we wait
+      return { currentCardId: null, isAnswerRevealed: false };
     });
   },
 
@@ -73,9 +119,8 @@ export const sessionActions = {
     useSessionStore.setState({ isSubmitting });
   },
 
-  recordRating: (rating: Rating) => {
+  recordRating: (cardId: string, updatedProgress: StudyProgress, isCorrect: boolean) => {
     useSessionStore.setState((state) => {
-      const isCorrect = rating !== 'wrong';
       const nextStats = {
         ...state.stats,
         reviewed: state.stats.reviewed + 1,
@@ -83,17 +128,20 @@ export const sessionActions = {
         wrong: state.stats.wrong + (isCorrect ? 0 : 1),
       };
 
-      const nextIndex = state.currentIndex + 1;
-      const isComplete = nextIndex >= state.queue.length;
+      // Update card in pool
+      const pool = state.pool.map(c => 
+        c.card.id === cardId ? { ...c, progress: updatedProgress } : c
+      );
 
       return {
         stats: nextStats,
-        currentIndex: nextIndex,
-        isAnswerRevealed: false,
+        pool,
         isSubmitting: false,
-        completedAt: isComplete ? new Date() : null,
       };
     });
+    
+    // Pick next card
+    sessionActions.pickNextCard();
   },
 
   setError: (error: string) => {
@@ -108,11 +156,19 @@ export const sessionActions = {
 // ── Selectors ─────────────────────────────────────────────────────────────────
 
 export const sessionSelectors = {
-  currentCard: (state: SessionState): SessionCard | null =>
-    state.queue[state.currentIndex] ?? null,
+  currentCard: (state: SessionState): SessionCard | null => {
+    if (!state.currentCardId) return null;
+    return state.pool.find(c => c.card.id === state.currentCardId) ?? null;
+  },
+
+  // The session is "complete" only if all cards in the pool are reviewed and pushed far into the future.
+  // In intensive study, "far into the future" could mean >= 4h (240 mins).
+  // For now, if currentCardId is null and pool > 0, it means we are waiting.
+  isWaiting: (state: SessionState): boolean =>
+    state.pool.length > 0 && state.currentCardId === null,
 
   isComplete: (state: SessionState): boolean =>
-    state.completedAt !== null,
+    state.pool.length === 0, // In this model, we never really complete until we stop, but just to satisfy typing
 
   progressPercent: (state: SessionState): number =>
     state.stats.total === 0

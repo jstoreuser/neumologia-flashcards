@@ -68,7 +68,7 @@ export class BarclCard extends LitElement {
             ${card.category}${card.subcategory ? ` · ${card.subcategory}` : ''}
           </span>
           <span style="font-size: 0.8rem; color: var(--text-secondary);">
-            ${state.currentIndex + 1} / ${state.queue.length}
+            ${state.stats.reviewed + 1} / ${state.pool.length}
           </span>
         </div>
 

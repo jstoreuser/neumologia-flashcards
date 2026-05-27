@@ -13,7 +13,7 @@
 
 import { createAppLifecycle } from '@/core/lifecycle/app-lifecycle';
 import { createUserProfile, logout } from '@/features/auth/auth.service';
-import { getFlashcardsPage } from '@/features/flashcards/repository';
+import { getAllFlashcards } from '@/features/flashcards/repository';
 import { flashcardActions } from '@/features/flashcards/store';
 import { startStudySession } from '@/features/study-session/session.service';
 import { initSidebarController } from '@/features/study-session/sidebar.controller';
@@ -28,10 +28,10 @@ const lifecycle = createAppLifecycle({
     // 1. Ensure Firestore profile exists (idempotent)
     await createUserProfile(user);
 
-    // 2. Load first page of flashcards (20 cards, cursor-paginated)
+    // 2. Load all flashcards
     flashcardActions.setLoading(true);
-    const { data: cards, hasMore } = await getFlashcardsPage(db, 20);
-    flashcardActions.setCards(cards, hasMore);
+    const { data: cards } = await getAllFlashcards(db);
+    flashcardActions.setCards(cards, false);
 
     // Initialize sidebar controller to sync store data with DOM
     initSidebarController();

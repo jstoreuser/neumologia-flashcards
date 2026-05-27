@@ -50,12 +50,10 @@ export async function getFlashcardById(db: Firestore, id: string): Promise<Flash
 }
 
 /**
- * Paginated query avoiding `onSnapshot` cost.
+ * Query all flashcards without pagination limits.
  */
-export async function getFlashcardsPage(
+export async function getAllFlashcards(
   db: Firestore,
-  pageSize: number = 20,
-  lastVisibleDoc?: QueryDocumentSnapshot,
 ) {
   try {
     const coll = collection(db, 'flashcards');
@@ -66,16 +64,12 @@ export async function getFlashcardsPage(
       where('isDeleted', '==', false)
     ];
 
-    const q = lastVisibleDoc
-      ? query(coll, ...baseQueryConstraints, startAfter(lastVisibleDoc), limit(pageSize))
-      : query(coll, ...baseQueryConstraints, limit(pageSize));
+    const q = query(coll, ...baseQueryConstraints);
 
     const snapshot = await getDocs(q);
     
     return {
       data: snapshot.docs.map(parseSnapshot),
-      lastVisible: snapshot.docs[snapshot.docs.length - 1] || null,
-      hasMore: snapshot.docs.length === pageSize,
     };
   } catch (error) {
     throw new RepositoryError('Falha ao listar flashcards');

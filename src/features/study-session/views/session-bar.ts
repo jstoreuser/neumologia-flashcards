@@ -21,7 +21,7 @@ export class BarclSessionBar extends LitElement {
     const pct = sessionSelectors.progressPercent(state);
     const { stats } = state;
 
-    if (state.queue.length === 0) return html``;
+    if (state.pool.length === 0) return html``;
 
     return html`
       <div style="margin-bottom: 16px;">
@@ -51,7 +51,7 @@ export class BarclSessionBar extends LitElement {
           font-size: 0.8rem;
         ">
           <span style="color: var(--text-secondary);">
-            ${state.currentIndex} / ${stats.total}
+            ${stats.reviewed} / ${stats.total}
           </span>
           <div style="display: flex; gap: 16px;">
             <span style="color: #00ff66;">✓ ${stats.correct}</span>

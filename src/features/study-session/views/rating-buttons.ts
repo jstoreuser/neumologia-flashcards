@@ -48,26 +48,26 @@ export class BarclRatingButtons extends LitElement {
     const ratings: { rating: Rating; label: string; style: string; id: string }[] = [
       {
         rating: 'wrong',
-        label: 'Erré',
-        style: 'background: rgba(255,51,51,0.15); border: 1px solid #ff3333; color: #ff5555;',
+        label: 'Errei',
+        style: 'background: rgba(255, 51, 51, 0.15); border: 1px solid #ff3333; color: #ff5555;',
         id: 'rate-wrong-btn',
       },
       {
         rating: 'hard',
         label: 'Difícil',
-        style: 'background: rgba(255,165,0,0.15); border: 1px solid #ff8c00; color: #ffa500;',
+        style: 'background: rgba(255, 215, 0, 0.15); border: 1px solid #ffd700; color: #ffd700;',
         id: 'rate-hard-btn',
       },
       {
         rating: 'good',
         label: 'Correto',
-        style: 'background: rgba(0,242,254,0.1); border: 1px solid var(--primary); color: var(--primary);',
+        style: 'background: rgba(0, 123, 255, 0.15); border: 1px solid #007bff; color: #007bff;',
         id: 'rate-good-btn',
       },
       {
         rating: 'easy',
         label: 'Fácil',
-        style: 'background: rgba(0,255,102,0.1); border: 1px solid #00ff66; color: #00ff66;',
+        style: 'background: rgba(0, 255, 102, 0.15); border: 1px solid #00ff66; color: #00ff66;',
         id: 'rate-easy-btn',
       },
     ];
