@@ -62,10 +62,14 @@
     --hero-video-opacity: 0.35; /* Reduced slightly to optimize contrast of central texts */
 
     /* 10. Motion & Diagnostics Speed */
-    --motion-fast: 150ms;
-    --motion-medium: 240ms;
-    --motion-slow: 600ms;
+    --motion-fast: 100ms;
+    --motion-medium: 150ms;
+    --motion-slow: 300ms;
     --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+    
+    --transition-fast: 100ms;
+    --transition-normal: 150ms;
+    --transition-slow: 300ms;
     
     --scanline-opacity: 0.03;
     --scanner-speed: 1.4s;

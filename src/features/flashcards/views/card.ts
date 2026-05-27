@@ -66,7 +66,7 @@ export class BarclCard extends LitElement {
           background: rgba(0,0,0,0.2);
         ">
           <span style="font-family: 'Space Grotesk', monospace; font-size: 0.8rem; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase;">
-            ${card.category}${card.subcategory ? ` · ${card.subcategory}` : ''}
+            ${card.category}${card.subcategory ? ` › ${card.subcategory}` : ''} <span style="opacity: 0.5; margin-left: 8px;">(ID: ${card.id})</span>
           </span>
           <span style="font-size: 0.8rem; color: var(--text-secondary);">
             ${state.stats.reviewed + 1} / ${state.pool.length}

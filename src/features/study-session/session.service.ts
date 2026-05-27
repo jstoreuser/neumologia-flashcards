@@ -148,12 +148,16 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
 
     // Persist to Firestore: users/{uid}/progress/{cardId}
     const ref = doc(db, 'users', user.uid, 'progress', card.id);
-    await setDoc(ref, updatedProgress, { merge: true });
+    
+    // Fire-and-forget background sync for immediate UI response
+    setDoc(ref, updatedProgress, { merge: true }).catch(err => {
+      telemetry.captureError(err, { phase: 'submitRating-bg' });
+    });
 
     // Invalidate progress cache for this user
     ProgressCache.invalidate(user.uid);
 
-    // Advance session state
+    // Advance session state immediately
     const isCorrect = rating !== 'wrong';
     sessionActions.recordRating(card.id, updatedProgress as StudyProgress, isCorrect);
   } catch (err) {

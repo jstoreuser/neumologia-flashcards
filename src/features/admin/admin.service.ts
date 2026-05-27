@@ -1,9 +1,9 @@
 /**
  * Admin Service
  *
- * All admin operations on flashcards and users.
- * Every write is validated through Zod before hitting Firestore.
- * Field whitelists are enforced server-side by security rules.
+ * Pure API layer. Never mutates the store directly.
+ * All functions return a strict Result<T, AppError> pattern.
+ * Uses AbortSignal for fetch cancellation.
  */
 
 import {
@@ -12,7 +12,6 @@ import {
   getDocs,
   addDoc,
   updateDoc,
-  getDoc,
   query,
   orderBy,
   limit,
@@ -22,104 +21,169 @@ import {
 } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import { db, functions } from '@/core/services/firebase';
+import { telemetry } from '@/core/services/telemetry';
 import {
   FlashcardSchema,
+  UserProfileSchema,
   type Flashcard,
   type CreateFlashcardDto,
   type UpdateFlashcardDto,
+  type UserProfile,
+  type Result,
+  type AppError,
 } from '@shared/contracts';
-import { UserProfileSchema, type UserProfile } from '@shared/contracts';
-import { RepositoryError } from '@/core/errors';
-import { FlashcardCache } from '@/core/cache/cache-manager';
 
 const PAGE_SIZE = 50;
+
+function createError(message: string, details?: unknown): AppError {
+  return { message, details };
+}
 
 // ── Flashcard CRUD ────────────────────────────────────────────────────────────
 
 export async function adminGetFlashcardsPage(
   lastVisible?: QueryDocumentSnapshot,
-): Promise<{ data: Flashcard[]; lastVisible: QueryDocumentSnapshot | null; hasMore: boolean }> {
+  signal?: AbortSignal,
+): Promise<Result<{ data: Flashcard[]; lastVisible: QueryDocumentSnapshot | null; hasMore: boolean }>> {
   try {
     const coll = collection(db, 'flashcards');
     const q = lastVisible
-      ? query(coll, orderBy('order'), startAfter(lastVisible), limit(PAGE_SIZE))
-      : query(coll, orderBy('order'), limit(PAGE_SIZE));
+      ? query(coll, orderBy('createdAt', 'desc'), startAfter(lastVisible), limit(PAGE_SIZE))
+      : query(coll, orderBy('createdAt', 'desc'), limit(PAGE_SIZE));
+
+    // AbortController logic mapping
+    if (signal?.aborted) throw new Error('aborted');
 
     const snapshot = await getDocs(q);
-    const data = snapshot.docs.map((d) => {
+    
+    if (signal?.aborted) throw new Error('aborted');
+
+    const data = snapshot.docs.reduce<Flashcard[]>((acc, d) => {
       const parsed = FlashcardSchema.safeParse({ id: d.id, ...d.data() });
-      if (!parsed.success) throw new RepositoryError(`Malformed flashcard: ${d.id}`);
-      return parsed.data;
-    });
+      if (!parsed.success) {
+        telemetry.captureError(new Error(`Malformed flashcard: ${d.id}`), {
+          feature: 'admin',
+          operation: 'parse-flashcard',
+          documentId: d.id,
+          details: parsed.error.issues,
+        });
+      } else {
+        acc.push(parsed.data);
+      }
+      return acc;
+    }, []);
 
     return {
-      data,
-      lastVisible: snapshot.docs[snapshot.docs.length - 1] ?? null,
-      hasMore: snapshot.docs.length === PAGE_SIZE,
+      success: true,
+      data: {
+        data,
+        lastVisible: snapshot.docs[snapshot.docs.length - 1] ?? null,
+        hasMore: snapshot.docs.length === PAGE_SIZE,
+      }
     };
-  } catch (err) {
-    if (err instanceof RepositoryError) throw err;
-    throw new RepositoryError('Failed to load flashcards for admin');
+  } catch (err: any) {
+    if (err.message === 'aborted') return { success: false, error: createError('aborted') };
+    telemetry.captureError(err, { feature: 'admin', operation: 'fetch-flashcards' });
+    return { success: false, error: createError('Failed to load flashcards', err) };
   }
 }
 
-export async function adminCreateFlashcard(dto: CreateFlashcardDto): Promise<string> {
-  const coll = collection(db, 'flashcards');
-  const ref = await addDoc(coll, {
-    ...dto,
-    isDeleted: false,
-    schemaVersion: 1,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
-  FlashcardCache.invalidate();
-  return ref.id;
+export async function adminCreateFlashcard(dto: CreateFlashcardDto): Promise<Result<string>> {
+  try {
+    const coll = collection(db, 'flashcards');
+    const ref = await addDoc(coll, {
+      ...dto,
+      isDeleted: false,
+      schemaVersion: 1,
+      order: 0,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, data: ref.id };
+  } catch (err: any) {
+    return { success: false, error: createError('Falha ao criar card', err) };
+  }
 }
 
-export async function adminUpdateFlashcard(id: string, dto: UpdateFlashcardDto): Promise<void> {
-  const ref = doc(db, 'flashcards', id);
-  await updateDoc(ref, {
-    ...dto,
-    updatedAt: serverTimestamp(),
-  });
-  FlashcardCache.invalidate();
+export async function adminUpdateFlashcard(id: string, dto: UpdateFlashcardDto): Promise<Result<void>> {
+  try {
+    const ref = doc(db, 'flashcards', id);
+    await updateDoc(ref, {
+      ...dto,
+      updatedAt: serverTimestamp(),
+    });
+    return { success: true, data: undefined };
+  } catch (err: any) {
+    return { success: false, error: createError('Falha ao atualizar card', err) };
+  }
 }
 
-export async function adminSoftDeleteFlashcard(id: string): Promise<void> {
-  const ref = doc(db, 'flashcards', id);
-  await updateDoc(ref, { isDeleted: true, updatedAt: serverTimestamp() });
-  FlashcardCache.invalidate();
+export async function adminSoftDeleteFlashcard(id: string): Promise<Result<void>> {
+  try {
+    const ref = doc(db, 'flashcards', id);
+    await updateDoc(ref, { isDeleted: true, updatedAt: serverTimestamp() });
+    return { success: true, data: undefined };
+  } catch (err: any) {
+    return { success: false, error: createError('Falha ao deletar card', err) };
+  }
 }
 
-export async function adminRestoreFlashcard(id: string): Promise<void> {
-  const ref = doc(db, 'flashcards', id);
-  await updateDoc(ref, { isDeleted: false, updatedAt: serverTimestamp() });
-  FlashcardCache.invalidate();
+export async function adminRestoreFlashcard(id: string): Promise<Result<void>> {
+  try {
+    const ref = doc(db, 'flashcards', id);
+    await updateDoc(ref, { isDeleted: false, updatedAt: serverTimestamp() });
+    return { success: true, data: undefined };
+  } catch (err: any) {
+    return { success: false, error: createError('Falha ao restaurar card', err) };
+  }
 }
 
 // ── User Management ───────────────────────────────────────────────────────────
 
-export async function adminGetUsers(): Promise<UserProfile[]> {
-  const coll = collection(db, 'users');
-  const snapshot = await getDocs(query(coll, orderBy('createdAt'), limit(200)));
-  return snapshot.docs.map((d) => {
-    const parsed = UserProfileSchema.safeParse(d.data());
-    if (!parsed.success) throw new RepositoryError(`Malformed user: ${d.id}`);
-    return parsed.data;
-  });
+export async function adminGetUsers(signal?: AbortSignal): Promise<Result<UserProfile[]>> {
+  try {
+    const coll = collection(db, 'users');
+    if (signal?.aborted) throw new Error('aborted');
+
+    const snapshot = await getDocs(query(coll, orderBy('createdAt', 'desc'), limit(200)));
+    
+    if (signal?.aborted) throw new Error('aborted');
+
+    const users = snapshot.docs.reduce<UserProfile[]>((acc, d) => {
+      const parsed = UserProfileSchema.safeParse({ uid: d.id, ...d.data() });
+      if (!parsed.success) {
+        telemetry.captureError(new Error(`Malformed user: ${d.id}`), {
+          feature: 'admin',
+          operation: 'parse-user',
+          documentId: d.id,
+          details: parsed.error.issues,
+        });
+      } else {
+        acc.push(parsed.data);
+      }
+      return acc;
+    }, []);
+
+    return { success: true, data: users };
+  } catch (err: any) {
+    if (err.message === 'aborted') return { success: false, error: createError('aborted') };
+    telemetry.captureError(err, { feature: 'admin', operation: 'fetch-users' });
+    return { success: false, error: createError('Falha ao carregar usuários', err) };
+  }
 }
 
-/**
- * Grants or revokes admin role via Cloud Function.
- * The CF sets the custom claim — never done client-side.
- */
-export async function adminSetRole(uid: string, isAdmin: boolean): Promise<void> {
-  const setAdminRole = httpsCallable<{ uid: string; isAdmin: boolean }, { success: boolean }>(
-    functions,
-    'setAdminRole',
-  );
-  const result = await setAdminRole({ uid, isAdmin });
-  if (!result.data.success) {
-    throw new Error('setAdminRole returned unsuccessful response');
+export async function adminSetRole(uid: string, isAdmin: boolean): Promise<Result<void>> {
+  try {
+    const setAdminRole = httpsCallable<{ uid: string; isAdmin: boolean }, { success: boolean }>(
+      functions,
+      'setAdminRole',
+    );
+    const result = await setAdminRole({ uid, isAdmin });
+    if (!result.data.success) {
+      throw new Error('setAdminRole returned unsuccessful response');
+    }
+    return { success: true, data: undefined };
+  } catch (err: any) {
+    return { success: false, error: createError('Falha ao alterar permissão', err) };
   }
 }

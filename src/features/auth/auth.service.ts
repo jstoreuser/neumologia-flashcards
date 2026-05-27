@@ -1,37 +1,22 @@
-/**
- * Auth Service
- *
- * Single point of truth for all Firebase Auth operations.
- * Follows the same functional/closure philosophy as the rest of the codebase.
- *
- * Responsibilities:
- * - Login, registration, logout, email verification
- * - Observing auth state changes
- * - Reading custom claims (admin role)
- * - Creating Firestore user profile on first login
- */
-
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   signOut,
-  reload,
   onAuthStateChanged,
+  reload,
   type User,
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  doc,
+  setDoc,
+  getDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { auth, db } from '@/core/services/firebase';
 import { AuthError, NetworkError } from '@/core/errors';
 import type { UserProfile } from '@shared/contracts';
 
-export interface AuthState {
-  user: User | null;
-  isAdmin: boolean;
-  isLoading: boolean;
-}
-
-// ── Login ────────────────────────────────────────────────────────────────────
+// ── Login ─────────────────────────────────────────────────────────────────────
 
 export async function loginWithEmail(email: string, password: string): Promise<User> {
   try {
@@ -39,75 +24,64 @@ export async function loginWithEmail(email: string, password: string): Promise<U
     return credential.user;
   } catch {
     // Intentionally generic — prevents user enumeration attacks
-    throw new AuthError('Credenciales inválidas.');
+    throw new AuthError('Credenciais inválidas. Verifique e-mail e senha.');
   }
 }
 
-// ── Register ─────────────────────────────────────────────────────────────────
+// ── Register ──────────────────────────────────────────────────────────────────
 
 export async function registerWithEmail(
   email: string,
   password: string,
   displayName: string,
 ): Promise<User> {
+  // Step 1: Create the Firebase Auth account.
+  // This is the only step that can fail with "email already in use".
+  let user: User;
   try {
     const credential = await createUserWithEmailAndPassword(auth, email, password);
-    const user = credential.user;
-
-    // Send verification email immediately after registration
-    await sendEmailVerification(user);
-
-    // Create the Firestore profile with role locked to 'student'
-    await createUserProfile(user, displayName);
-
-    return user;
-  } catch (err) {
-    console.error('[Registration Error]', err);
-    if (err instanceof AuthError) throw err;
-    throw new AuthError('No se pudo registrar la cuenta. Verifica tus datos o intenta con otro correo.');
+    user = credential.user;
+  } catch (err: any) {
+    if (err?.code === 'auth/email-already-in-use') {
+      throw new AuthError('Este e-mail já está cadastrado. Tente fazer login.');
+    }
+    if (err?.code === 'auth/weak-password') {
+      throw new AuthError('Senha muito fraca. Use no mínimo 6 caracteres.');
+    }
+    throw new AuthError('Não foi possível criar a conta. Tente novamente.');
   }
+
+  // Step 2: Create the Firestore profile.
+  // If this fails, the auth account already exists — user can just login.
+  try {
+    await createUserProfile(user, displayName);
+  } catch (err) {
+    console.warn('[Auth] Profile creation failed after account was created:', err);
+    // Non-fatal: profile will be created on first login via createUserProfile
+  }
+
+  return user;
 }
 
-// ── Logout ───────────────────────────────────────────────────────────────────
+// ── Logout ────────────────────────────────────────────────────────────────────
 
 export async function logout(): Promise<void> {
   try {
     await signOut(auth);
   } catch {
-    throw new NetworkError('Logout failed — check your connection');
+    throw new NetworkError('Logout falhou — verifique sua conexão.');
   }
 }
 
-// ── Email Verification ───────────────────────────────────────────────────────
-
-export async function resendVerificationEmail(user: User): Promise<void> {
-  try {
-    await sendEmailVerification(user);
-  } catch {
-    throw new NetworkError('Could not send verification email');
-  }
-}
-
-export async function refreshEmailVerification(user: User): Promise<boolean> {
-  try {
-    await reload(user);
-    return user.emailVerified;
-  } catch {
-    throw new NetworkError('Could not refresh auth state');
-  }
-}
-
-// ── User Profile ─────────────────────────────────────────────────────────────
+// ── User Profile ──────────────────────────────────────────────────────────────
 
 /**
  * Creates the Firestore user profile document on first login.
- * Idempotent: uses { merge: false } to avoid overwriting existing profiles.
- * On subsequent logins the document already exists and this is a no-op.
+ * Idempotent: returns early if the profile already exists.
  */
 export async function createUserProfile(user: User, displayName?: string): Promise<void> {
   const ref = doc(db, 'users', user.uid);
 
-  // Check if profile already exists to preserve any existing data
   const snapshot = await getDoc(ref);
   if (snapshot.exists()) return;
 
@@ -125,7 +99,6 @@ export async function createUserProfile(user: User, displayName?: string): Promi
 
 /**
  * Fetches the user profile from Firestore.
- * Returns null if the profile does not exist (e.g., auth user created outside the app).
  */
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   const ref = doc(db, 'users', uid);
@@ -134,7 +107,7 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   return snapshot.data() as UserProfile;
 }
 
-// ── Admin Claims ─────────────────────────────────────────────────────────────
+// ── Admin Claims ──────────────────────────────────────────────────────────────
 
 /**
  * Reads admin status from the ID token custom claims.
@@ -145,11 +118,10 @@ export async function getIsAdmin(user: User): Promise<boolean> {
   return tokenResult.claims['admin'] === true;
 }
 
-// ── Auth State Observer ──────────────────────────────────────────────────────
+// ── Auth State Observer ───────────────────────────────────────────────────────
 
 /**
  * Returns a cleanup function that unsubscribes the observer.
- * The callback receives null when the user signs out.
  */
 export function observeAuthState(callback: (user: User | null) => void): () => void {
   return onAuthStateChanged(auth, callback);

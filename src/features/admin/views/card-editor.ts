@@ -1,22 +1,16 @@
 /**
  * <barcl-card-editor>
  *
- * Modal form for creating and editing flashcards.
- * Appears on top of the card list when editorOpen === true.
- * Validates with Zod before submitting to admin.service.
+ * Modal form for creating and editing flashcards. Uses purely reactive UI state.
  */
 
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { StoreController } from '@/shared/utils/lit-helpers';
 import { useAdminStore, adminActions } from '../store';
-import {
-  adminCreateFlashcard,
-  adminUpdateFlashcard,
-} from '../admin.service';
+import { saveFlashcard } from '../admin.actions';
 import { CreateFlashcardSchema, UpdateFlashcardSchema } from '@shared/contracts';
 import { sanitizeHtml } from '@/shared/utils/sanitizer';
-import type { Flashcard } from '@shared/contracts';
 
 @customElement('barcl-card-editor')
 export class BarclCardEditor extends LitElement {
@@ -25,14 +19,13 @@ export class BarclCardEditor extends LitElement {
   private _admin = new StoreController(this, useAdminStore);
 
   override render() {
-    const { editorOpen, editorMode, editingCard, isSaving, error } = this._admin.value;
+    const { editorOpen, editorMode, editingCardId, isSaving, editorError, flashcards } = this._admin.value;
     if (!editorOpen) return html``;
 
-    const card = editingCard;
+    const card = editingCardId ? flashcards.byId[editingCardId] : null;
     const isEdit = editorMode === 'edit';
 
     return html`
-      <!-- Backdrop -->
       <div style="
         position: fixed; inset: 0;
         background: rgba(0,0,0,0.75);
@@ -41,34 +34,24 @@ export class BarclCardEditor extends LitElement {
         display: flex; align-items: center; justify-content: center;
         padding: 20px;
       " @click=${this._handleBackdropClick}>
-        <!-- Modal panel — stop propagation so clicking inside doesn't close -->
-        <div class="pacs-panel glassmorphism" style="
+        <div class="pacs-panel" style="
           width: 100%; max-width: 640px;
           max-height: 90vh; overflow-y: auto;
-          padding: 30px;
-          border: 1px solid var(--border-color);
-          border-radius: 6px;
-          box-shadow: 0 0 40px rgba(0,242,254,0.15);
+          padding: 30px; border: 1px solid var(--border-color);
+          border-radius: 6px; box-shadow: 0 0 40px rgba(0,242,254,0.15);
         " @click=${(e: Event) => e.stopPropagation()}>
 
-          <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; margin: 0;">
               ${isEdit ? 'Editar Flashcard' : 'Novo Flashcard'}
             </h2>
-            <button id="close-editor-btn" @click=${adminActions.closeEditor}
-              style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; line-height: 1;">
-              ×
-            </button>
+            <button @click=${adminActions.closeEditor} style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.5rem; line-height: 1;">×</button>
           </div>
 
-          ${error ? html`
-            <div class="auth-error-banner" style="margin-bottom: 20px;" role="alert">
-              ${sanitizeHtml(error)}
-            </div>
+          ${editorError ? html`
+            <div class="auth-error-banner" style="margin-bottom: 20px;" role="alert">${sanitizeHtml(editorError)}</div>
           ` : ''}
 
-          <!-- Form -->
           <form id="card-editor-form" @submit=${this._handleSubmit}>
             ${this._field('Pergunta *', 'fc-question', 'textarea', card?.question ?? '', true)}
             ${this._field('Resposta *', 'fc-answer', 'textarea', card?.answer ?? '', true)}
@@ -81,42 +64,25 @@ export class BarclCardEditor extends LitElement {
 
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
               ${this._field('Subcategoria', 'fc-subcategory', 'text', card?.subcategory ?? '', false)}
-
-              <!-- Difficulty -->
+              
               <div style="margin-bottom: 16px;">
                 <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase;">Dificuldade</label>
-                <select id="fc-difficulty" style="
-                  width: 100%; padding: 10px;
-                  background: rgba(0,0,0,0.5); border: 1px solid var(--border-color);
-                  color: white; border-radius: 4px;
-                  font-family: 'Plus Jakarta Sans', sans-serif;
-                ">
-                  ${(['easy', 'medium', 'hard'] as const).map(d => html`
-                    <option value="${d}" ?selected=${card?.difficulty === d}>${d}</option>
-                  `)}
+                <select id="fc-difficulty" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px; font-family: 'Plus Jakarta Sans', sans-serif;">
+                  ${(['easy', 'medium', 'hard'] as const).map(d => html`<option value="${d}" ?selected=${card?.difficulty === d}>${d}</option>`)}
                 </select>
               </div>
 
               ${this._field('URL da Imagem', 'fc-imageUrl', 'url', card?.imageUrl ?? '', false)}
             </div>
 
-            <!-- Published toggle -->
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
-              <input type="checkbox" id="fc-isPublished" ?checked=${card?.isPublished === true}
-                style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
-              <label for="fc-isPublished" style="cursor: pointer; font-size: 0.9rem;">
-                Publicado (visível para estudantes)
-              </label>
+              <input type="checkbox" id="fc-isPublished" ?checked=${card?.isPublished === true} style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
+              <label for="fc-isPublished" style="cursor: pointer; font-size: 0.9rem;">Publicado (visível para estudantes)</label>
             </div>
 
-            <!-- Actions -->
             <div style="display: flex; gap: 12px; justify-content: flex-end;">
-              <button type="button" @click=${adminActions.closeEditor}
-                style="padding: 10px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-secondary); border-radius: 4px; cursor: pointer;">
-                Cancelar
-              </button>
-              <button type="submit" id="fc-save-btn" class="btn btn-primary" ?disabled=${isSaving}
-                style="padding: 10px 24px;">
+              <button type="button" @click=${adminActions.closeEditor} style="padding: 10px 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-secondary); border-radius: 4px; cursor: pointer;">Cancelar</button>
+              <button type="submit" class="btn btn-primary" ?disabled=${isSaving} style="padding: 10px 24px;">
                 ${isSaving ? html`<span class="spinner"></span>Salvando...` : (isEdit ? 'Salvar Alterações' : 'Criar Flashcard')}
               </button>
             </div>
@@ -126,74 +92,36 @@ export class BarclCardEditor extends LitElement {
     `;
   }
 
-  private _field(
-    label: string,
-    id: string,
-    type: 'text' | 'textarea' | 'url',
-    value: string,
-    required: boolean,
-  ) {
-    const inputStyle = `
-      width: 100%; padding: 10px;
-      background: rgba(0,0,0,0.5); border: 1px solid var(--border-color);
-      color: white; border-radius: 4px; box-sizing: border-box;
-      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;
-    `;
+  private _field(label: string, id: string, type: 'text' | 'textarea' | 'url', value: string, required: boolean) {
+    const inputStyle = `width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;`;
     return html`
       <div style="margin-bottom: 16px;">
-        <label for="${id}" style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase;">
-          ${label}
-        </label>
-        ${type === 'textarea' ? html`
-          <textarea id="${id}" ?required=${required} rows="3"
-            style="${inputStyle} resize: vertical;"
-            .value=${value}></textarea>
-        ` : html`
-          <input type="${type}" id="${id}" ?required=${required}
-            style="${inputStyle}"
-            .value=${value}>
-        `}
+        <label for="${id}" style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase;">${label}</label>
+        ${type === 'textarea' 
+          ? html`<textarea id="${id}" ?required=${required} rows="3" style="${inputStyle} resize: vertical;" .value=${value}></textarea>` 
+          : html`<input type="${type}" id="${id}" ?required=${required} style="${inputStyle}" .value=${value}>`}
       </div>
     `;
   }
 
   private async _handleSubmit(e: Event) {
     e.preventDefault();
-    const { editorMode, editingCard } = this._admin.value;
-
-    adminActions.setSaving(true);
-    adminActions.clearFeedback();
-
+    const { editorMode, editingCardId } = this._admin.value;
     const dto = this._readForm();
-    if (!dto) return;
 
-    try {
-      if (editorMode === 'create') {
-        const parsed = CreateFlashcardSchema.safeParse({ ...dto, authorId: 'admin' });
-        if (!parsed.success) {
-          adminActions.setError('Dados inválidos: ' + JSON.stringify(parsed.error.flatten().fieldErrors));
-          return;
-        }
-        const id = await adminCreateFlashcard(parsed.data);
-        adminActions.upsertCard({ ...parsed.data, id, isDeleted: false, schemaVersion: 1, createdAt: new Date() } as Flashcard);
-      } else {
-        if (!editingCard?.id) return;
-        const parsed = UpdateFlashcardSchema.safeParse(dto);
-        if (!parsed.success) {
-          adminActions.setError('Dados inválidos: ' + JSON.stringify(parsed.error.flatten().fieldErrors));
-          return;
-        }
-        await adminUpdateFlashcard(editingCard.id, parsed.data);
-        adminActions.upsertCard({ ...editingCard, ...parsed.data, updatedAt: new Date() } as Flashcard);
-      }
-    } catch (err) {
-      adminActions.setError(err instanceof Error ? sanitizeHtml(err.message) : 'Erro desconhecido');
+    if (editorMode === 'create') {
+      const parsed = CreateFlashcardSchema.safeParse({ ...dto, authorId: 'admin' });
+      if (!parsed.success) return adminActions.setEditorError('Dados inválidos: ' + JSON.stringify(parsed.error.flatten().fieldErrors));
+      await saveFlashcard(null, parsed.data as unknown as Partial<import('@shared/contracts').Flashcard>);
+    } else {
+      const parsed = UpdateFlashcardSchema.safeParse(dto);
+      if (!parsed.success) return adminActions.setEditorError('Dados inválidos: ' + JSON.stringify(parsed.error.flatten().fieldErrors));
+      await saveFlashcard(editingCardId, parsed.data as unknown as Partial<import('@shared/contracts').Flashcard>);
     }
   }
 
-  private _readForm(): Record<string, unknown> | null {
+  private _readForm(): Record<string, unknown> {
     const get = (id: string) => this.querySelector<HTMLInputElement | HTMLTextAreaElement>(`#${id}`)?.value.trim() ?? '';
-
     return {
       question: get('fc-question'),
       answer: get('fc-answer'),
@@ -209,16 +137,6 @@ export class BarclCardEditor extends LitElement {
   }
 
   private _handleBackdropClick() {
-    if (!this._admin.value.isSaving) {
-      adminActions.closeEditor();
-    }
-  }
-
-  static override styles = css``;
-}
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'barcl-card-editor': BarclCardEditor;
+    if (!this._admin.value.isSaving) adminActions.closeEditor();
   }
 }

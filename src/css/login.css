@@ -104,18 +104,35 @@
     }
 }
 
+barcl-login-form {
+    display: block;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
 .auth-panel {
     width: 100%;
-    max-width: 520px;
-    min-height: 480px;
-    padding: 25px;
+    max-width: 480px;
+    /* Fixed min height so it doesn't jump when switching tabs or showing errors */
+    min-height: 550px;
+    padding: 30px;
     position: relative;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-neon);
+    display: flex;
+    flex-direction: column;
+    background: rgba(4, 6, 11, 0.7) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
 @media (min-width: 768px) {
     .auth-panel {
-        padding: 45px;
+        max-width: 640px;
+        min-height: 600px;
+        padding: 55px;
+        border-radius: 12px;
     }
 }
+

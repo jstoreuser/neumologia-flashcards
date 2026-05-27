@@ -1,115 +1,238 @@
 /**
  * Admin Store
  *
- * Owns the UI state for the admin panel.
- * Split from the main flashcard store to avoid cross-concern pollution.
+ * Separates Server State from UI State. Uses normalized entities and explicit statuses.
  */
 
 import { createStore } from '@/core/store';
-import type { Flashcard } from '@shared/contracts';
-import type { UserProfile } from '@shared/contracts';
+import { entityAdapter, type EntityState, createEntityState } from '@/shared/utils/entity-adapter';
+import type { Flashcard, UserProfile, ResourceStatus } from '@shared/contracts';
 import type { QueryDocumentSnapshot } from 'firebase/firestore';
 
 export type AdminView = 'flashcards' | 'users';
 export type EditorMode = 'create' | 'edit';
 
-export interface AdminState {
-  activeView: AdminView;
-  // Flashcard list
-  flashcards: Flashcard[];
-  isLoadingCards: boolean;
-  hasMoreCards: boolean;
-  lastVisibleCard: QueryDocumentSnapshot | null;
-  // User list
-  users: UserProfile[];
-  isLoadingUsers: boolean;
-  // Editor modal
-  editorOpen: boolean;
-  editorMode: EditorMode;
-  editingCard: Flashcard | null;
-  isSaving: boolean;
-  // Feedback
-  error: string | null;
-  successMessage: string | null;
+export interface PendingOperation {
+  id: string;
+  type: 'delete' | 'publish' | 'update' | 'restore' | 'create';
+  entityId: string | null;
+  startedAt: number;
 }
 
+export interface AdminServerState {
+  // Flashcards
+  flashcards: EntityState<Flashcard>;
+  flashcardsStatus: ResourceStatus;
+  flashcardsLastFetchStartedAt: number | null;
+  flashcardsLastFetchCompletedAt: number | null;
+  flashcardsError: string | null;
+  hasMoreCards: boolean;
+  lastVisibleCard: QueryDocumentSnapshot | null;
+
+  // Users
+  users: EntityState<UserProfile>;
+  usersStatus: ResourceStatus;
+  usersLastFetchStartedAt: number | null;
+  usersLastFetchCompletedAt: number | null;
+  usersError: string | null;
+  hasMoreUsers: boolean;
+  lastVisibleUser: QueryDocumentSnapshot | null;
+
+  // Concurrency
+  currentRequestId: string | null;
+  pendingOperations: Record<string, PendingOperation>;
+}
+
+export interface AdminUIState {
+  activeView: AdminView;
+  editorOpen: boolean;
+  editorMode: EditorMode;
+  editingCardId: string | null;
+  dirtyFields: Record<string, boolean>;
+  isSaving: boolean;
+  editorError: string | null;
+}
+
+export type AdminState = AdminServerState & AdminUIState;
+
 const initialState: AdminState = {
-  activeView: 'flashcards',
-  flashcards: [],
-  isLoadingCards: false,
+  // Server State
+  flashcards: createEntityState<Flashcard>(),
+  flashcardsStatus: 'idle',
+  flashcardsLastFetchStartedAt: null,
+  flashcardsLastFetchCompletedAt: null,
+  flashcardsError: null,
   hasMoreCards: true,
   lastVisibleCard: null,
-  users: [],
-  isLoadingUsers: false,
+
+  users: createEntityState<UserProfile>(),
+  usersStatus: 'idle',
+  usersLastFetchStartedAt: null,
+  usersLastFetchCompletedAt: null,
+  usersError: null,
+  hasMoreUsers: true,
+  lastVisibleUser: null,
+
+  currentRequestId: null,
+  pendingOperations: {},
+
+  // UI State
+  activeView: 'flashcards',
   editorOpen: false,
   editorMode: 'create',
-  editingCard: null,
+  editingCardId: null,
+  dirtyFields: {},
   isSaving: false,
-  error: null,
-  successMessage: null,
+  editorError: null,
 };
 
 export const useAdminStore = createStore<AdminState>(initialState);
 
 export const adminActions = {
+  // ── UI Actions ─────────────────────────────────────────────────────────────
   setView: (view: AdminView) => {
-    useAdminStore.setState({ activeView: view, error: null });
-  },
-
-  setCards: (flashcards: Flashcard[], lastVisible: QueryDocumentSnapshot | null, hasMore: boolean) => {
-    useAdminStore.setState({ flashcards, lastVisibleCard: lastVisible, hasMoreCards: hasMore, isLoadingCards: false });
-  },
-
-  appendCards: (more: Flashcard[], lastVisible: QueryDocumentSnapshot | null, hasMore: boolean) => {
-    useAdminStore.setState((s) => ({
-      flashcards: [...s.flashcards, ...more],
-      lastVisibleCard: lastVisible,
-      hasMoreCards: hasMore,
-      isLoadingCards: false,
-    }));
-  },
-
-  setUsers: (users: UserProfile[]) => {
-    useAdminStore.setState({ users, isLoadingUsers: false });
+    useAdminStore.setState({ activeView: view });
   },
 
   openCreateEditor: () => {
-    useAdminStore.setState({ editorOpen: true, editorMode: 'create', editingCard: null, error: null });
+    useAdminStore.setState({ 
+      editorOpen: true, 
+      editorMode: 'create', 
+      editingCardId: null,
+      dirtyFields: {},
+      isSaving: false,
+      editorError: null 
+    });
   },
 
-  openEditEditor: (card: Flashcard) => {
-    useAdminStore.setState({ editorOpen: true, editorMode: 'edit', editingCard: card, error: null });
+  openEditEditor: (cardId: string) => {
+    useAdminStore.setState({ 
+      editorOpen: true, 
+      editorMode: 'edit', 
+      editingCardId: cardId,
+      dirtyFields: {},
+      isSaving: false,
+      editorError: null
+    });
   },
 
   closeEditor: () => {
-    useAdminStore.setState({ editorOpen: false, editingCard: null, isSaving: false, error: null });
+    useAdminStore.setState({ 
+      editorOpen: false, 
+      editingCardId: null, 
+      dirtyFields: {},
+      isSaving: false,
+      editorError: null
+    });
   },
 
   setSaving: (isSaving: boolean) => {
     useAdminStore.setState({ isSaving });
   },
 
-  upsertCard: (card: Flashcard) => {
-    useAdminStore.setState((s) => {
-      const idx = s.flashcards.findIndex(c => c.id === card.id);
-      const next = idx >= 0
-        ? s.flashcards.map((c, i) => i === idx ? card : c)
-        : [card, ...s.flashcards];
-      return { flashcards: next, editorOpen: false, isSaving: false, successMessage: 'Card salvo com sucesso.' };
-    });
+  setEditorError: (error: string | null) => {
+    useAdminStore.setState({ editorError: error, isSaving: false });
   },
 
-  removeCard: (id: string) => {
-    useAdminStore.setState((s) => ({
-      flashcards: s.flashcards.filter(c => c.id !== id),
+  setDirtyField: (field: string, isDirty: boolean) => {
+    useAdminStore.setState(s => ({
+      dirtyFields: { ...s.dirtyFields, [field]: isDirty }
     }));
   },
 
-  setError: (error: string) => {
-    useAdminStore.setState({ error, isSaving: false, isLoadingCards: false, isLoadingUsers: false });
+  // ── Concurrency & Lifecycle ────────────────────────────────────────────────
+  startOperation: (id: string, type: PendingOperation['type'], entityId: string | null = null) => {
+    useAdminStore.setState(s => ({
+      pendingOperations: {
+        ...s.pendingOperations,
+        [id]: { id, type, entityId, startedAt: Date.now() }
+      }
+    }));
   },
 
-  clearFeedback: () => {
-    useAdminStore.setState({ error: null, successMessage: null });
+  finishOperation: (id: string) => {
+    useAdminStore.setState(s => {
+      const next = { ...s.pendingOperations };
+      delete next[id];
+      return { pendingOperations: next };
+    });
   },
+
+  setRequestId: (id: string) => {
+    useAdminStore.setState({ currentRequestId: id });
+  },
+
+  // ── Server Actions (Reducers) ──────────────────────────────────────────────
+  setFlashcardsStatus: (status: ResourceStatus, error: string | null = null) => {
+    useAdminStore.setState({ flashcardsStatus: status, flashcardsError: error });
+  },
+
+  setUsersStatus: (status: ResourceStatus, error: string | null = null) => {
+    useAdminStore.setState({ usersStatus: status, usersError: error });
+  },
+
+  markFetchStart: (resource: 'flashcards' | 'users') => {
+    useAdminStore.setState(resource === 'flashcards' 
+      ? { flashcardsLastFetchStartedAt: Date.now() } 
+      : { usersLastFetchStartedAt: Date.now() }
+    );
+  },
+
+  markFetchComplete: (resource: 'flashcards' | 'users') => {
+    useAdminStore.setState(resource === 'flashcards' 
+      ? { flashcardsLastFetchCompletedAt: Date.now() } 
+      : { usersLastFetchCompletedAt: Date.now() }
+    );
+  },
+
+  setFlashcards: (cards: Flashcard[], lastVisible: QueryDocumentSnapshot | null, hasMore: boolean) => {
+    useAdminStore.setState(s => ({
+      flashcards: entityAdapter.setAll(cards),
+      lastVisibleCard: lastVisible,
+      hasMoreCards: hasMore,
+      flashcardsStatus: 'ready'
+    }));
+  },
+
+  appendFlashcards: (more: Flashcard[], lastVisible: QueryDocumentSnapshot | null, hasMore: boolean) => {
+    useAdminStore.setState(s => ({
+      flashcards: entityAdapter.setMany(s.flashcards, more),
+      lastVisibleCard: lastVisible,
+      hasMoreCards: hasMore,
+      flashcardsStatus: 'ready'
+    }));
+  },
+
+  upsertFlashcard: (card: Flashcard) => {
+    useAdminStore.setState(s => ({
+      flashcards: entityAdapter.upsertOne(s.flashcards, card)
+    }));
+  },
+
+  updateFlashcardLocal: (id: string, changes: Partial<Flashcard>) => {
+    useAdminStore.setState(s => ({
+      flashcards: entityAdapter.updateOne(s.flashcards, id, changes)
+    }));
+  },
+
+  removeFlashcard: (id: string) => {
+    useAdminStore.setState(s => ({
+      flashcards: entityAdapter.removeOne(s.flashcards, id)
+    }));
+  },
+
+  setUsers: (users: UserProfile[], lastVisible: QueryDocumentSnapshot | null, hasMore: boolean) => {
+    useAdminStore.setState({
+      users: entityAdapter.setAll(users),
+      lastVisibleUser: lastVisible,
+      hasMoreUsers: hasMore,
+      usersStatus: 'ready'
+    });
+  },
+
+  updateUserLocal: (uid: string, changes: Partial<UserProfile>) => {
+    useAdminStore.setState(s => ({
+      users: entityAdapter.updateOne(s.users, uid, changes)
+    }));
+  }
 };

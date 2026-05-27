@@ -55,7 +55,7 @@ export function createAppLifecycle(deps: AppLifecycleDeps): AppLifecycle {
           unsubscribeAuth();
 
           try {
-            if (!user || !user.emailVerified) {
+            if (!user) {
               deps.onUnauthenticated();
               resolve();
               return;

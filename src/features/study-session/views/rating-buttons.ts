@@ -72,7 +72,7 @@ export class BarclRatingButtons extends LitElement {
           flex-direction: column;
           align-items: center;
           gap: 6px;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
           color: var(--text-primary);
           font-family: 'Space Grotesk', sans-serif;
           position: relative;
@@ -127,7 +127,7 @@ export class BarclRatingButtons extends LitElement {
           letter-spacing: 1px;
           text-transform: uppercase;
           box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
-          transition: all 0.3s ease;
+          transition: all 0.1s ease;
         }
         
         .aesthetic-reveal-btn:hover {

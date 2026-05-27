@@ -1,0 +1,42 @@
+{"users": [
+{
+  "localId": "MEZfOu8AAPbv5dUUEKrjzvjRiwp1",
+  "email": "kupnski@gmail.com",
+  "emailVerified": false,
+  "passwordHash": "Z+OrTfTqWgVYOdqBSSaJn+tTBMA/fODNOZmrMMxdfRz1cjQ7HDpQ3lpjQp0rXEriftbG9kqzB9DGChr0lp7vbg==",
+  "salt": "tGySLVmyHzgROQ==",
+  "lastSignedInAt": "1779854458391",
+  "createdAt": "1779854458391",
+  "providerUserInfo": []
+},
+{
+  "localId": "VIpnjEvtyrQ7XkVrIyFAQHcvDqg2",
+  "email": "jessewesley11@gmail.com",
+  "emailVerified": true,
+  "passwordHash": "gM0LpfINLj+RRCZ1iHmCfEQj44ULGfruPEyBnTbLQd11jp1SfSCCuNkQssfcHmEhMMykimcF4ddmGaH36+rXlw==",
+  "salt": "rYslrzRicUVWjQ==",
+  "lastSignedInAt": "1779846828508",
+  "createdAt": "1779762211891",
+  "customAttributes": "{\"admin\":true}",
+  "providerUserInfo": []
+},
+{
+  "localId": "ZYsMSRaiI8OtYfNuk1maowPQRLF3",
+  "email": "vendasjoaovictor@gmail.com",
+  "emailVerified": true,
+  "passwordHash": "wzN5FoFH6PTFOlMxFkVhjJ8BL7M8bkzEB4XIZT/FYChoAdgPKKabHAluvVCbkYk17RuwDN09vrRakUPDJCgEog==",
+  "salt": "z4IF2t2oIpNeDg==",
+  "lastSignedInAt": "1779830387876",
+  "createdAt": "1779801652434",
+  "providerUserInfo": []
+},
+{
+  "localId": "cLkD8MOyOQOU1KZ9zHHpvNWy9Ys1",
+  "email": "jessesuporte5@gmail.com",
+  "emailVerified": false,
+  "passwordHash": "L9c7St2/xBg5ph+yazpjtOHfjmxK4+0ZLZ0w9NR8UIoHYZDwe7FWCKDjFEjiSfLpPhbN67KYoOnEmq6EMtYtjg==",
+  "salt": "/2shMJoGUV/Ufw==",
+  "lastSignedInAt": "1779854386531",
+  "createdAt": "1779854386531",
+  "providerUserInfo": []
+}]}

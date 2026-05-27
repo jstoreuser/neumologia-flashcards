@@ -6,4 +6,5 @@
  */
 
 export { createUserProfile } from './auth/on-create';
+export { deleteUserProfile } from './auth/on-delete';
 export { setAdminRole } from './admin/set-admin';

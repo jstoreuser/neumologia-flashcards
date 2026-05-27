@@ -48,9 +48,9 @@ service cloud.firestore {
 
       allow delete: if isAdmin();
 
-      // Progress subcollection: owner or admin, email verified required.
+      // Progress subcollection: owner or admin.
       match /progress/{cardId} {
-        allow read, write: if isEmailVerified() && (isOwner(userId) || isAdmin());
+        allow read, write: if isAuthenticated() && (isOwner(userId) || isAdmin());
       }
     }
 
@@ -58,7 +58,7 @@ service cloud.firestore {
 
     match /flashcards/{cardId} {
       // Students can only read published, non-deleted cards.
-      allow read: if isEmailVerified()
+      allow read: if isAuthenticated()
         && resource.data.isPublished == true
         && resource.data.isDeleted == false;
 

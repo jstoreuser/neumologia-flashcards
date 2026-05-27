@@ -3,7 +3,7 @@ import { z } from 'zod';
 const TimestampLike = z.union([
   z.date(),
   z.string().datetime({ offset: true }),
-  z.object({ toDate: z.function().returns(z.date()) }),
+  z.custom<{ toDate: () => Date }>((val: any) => typeof val?.toDate === 'function'),
 ]);
 
 export const StudyProgressSchema = z.object({

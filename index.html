@@ -12,8 +12,80 @@
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 <body class="pacs-theme-dark">
+    <!-- ═══════════════════════════════════════════════════════
+         BOOT SCREEN — Visible immediately, no JS required.
+         Removed by main.ts when boot completes or on error.
+    ═══════════════════════════════════════════════════════ -->
+    <div id="boot-screen" style="
+        position: fixed; inset: 0; z-index: 9999;
+        background: #04060b;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+    ">
+        <!-- Logo -->
+        <div style="margin-bottom: 40px; text-align: center;">
+            <div style="
+                width: 56px; height: 56px; margin: 0 auto 16px;
+                border: 2px solid #ff2a5f;
+                border-radius: 8px;
+                display: flex; align-items: center; justify-content: center;
+                box-shadow: 0 0 24px rgba(255,42,95,0.3);
+            ">
+                <svg viewBox="0 0 24 24" width="28" height="28" stroke="#ff2a5f" stroke-width="2.5" fill="none">
+                    <path d="M4 4h16v16H4z"/><path d="M12 4v16"/>
+                </svg>
+            </div>
+            <div style="font-size: 1.6rem; font-weight: 700; letter-spacing: 4px; color: #fff;">BARCL</div>
+            <div style="font-size: 0.65rem; letter-spacing: 3px; color: #ff2a5f; margin-top: 4px; opacity: 0.8;">ESTAÇÃO DE TRABALHO CLÍNICA</div>
+        </div>
+
+        <!-- Spinner normal (estado: loading) -->
+        <div id="boot-spinner" style="
+            width: 36px; height: 36px; border-radius: 50%;
+            border: 3px solid rgba(255,42,95,0.15);
+            border-top-color: #ff2a5f;
+            animation: boot-spin 0.8s linear infinite;
+            margin-bottom: 24px;
+        "></div>
+
+        <!-- Ícone de erro (estado: error) — oculto por padrão -->
+        <div id="boot-error-icon" style="display:none; margin-bottom: 24px;">
+            <svg viewBox="0 0 24 24" width="40" height="40" stroke="#ff5555" stroke-width="2" fill="none">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+        </div>
+
+        <!-- Mensagem de status -->
+        <div id="boot-message" style="
+            color: rgba(255,255,255,0.5); font-size: 0.8rem;
+            letter-spacing: 1px; text-align: center;
+            max-width: 320px; line-height: 1.6;
+        ">Verificando autenticação...</div>
+
+        <!-- Botão retry (estado: error) — oculto por padrão -->
+        <button id="boot-retry-btn" onclick="window.location.reload()" style="
+            display: none; margin-top: 24px;
+            padding: 10px 28px; background: transparent;
+            border: 1px solid #ff2a5f; color: #ff2a5f;
+            border-radius: 6px; font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem; letter-spacing: 1px; cursor: pointer;
+            transition: background 0.2s;
+        " onmouseover="this.style.background='rgba(255,42,95,0.1)'"
+           onmouseout="this.style.background='transparent'">
+            Tentar Novamente
+        </button>
+    </div>
+
+    <style>
+        @keyframes boot-spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 
     <!-- Overlay de Blur para o Zoom da Imagem (Lightbox Lightroom) -->
+
     <div id="lightbox" class="lightbox" aria-hidden="true">
         <div class="lightbox-content">
             <button id="lightbox-close" class="lightbox-close-btn" aria-label="Cerrar zoom">
@@ -67,6 +139,21 @@
             </div>
 
             <div class="header-actions">
+                <!-- Botão de Abrir Dashboard Drawer -->
+                <button id="btn-open-drawer" class="btn btn-icon btn-outline" style="margin-right: 8px;" title="Abrir Dashboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    <span>Dashboard</span>
+                </button>
+
+                <!-- Indicador de Perfil do Usuário -->
+                <div id="user-profile-indicator" style="display: flex; align-items: center; gap: 10px; margin-right: 12px; padding-right: 16px; border-right: 1px solid rgba(255,255,255,0.1);">
+                    <div id="user-avatar" style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255,42,95,0.15); border: 1px solid rgba(255,42,95,0.3); color: #ff2a5f; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">?</div>
+                    <div style="display: flex; flex-direction: column; line-height: 1.2;">
+                        <span id="user-name-display" style="font-size: 0.85rem; font-weight: 600; color: #fff;">Cargando...</span>
+                        <span id="user-email-display" style="font-size: 0.7rem; color: rgba(255,255,255,0.5);">cargando...</span>
+                    </div>
+                </div>
+
                 <!-- Botão de Baixar Deck do Anki -->
                 <a href="anki/Diagnostico_Imagens.apkg" download="Diagnostico_Imagens.apkg" class="btn btn-icon btn-outline" style="text-decoration: none;" title="Descargar paquete de Anki (.apkg) para estudio local">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
@@ -89,94 +176,8 @@
 
         <!-- Layout Grid Principal -->
         <main class="pacs-layout-grid">
-            <!-- Coluna Esquerda: Dashboard e Filtros -->
-            <section class="pacs-sidebar">
-                <!-- Painel de Progresso -->
-                <div class="pacs-panel glassmorphism">
-                    <div class="panel-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="panel-icon"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                        <h2>Progreso</h2>
-                    </div>
-                    
-                    <!-- Gráfico de Rosca de Progresso -->
-                    <div class="progress-radial-container">
-                        <svg class="progress-radial" viewBox="0 0 36 36">
-                            <path class="radial-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                            <path id="radial-progress-bar" class="radial-progress" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                        </svg>
-                        <div class="progress-radial-text">
-                            <span class="radial-percent" id="radial-percent-lbl">0%</span>
-                            <span class="radial-sub">COMPLETADO</span>
-                        </div>
-                    </div>
-
-                    <!-- Estatísticas Detalhadas -->
-                    <div class="progress-stats-list">
-                        <div class="stat-item">
-                            <div class="stat-item-lbl">
-                                <span class="dot dot-mastered"></span>
-                                Fáciles (Fijado)
-                            </div>
-                            <span class="stat-item-val" id="stats-mastered">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-item-lbl">
-                                <span class="dot dot-learning"></span>
-                                Difíciles (Repasar)
-                            </div>
-                            <span class="stat-item-val" id="stats-learning">0</span>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-item-lbl">
-                                <span class="dot dot-new"></span>
-                                Nuevos
-                            </div>
-                            <span class="stat-item-val" id="stats-new">0</span>
-                        </div>
-                    </div>
-
-                    <!-- Painel Extra: Metas do dia -->
-                    <div class="streak-banner">
-                        <div class="streak-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-mini text-orange"><path d="M12 2c1.78 2.37 3 5.37 3 8s-1.22 5.63-3 8-3-5.37-3-8 1.22-5.63 3-8zm0 0c2-2 6 2 6 6s-4 6-6 6-6-2-6-6 4-8 6-8z"></path></svg>
-                        </div>
-                        <div class="streak-text">
-                            <div class="streak-title"><span id="streak-count">0</span> días seguidos</div>
-                            <div class="streak-sub">Mantenga la frecuencia de estudio</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Painel de Filtros por Categoria -->
-                <div class="pacs-panel glassmorphism">
-                    <div class="panel-header">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="panel-icon"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                        <h2>Filtros</h2>
-                    </div>
-                    <div class="filter-pills-container" id="filter-container">
-                        <button class="filter-pill active" data-filter="Todos">
-                            <span>Todas las Tarjetas</span>
-                            <span class="pill-count" id="count-Todos">0</span>
-                        </button>
-                        <button class="filter-pill" data-filter="Radiografía">
-                            <span>Radiografías (Rx)</span>
-                            <span class="pill-count" id="count-Radiografía">0</span>
-                        </button>
-                        <button class="filter-pill" data-filter="Tomografía">
-                            <span>Tomografías (TC)</span>
-                            <span class="pill-count" id="count-Tomografía">0</span>
-                        </button>
-                        <button class="filter-pill" data-filter="Signo_Radiológico">
-                            <span>Signos Clínicos</span>
-                            <span class="pill-count" id="count-Signo_Radiológico">0</span>
-                        </button>
-                        <button class="filter-pill" data-filter="Patrón_Intersticial">
-                            <span>Patrones Intersticiales</span>
-                            <span class="pill-count" id="count-Patrón_Intersticial">0</span>
-                        </button>
-                    </div>
-                </div>
-            </section>
+            <!-- Drawer do Dashboard -->
+            <barcl-study-drawer></barcl-study-drawer>
 
             <!-- Console do Flashcard Ativo -->
             <section class="pacs-main-content">
@@ -192,7 +193,6 @@
     </div>
 
     <!-- scripts carregados no final (Native ES Modules) -->
-    <script src="runtime-env.js"></script>
     <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

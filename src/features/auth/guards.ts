@@ -2,27 +2,22 @@
  * Route Guards
  *
  * Pure functions that check auth state and redirect if needed.
- * Called at the top of each page's entry point (main.ts, admin.main.ts).
- *
- * Design: synchronous redirect pattern — call guard, if it redirects
- * execution stops, otherwise continue booting.
+ * Email verification is NOT required — users login directly after registration.
  */
 
 import { auth } from '@/core/services/firebase';
 import { getIsAdmin } from './auth.service';
 
 /**
- * Ensures the user is authenticated and email-verified.
+ * Ensures the user is authenticated.
  * Redirects to login.html if not.
- * Returns the current user if authenticated.
  */
 export async function requireAuth(): Promise<import('firebase/auth').User> {
   return new Promise((resolve) => {
-    // onAuthStateChanged fires once immediately with current state
     const unsubscribe = auth.onAuthStateChanged((user) => {
       unsubscribe();
 
-      if (!user || !user.emailVerified) {
+      if (!user) {
         window.location.replace('/login.html');
         return;
       }
@@ -42,7 +37,6 @@ export async function requireAdmin(): Promise<import('firebase/auth').User> {
 
   if (!isAdmin) {
     window.location.replace('/index.html');
-    // Return a never-resolving promise to halt execution
     return new Promise(() => undefined);
   }
 
@@ -58,7 +52,7 @@ export function redirectIfAuthenticated(): Promise<void> {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       unsubscribe();
 
-      if (user?.emailVerified) {
+      if (user) {
         try {
           const idToken = await user.getIdTokenResult();
           if (idToken.claims.admin) {

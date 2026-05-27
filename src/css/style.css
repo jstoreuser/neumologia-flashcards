@@ -32,11 +32,11 @@ body {
 }
 
 .ambient-video-bg {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     object-fit: cover;
     z-index: 1; /* Placed above ambient gradient but behind hero content (which has z-index: 10) */
     pointer-events: none;
@@ -211,26 +211,25 @@ body {
    ========================================================================== */
 
 .pacs-layout-grid {
-    display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 40px;
-    padding: 40px 48px;
+    display: flex;
+    flex-direction: column;
+    padding: 40px 24px;
     flex-grow: 1;
-    max-width: 1400px;
     width: 100%;
     margin: 0 auto;
 }
 
 .pacs-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    display: none; /* Sidebar antiga desativada, usando drawer agora */
 }
 
 .pacs-main-content {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
 }
 
 .pacs-panel {
