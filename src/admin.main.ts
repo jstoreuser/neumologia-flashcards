@@ -29,6 +29,10 @@ async function boot() {
   adminActions.setView('flashcards');
   loadUsers();
 
+  // Unhide the workspace now that auth is confirmed
+  const workspace = document.getElementById('admin-workspace');
+  if (workspace) workspace.style.display = '';
+
   // Mount admin shell into the page
   const container = document.querySelector<HTMLElement>('#admin-panel-root');
   if (!container) return;

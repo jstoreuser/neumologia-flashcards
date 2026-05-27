@@ -73,21 +73,8 @@
                 <button class="btn btn-primary" id="add-new-btn">+ Adicionar Flashcard</button>
             </header>
 
-            <div class="pacs-panel" style="background: #0a0a0a; border: 1px solid var(--border-color);">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Modalidade</th>
-                            <th>Diagnóstico</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-table-body">
-                        <!-- Carregado via JS dinamicamente -->
-                        <tr><td colspan="4" style="text-align: center; color: var(--text-secondary);">Carregando dados...</td></tr>
-                    </tbody>
-                </table>
+            <div id="admin-panel-root">
+                <!-- Mounted by admin.main.ts -->
             </div>
         </main>
     </div>
