@@ -18,7 +18,9 @@ exports.setAdminRole = void 0;
 const v2_1 = require("firebase-functions/v2");
 const auth_1 = require("firebase-admin/auth");
 const firestore_1 = require("firebase-admin/firestore");
-exports.setAdminRole = v2_1.https.onCall(async (request) => {
+// Region must match the client's getFunctions(app, 'southamerica-east1');
+// otherwise the callable is unreachable (it would default to us-central1).
+exports.setAdminRole = v2_1.https.onCall({ region: 'southamerica-east1' }, async (request) => {
     // 1. Verify caller is authenticated
     if (!request.auth) {
         throw new v2_1.https.HttpsError('unauthenticated', 'You must be signed in to call this function.');
