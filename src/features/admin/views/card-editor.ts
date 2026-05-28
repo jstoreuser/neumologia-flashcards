@@ -73,7 +73,7 @@ export class BarclCardEditor extends LitElement {
                 </select>
               </div>
 
-              ${this._field('URL da Imagem', 'fc-imageUrl', 'text', card?.imageUrl ?? '', false)}
+              ${this._field('Imagem (caminho ou URL)', 'fc-imageUrl', 'text', card?.imageUrl ?? '', false, 'assets/images/img_pagina_79_1.jpeg')}
             </div>
 
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
@@ -93,14 +93,14 @@ export class BarclCardEditor extends LitElement {
     `;
   }
 
-  private _field(label: string, id: string, type: 'text' | 'textarea', value: string, required: boolean) {
+  private _field(label: string, id: string, type: 'text' | 'textarea', value: string, required: boolean, placeholder = '') {
     const inputStyle = `width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;`;
     return html`
       <div style="margin-bottom: 16px;">
         <label for="${id}" style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase;">${label}</label>
-        ${type === 'textarea' 
-          ? html`<textarea id="${id}" ?required=${required} rows="3" style="${inputStyle} resize: vertical;" .value=${value}></textarea>` 
-          : html`<input type="${type}" id="${id}" ?required=${required} style="${inputStyle}" .value=${value}>`}
+        ${type === 'textarea'
+          ? html`<textarea id="${id}" ?required=${required} rows="3" placeholder="${placeholder}" style="${inputStyle} resize: vertical;" .value=${value}></textarea>`
+          : html`<input type="${type}" id="${id}" ?required=${required} placeholder="${placeholder}" style="${inputStyle}" .value=${value}>`}
       </div>
     `;
   }
