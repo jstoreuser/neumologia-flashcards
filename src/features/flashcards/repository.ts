@@ -17,6 +17,15 @@ import { Flashcard, FlashcardSchema } from '@shared/contracts';
 import { RepositoryError } from '@/core/errors';
 
 /**
+ * Safety cap on how many cards the study app loads in one go.
+ * The deck is small today; this only prevents a pathological load if the
+ * collection ever grows huge. The study session needs the full pool to
+ * schedule reviews, so there is no pagination — just raise this number if
+ * your published-card count ever approaches it.
+ */
+export const STUDY_CARD_LIMIT = 1000;
+
+/**
  * Zod Guard: Parses a Firestore snapshot into a Flashcard.
  * Returns null for invalid/malformed documents instead of throwing,
  * so one bad card never breaks the entire list.
@@ -52,7 +61,7 @@ export async function getFlashcardById(db: Firestore, id: string): Promise<Flash
 }
 
 /**
- * Query all flashcards without pagination limits.
+ * Query published, non-deleted flashcards, capped at STUDY_CARD_LIMIT.
  */
 export async function getAllFlashcards(
   db: Firestore,
@@ -66,6 +75,7 @@ export async function getAllFlashcards(
       coll,
       where('isPublished', '==', true),
       where('isDeleted', '==', false),
+      limit(STUDY_CARD_LIMIT),
     );
 
     const snapshot = await getDocs(q);
