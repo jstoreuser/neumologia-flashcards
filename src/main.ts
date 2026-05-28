@@ -54,7 +54,12 @@ function bootError(message: string) {
     msg.textContent = message;
     msg.style.color = '#ff8080';
   }
-  if (retryBtn) retryBtn.style.display = 'inline-block';
+  if (retryBtn) {
+    retryBtn.style.display = 'inline-block';
+    // Listener attached here instead of an inline onclick, so the CSP
+    // script-src can drop 'unsafe-inline'. Property assignment is idempotent.
+    retryBtn.onclick = () => window.location.reload();
+  }
   if (screen) screen.style.background = '#0a0608'; // subtle red tint
 }
 

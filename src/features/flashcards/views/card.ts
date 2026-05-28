@@ -11,7 +11,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { StoreController } from '@/shared/utils/lit-helpers';
-import { useSessionStore, sessionSelectors } from '@/features/study-session/store';
+import { useSessionStore, sessionSelectors, sessionActions } from '@/features/study-session/store';
 import { sanitizeHtml } from '@/shared/utils/sanitizer';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
@@ -170,9 +170,18 @@ export class BarclCard extends LitElement {
             <div style="font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase;">Acertos</div>
           </div>
         </div>
-        <button class="btn btn-primary" @click=${() => window.location.reload()}>
-          Nova Sessão
-        </button>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn btn-primary" @click=${() => sessionActions.continueStudying()}>
+            Continuar Estudando
+          </button>
+          <button
+            class="btn"
+            style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); color: var(--text-secondary);"
+            @click=${() => window.location.reload()}
+          >
+            Nova Sessão
+          </button>
+        </div>
       </div>
     `;
   }

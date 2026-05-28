@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 import { auth, db } from '@/core/services/firebase';
 import { AuthError, NetworkError } from '@/core/errors';
-import type { UserProfile } from '@shared/contracts';
+import { UserProfileSchema, type UserProfile } from '@shared/contracts';
 
 // ── Login ─────────────────────────────────────────────────────────────────────
 
@@ -104,7 +104,13 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   const ref = doc(db, 'users', uid);
   const snapshot = await getDoc(ref);
   if (!snapshot.exists()) return null;
-  return snapshot.data() as UserProfile;
+
+  const parsed = UserProfileSchema.safeParse({ uid: snapshot.id, ...snapshot.data() });
+  if (!parsed.success) {
+    console.warn('[Auth] Malformed user profile:', uid, parsed.error.format());
+    return null;
+  }
+  return parsed.data;
 }
 
 // ── Admin Claims ──────────────────────────────────────────────────────────────

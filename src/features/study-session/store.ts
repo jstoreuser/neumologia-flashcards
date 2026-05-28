@@ -8,6 +8,7 @@
 import { createStore } from '@/core/store';
 import type { Flashcard, StudyProgress } from '@shared/contracts';
 import { isDue } from './domain/sm2';
+import { toDate } from '@/shared/utils/to-date';
 
 export interface SessionCard {
   card: Flashcard;
@@ -25,6 +26,8 @@ export interface SessionState {
   isAnswerRevealed: boolean;
   /** Whether a rating is being submitted */
   isSubmitting: boolean;
+  /** Set when the user opts to keep studying after mastering everything */
+  forceContinue: boolean;
   /** Session stats */
   stats: {
     total: number;
@@ -41,6 +44,7 @@ const initialState: SessionState = {
   currentCardId: null,
   isAnswerRevealed: false,
   isSubmitting: false,
+  forceContinue: false,
   stats: { total: 0, reviewed: 0, correct: 0, wrong: 0 },
   error: null,
 };
@@ -57,6 +61,7 @@ export const sessionActions = {
       currentCardId: null,
       isAnswerRevealed: false,
       isSubmitting: false,
+      forceContinue: false,
       stats: { total: pool.length, reviewed: 0, correct: 0, wrong: 0 },
       error: null,
     });
@@ -77,14 +82,7 @@ export const sessionActions = {
       // Find cards that are due or new
       const dueCards = state.pool.filter(c => {
         if (!c.progress) return true; // new
-        const nextDate = c.progress.nextReviewDate
-          ? (c.progress.nextReviewDate instanceof Date
-            ? c.progress.nextReviewDate
-            : typeof c.progress.nextReviewDate === 'string'
-              ? new Date(c.progress.nextReviewDate)
-              : (c.progress.nextReviewDate as { toDate: () => Date }).toDate())
-          : null;
-        return isDue(nextDate, new Date(state.now));
+        return isDue(toDate(c.progress.nextReviewDate), new Date(state.now));
       });
 
       if (dueCards.length > 0) {
@@ -92,9 +90,9 @@ export const sessionActions = {
         dueCards.sort((a, b) => {
           if (!a.progress) return 1;
           if (!b.progress) return -1;
-          const aDate = a.progress.nextReviewDate instanceof Date ? a.progress.nextReviewDate : new Date(a.progress.nextReviewDate as string);
-          const bDate = b.progress.nextReviewDate instanceof Date ? b.progress.nextReviewDate : new Date(b.progress.nextReviewDate as string);
-          return aDate.getTime() - bDate.getTime();
+          const aDate = toDate(a.progress.nextReviewDate)?.getTime() ?? 0;
+          const bDate = toDate(b.progress.nextReviewDate)?.getTime() ?? 0;
+          return aDate - bDate;
         });
 
         // Optimization: prevent same card from showing up twice in a row if there are other due cards
@@ -106,9 +104,24 @@ export const sessionActions = {
         return { currentCardId: nextCard.card.id ?? null, isAnswerRevealed: false };
       }
 
-      // No due cards right now, we wait
+      // No cards due right now. If the user chose to keep studying after
+      // mastering everything, cycle through the full pool instead of waiting.
+      if (state.forceContinue && state.pool.length > 0) {
+        let nextCard = state.pool[0]!;
+        if (state.pool.length > 1 && nextCard.card.id === state.currentCardId) {
+          nextCard = state.pool[1]!;
+        }
+        return { currentCardId: nextCard.card.id ?? null, isAnswerRevealed: false };
+      }
+
+      // Otherwise wait (deck shows the completion screen if all mastered).
       return { currentCardId: null, isAnswerRevealed: false };
     });
+  },
+
+  continueStudying: () => {
+    useSessionStore.setState({ forceContinue: true });
+    sessionActions.pickNextCard();
   },
 
   revealAnswer: () => {
@@ -167,8 +180,12 @@ export const sessionSelectors = {
   isWaiting: (state: SessionState): boolean =>
     state.pool.length > 0 && state.currentCardId === null,
 
+  // Complete when every card in the pool has been pushed to 'mastered'
+  // (interval >= 4h). The user can override this via continueStudying().
   isComplete: (state: SessionState): boolean =>
-    state.pool.length === 0, // In this model, we never really complete until we stop, but just to satisfy typing
+    state.pool.length > 0
+    && !state.forceContinue
+    && state.pool.every((c) => c.progress?.status === 'mastered'),
 
   progressPercent: (state: SessionState): number =>
     state.stats.total === 0

@@ -22,6 +22,7 @@ import {
 import { httpsCallable } from 'firebase/functions';
 import { db, functions } from '@/core/services/firebase';
 import { telemetry } from '@/core/services/telemetry';
+import { parseDocs } from '@/shared/utils/firestore-parse';
 import {
   FlashcardSchema,
   UserProfileSchema,
@@ -58,20 +59,16 @@ export async function adminGetFlashcardsPage(
     
     if (signal?.aborted) throw new Error('aborted');
 
-    const data = snapshot.docs.reduce<Flashcard[]>((acc, d) => {
-      const parsed = FlashcardSchema.safeParse({ id: d.id, ...d.data() });
-      if (!parsed.success) {
-        telemetry.captureError(new Error(`Malformed flashcard: ${d.id}`), {
+    const data = parseDocs(snapshot.docs, FlashcardSchema, {
+      idField: 'id',
+      onError: (id, error) =>
+        telemetry.captureError(new Error(`Malformed flashcard: ${id}`), {
           feature: 'admin',
           operation: 'parse-flashcard',
-          documentId: d.id,
-          details: parsed.error.issues,
-        });
-      } else {
-        acc.push(parsed.data);
-      }
-      return acc;
-    }, []);
+          documentId: id,
+          details: error.issues,
+        }),
+    });
 
     return {
       success: true,
@@ -149,20 +146,16 @@ export async function adminGetUsers(signal?: AbortSignal): Promise<Result<UserPr
     
     if (signal?.aborted) throw new Error('aborted');
 
-    const users = snapshot.docs.reduce<UserProfile[]>((acc, d) => {
-      const parsed = UserProfileSchema.safeParse({ uid: d.id, ...d.data() });
-      if (!parsed.success) {
-        telemetry.captureError(new Error(`Malformed user: ${d.id}`), {
+    const users = parseDocs(snapshot.docs, UserProfileSchema, {
+      idField: 'uid',
+      onError: (id, error) =>
+        telemetry.captureError(new Error(`Malformed user: ${id}`), {
           feature: 'admin',
           operation: 'parse-user',
-          documentId: d.id,
-          details: parsed.error.issues,
-        });
-      } else {
-        acc.push(parsed.data);
-      }
-      return acc;
-    }, []);
+          documentId: id,
+          details: error.issues,
+        }),
+    });
 
     return { success: true, data: users };
   } catch (err: any) {
