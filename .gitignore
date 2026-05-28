@@ -39,3 +39,7 @@ Thumbs.db
 .firebase/
 service-account*.json
 *-firebase-adminsdk-*.json
+# Firebase Auth emulator exports — contain user emails + password hashes
+auth_users.json
+auth_*.json
+firebase-export-*/
