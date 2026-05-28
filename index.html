@@ -65,15 +65,14 @@
         ">Verificando autenticação...</div>
 
         <!-- Botão retry (estado: error) — oculto por padrão -->
-        <button id="boot-retry-btn" onclick="window.location.reload()" style="
+        <button id="boot-retry-btn" style="
             display: none; margin-top: 24px;
             padding: 10px 28px; background: transparent;
             border: 1px solid #ff2a5f; color: #ff2a5f;
             border-radius: 6px; font-family: 'Space Grotesk', sans-serif;
             font-size: 0.85rem; letter-spacing: 1px; cursor: pointer;
             transition: background 0.2s;
-        " onmouseover="this.style.background='rgba(255,42,95,0.1)'"
-           onmouseout="this.style.background='transparent'">
+        ">
             Tentar Novamente
         </button>
     </div>
@@ -82,6 +81,9 @@
         @keyframes boot-spin {
             to { transform: rotate(360deg); }
         }
+        /* Hover handled in CSS (was an inline onmouseover) so the CSP
+           script-src no longer needs 'unsafe-inline'. */
+        #boot-retry-btn:hover { background: rgba(255, 42, 95, 0.1); }
     </style>
 
     <!-- Overlay de Blur para o Zoom da Imagem (Lightbox Lightroom) -->
