@@ -22,7 +22,11 @@ interface SetAdminRequest {
   isAdmin: boolean;
 }
 
-export const setAdminRole = https.onCall<SetAdminRequest>(async (request) => {
+// Region must match the client's getFunctions(app, 'southamerica-east1');
+// otherwise the callable is unreachable (it would default to us-central1).
+export const setAdminRole = https.onCall<SetAdminRequest>(
+  { region: 'southamerica-east1' },
+  async (request) => {
   // 1. Verify caller is authenticated
   if (!request.auth) {
     throw new https.HttpsError(
