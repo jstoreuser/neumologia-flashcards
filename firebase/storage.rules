@@ -6,18 +6,16 @@ service firebase.storage {
       return request.auth != null;
     }
 
-    function isEmailVerified() {
-      return isAuthenticated() && request.auth.token.email_verified == true;
-    }
-
     function isAdmin() {
       return isAuthenticated() && request.auth.token.admin == true;
     }
 
     match /{allPaths=**} {
-      // FIX: Added size limit (5MB) and mime-type restriction
-      allow read: if isEmailVerified();
-      allow write: if isAdmin() && isEmailVerified() && request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
+      // Email verification is intentionally NOT required (kept optional for
+      // users). Any signed-in user can read; only admins can upload, capped
+      // at 5MB and restricted to images.
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() && request.resource.size < 5 * 1024 * 1024 && request.resource.contentType.matches('image/.*');
     }
   }
 }
