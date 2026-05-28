@@ -8,6 +8,7 @@
 import { createStore } from '@/core/store';
 import type { Flashcard, StudyProgress } from '@shared/contracts';
 import { isDue } from './domain/sm2';
+import { toDate } from '@/shared/utils/to-date';
 
 export interface SessionCard {
   card: Flashcard;
@@ -77,14 +78,7 @@ export const sessionActions = {
       // Find cards that are due or new
       const dueCards = state.pool.filter(c => {
         if (!c.progress) return true; // new
-        const nextDate = c.progress.nextReviewDate
-          ? (c.progress.nextReviewDate instanceof Date
-            ? c.progress.nextReviewDate
-            : typeof c.progress.nextReviewDate === 'string'
-              ? new Date(c.progress.nextReviewDate)
-              : (c.progress.nextReviewDate as { toDate: () => Date }).toDate())
-          : null;
-        return isDue(nextDate, new Date(state.now));
+        return isDue(toDate(c.progress.nextReviewDate), new Date(state.now));
       });
 
       if (dueCards.length > 0) {
@@ -92,9 +86,9 @@ export const sessionActions = {
         dueCards.sort((a, b) => {
           if (!a.progress) return 1;
           if (!b.progress) return -1;
-          const aDate = a.progress.nextReviewDate instanceof Date ? a.progress.nextReviewDate : new Date(a.progress.nextReviewDate as string);
-          const bDate = b.progress.nextReviewDate instanceof Date ? b.progress.nextReviewDate : new Date(b.progress.nextReviewDate as string);
-          return aDate.getTime() - bDate.getTime();
+          const aDate = toDate(a.progress.nextReviewDate)?.getTime() ?? 0;
+          const bDate = toDate(b.progress.nextReviewDate)?.getTime() ?? 0;
+          return aDate - bDate;
         });
 
         // Optimization: prevent same card from showing up twice in a row if there are other due cards

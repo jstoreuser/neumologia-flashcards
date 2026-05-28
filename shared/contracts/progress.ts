@@ -10,7 +10,6 @@ export const StudyProgressSchema = z.object({
   cardId: z.string(),
   userId: z.string(),
   status: z.enum(['new', 'learning', 'review', 'mastered']).default('new'),
-  easeFactor: z.number().min(1.3).max(5.0).default(2.5),
   intervalDays: z.number().min(0).default(0), // Kept for backwards compatibility
   intervalMinutes: z.number().min(0).default(0),
   repetitions: z.number().min(0).default(0),           // SM-2: number of times rated ≥ 'good'

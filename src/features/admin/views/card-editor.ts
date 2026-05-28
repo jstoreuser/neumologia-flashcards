@@ -11,6 +11,7 @@ import { useAdminStore, adminActions } from '../store';
 import { saveFlashcard } from '../admin.actions';
 import { CreateFlashcardSchema, UpdateFlashcardSchema } from '@shared/contracts';
 import { sanitizeHtml } from '@/shared/utils/sanitizer';
+import { auth } from '@/core/services/firebase';
 
 @customElement('barcl-card-editor')
 export class BarclCardEditor extends LitElement {
@@ -72,7 +73,7 @@ export class BarclCardEditor extends LitElement {
                 </select>
               </div>
 
-              ${this._field('URL da Imagem', 'fc-imageUrl', 'url', card?.imageUrl ?? '', false)}
+              ${this._field('URL da Imagem', 'fc-imageUrl', 'text', card?.imageUrl ?? '', false)}
             </div>
 
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
@@ -92,7 +93,7 @@ export class BarclCardEditor extends LitElement {
     `;
   }
 
-  private _field(label: string, id: string, type: 'text' | 'textarea' | 'url', value: string, required: boolean) {
+  private _field(label: string, id: string, type: 'text' | 'textarea', value: string, required: boolean) {
     const inputStyle = `width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;`;
     return html`
       <div style="margin-bottom: 16px;">
@@ -110,7 +111,7 @@ export class BarclCardEditor extends LitElement {
     const dto = this._readForm();
 
     if (editorMode === 'create') {
-      const parsed = CreateFlashcardSchema.safeParse({ ...dto, authorId: 'admin' });
+      const parsed = CreateFlashcardSchema.safeParse({ ...dto, authorId: auth.currentUser?.uid ?? 'unknown' });
       if (!parsed.success) return adminActions.setEditorError('Dados inválidos: ' + JSON.stringify(parsed.error.flatten().fieldErrors));
       await saveFlashcard(null, parsed.data as unknown as Partial<import('@shared/contracts').Flashcard>);
     } else {

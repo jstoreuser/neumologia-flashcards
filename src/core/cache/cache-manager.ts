@@ -129,10 +129,12 @@ export const FlashcardCache = {
 
 export const ProgressCache = {
   get: (uid: string) =>
-    cacheGet<Record<string, unknown>>('progress', uid),
+    cacheGet<Record<string, unknown>>(`progress:${uid}`, 'all'),
 
   set: (uid: string, data: Record<string, unknown>) =>
-    cacheSet('progress', uid, data),
+    cacheSet(`progress:${uid}`, 'all', data),
 
-  invalidate: (uid: string) => invalidateByDomain(`progress`),
+  // Invalidates only this user's progress (and broadcasts it cross-tab),
+  // never other users'.
+  invalidate: (uid: string) => invalidateByDomain(`progress:${uid}`),
 };

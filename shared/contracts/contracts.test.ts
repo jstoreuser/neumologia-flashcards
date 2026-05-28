@@ -79,7 +79,6 @@ describe('StudyProgressSchema', () => {
     expect(r.success).toBe(true);
     if (r.success) {
       expect(r.data.status).toBe('new');
-      expect(r.data.easeFactor).toBe(2.5);
       expect(r.data.intervalMinutes).toBe(0);
       expect(r.data.repetitions).toBe(0);
     }
@@ -89,7 +88,9 @@ describe('StudyProgressSchema', () => {
     expect(StudyProgressSchema.safeParse({ ...valid, nextReviewDate: firestoreTimestamp }).success).toBe(true);
   });
 
-  it('rejects an out-of-range easeFactor', () => {
-    expect(StudyProgressSchema.safeParse({ ...valid, easeFactor: 0.5 }).success).toBe(false);
+  it('ignores a legacy easeFactor field on read (tolerant of old docs)', () => {
+    const r = StudyProgressSchema.safeParse({ ...valid, easeFactor: 2.5 });
+    expect(r.success).toBe(true);
+    if (r.success) expect((r.data as Record<string, unknown>).easeFactor).toBeUndefined();
   });
 });

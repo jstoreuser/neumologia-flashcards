@@ -30,6 +30,7 @@ import { flashcardActions, useFlashcardStore } from '@/features/flashcards/store
 import { StudyProgressSchema, type StudyProgress } from '@shared/contracts';
 import { telemetry } from '@/core/services/telemetry';
 import { ProgressCache } from '@/core/cache/cache-manager';
+import { toDate } from '@/shared/utils/to-date';
 
 
 
@@ -53,7 +54,7 @@ export async function startStudySession(
     }
 
     // Load progress for all cards in the current set
-    const progressMap = await loadProgressMap(user.uid, cards.map(c => c.id ?? ''));
+    const progressMap = await loadProgressMap(user.uid);
 
     const now = new Date();
 
@@ -64,13 +65,7 @@ export async function startStudySession(
     for (const card of cards) {
       if (!card.id) continue;
       const progress = progressMap[card.id] ?? null;
-      const nextDate = progress?.nextReviewDate
-        ? (progress.nextReviewDate instanceof Date
-          ? progress.nextReviewDate
-          : typeof progress.nextReviewDate === 'string'
-            ? new Date(progress.nextReviewDate)
-            : (progress.nextReviewDate as { toDate: () => Date }).toDate())
-        : null;
+      const nextDate = toDate(progress?.nextReviewDate ?? null);
 
       const sessionCard: SessionCard = { card, progress };
 
@@ -118,7 +113,7 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
     if (!card.id) throw new Error('Card missing ID');
     const now = new Date();
 
-    const { intervalDays, intervalMinutes, easeFactor, repetitions, status, nextReviewDate } = calculateSm2(
+    const { intervalDays, intervalMinutes, repetitions, status, nextReviewDate } = calculateSm2(
       progress,
       rating,
       now,
@@ -131,7 +126,6 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
     } = {
       cardId: card.id,
       userId: user.uid,
-      easeFactor,
       intervalDays,
       intervalMinutes,
       repetitions,
@@ -170,7 +164,6 @@ export async function submitRating(user: User, rating: Rating): Promise<void> {
 
 async function loadProgressMap(
   uid: string,
-  cardIds: string[],
 ): Promise<Record<string, StudyProgress>> {
   // Check cache first
   const cached = ProgressCache.get(uid);

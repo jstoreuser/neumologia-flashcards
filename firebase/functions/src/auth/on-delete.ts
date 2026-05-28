@@ -4,13 +4,10 @@ import { getFirestore } from 'firebase-admin/firestore';
 export const deleteUserProfile = functions.auth.user().onDelete(async (user) => {
   const db = getFirestore();
   const ref = db.collection('users').doc(user.uid);
-  
-  // Recursively delete subcollections (like 'progress') using a batched approach 
-  // or simply delete the user document. Wait, subcollections don't automatically
-  // delete when parent is deleted in Firestore.
-  // To keep it simple for now, we just delete the user document. 
-  // A complete cleanup would use firebase-tools or recursive delete.
-  
-  await ref.delete();
-  console.log(`Successfully deleted orphaned user profile for UID: ${user.uid}`);
+
+  // recursiveDelete removes the user document AND its subcollections
+  // (e.g. progress/*), which Firestore does not cascade automatically.
+  // Prevents orphaned study-progress data lingering for deleted users.
+  await db.recursiveDelete(ref);
+  console.log(`Deleted user profile and subcollections for UID: ${user.uid}`);
 });

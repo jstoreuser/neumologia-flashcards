@@ -18,7 +18,6 @@ export type Rating = 'wrong' | 'hard' | 'good' | 'easy';
 export interface SM2Result {
   intervalDays: number; // Kept for backwards compatibility in interface
   intervalMinutes: number;
-  easeFactor: number;
   repetitions: number;
   status: StudyProgress['status'];
   nextReviewDate: Date;
@@ -30,18 +29,16 @@ export interface SM2Result {
  * - the rating the user just gave
  */
 export function calculateSm2(
-  current: Pick<StudyProgress, 'easeFactor' | 'intervalDays' | 'intervalMinutes' | 'repetitions'> | null,
+  current: Pick<StudyProgress, 'intervalDays' | 'intervalMinutes' | 'repetitions'> | null,
   rating: Rating,
   now: Date = new Date(),
 ): SM2Result {
-  const prevEase = current?.easeFactor ?? 2.5;
   // Fallback to intervalDays if intervalMinutes isn't set yet from legacy
   const prevInterval = current?.intervalMinutes || (current?.intervalDays ? current.intervalDays * 1440 : 0);
   const prevReps = current?.repetitions ?? 0;
 
   let newInterval: number;
   let newReps: number;
-  let newEase = prevEase;
 
   if (rating === 'wrong') {
     newReps = 0;
@@ -74,7 +71,6 @@ export function calculateSm2(
   return {
     intervalDays: Math.floor(newInterval / 1440),
     intervalMinutes: newInterval,
-    easeFactor: parseFloat(newEase.toFixed(4)),
     repetitions: newReps,
     status,
     nextReviewDate,
@@ -93,7 +89,7 @@ export function isDue(nextReviewDate: Date | null, now: Date = new Date()): bool
  * Returns a human-readable label for the next interval in minutes/hours.
  */
 export function previewInterval(
-  current: Pick<StudyProgress, 'easeFactor' | 'intervalDays' | 'intervalMinutes' | 'repetitions'> | null,
+  current: Pick<StudyProgress, 'intervalDays' | 'intervalMinutes' | 'repetitions'> | null,
   rating: Rating,
 ): string {
   const result = calculateSm2(current, rating);

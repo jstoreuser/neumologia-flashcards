@@ -4,9 +4,8 @@ import type { StudyProgress } from '@shared/contracts';
 
 const NOW = new Date('2026-01-01T00:00:00.000Z');
 
-type Prev = Pick<StudyProgress, 'easeFactor' | 'intervalDays' | 'intervalMinutes' | 'repetitions'>;
+type Prev = Pick<StudyProgress, 'intervalDays' | 'intervalMinutes' | 'repetitions'>;
 const prev = (intervalMinutes: number, repetitions = 1, intervalDays = 0): Prev => ({
-  easeFactor: 2.5,
   intervalDays,
   intervalMinutes,
   repetitions,
@@ -78,13 +77,6 @@ describe('calculateSm2 — legacy intervalDays fallback', () => {
     const r = calculateSm2(prev(0, 2, 1), 'good', NOW);
     expect(r.intervalMinutes).toBe(240);
     expect(r.status).toBe('mastered');
-  });
-});
-
-describe('calculateSm2 — easeFactor stays constant (cramming model)', () => {
-  it('keeps easeFactor unchanged', () => {
-    expect(calculateSm2(null, 'easy', NOW).easeFactor).toBe(2.5);
-    expect(calculateSm2(prev(60), 'wrong', NOW).easeFactor).toBe(2.5);
   });
 });
 
