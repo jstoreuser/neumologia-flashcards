@@ -26,6 +26,8 @@ export interface SessionState {
   isAnswerRevealed: boolean;
   /** Whether a rating is being submitted */
   isSubmitting: boolean;
+  /** Set when the user opts to keep studying after mastering everything */
+  forceContinue: boolean;
   /** Session stats */
   stats: {
     total: number;
@@ -42,6 +44,7 @@ const initialState: SessionState = {
   currentCardId: null,
   isAnswerRevealed: false,
   isSubmitting: false,
+  forceContinue: false,
   stats: { total: 0, reviewed: 0, correct: 0, wrong: 0 },
   error: null,
 };
@@ -58,6 +61,7 @@ export const sessionActions = {
       currentCardId: null,
       isAnswerRevealed: false,
       isSubmitting: false,
+      forceContinue: false,
       stats: { total: pool.length, reviewed: 0, correct: 0, wrong: 0 },
       error: null,
     });
@@ -100,9 +104,24 @@ export const sessionActions = {
         return { currentCardId: nextCard.card.id ?? null, isAnswerRevealed: false };
       }
 
-      // No due cards right now, we wait
+      // No cards due right now. If the user chose to keep studying after
+      // mastering everything, cycle through the full pool instead of waiting.
+      if (state.forceContinue && state.pool.length > 0) {
+        let nextCard = state.pool[0]!;
+        if (state.pool.length > 1 && nextCard.card.id === state.currentCardId) {
+          nextCard = state.pool[1]!;
+        }
+        return { currentCardId: nextCard.card.id ?? null, isAnswerRevealed: false };
+      }
+
+      // Otherwise wait (deck shows the completion screen if all mastered).
       return { currentCardId: null, isAnswerRevealed: false };
     });
+  },
+
+  continueStudying: () => {
+    useSessionStore.setState({ forceContinue: true });
+    sessionActions.pickNextCard();
   },
 
   revealAnswer: () => {
@@ -161,8 +180,12 @@ export const sessionSelectors = {
   isWaiting: (state: SessionState): boolean =>
     state.pool.length > 0 && state.currentCardId === null,
 
+  // Complete when every card in the pool has been pushed to 'mastered'
+  // (interval >= 4h). The user can override this via continueStudying().
   isComplete: (state: SessionState): boolean =>
-    state.pool.length === 0, // In this model, we never really complete until we stop, but just to satisfy typing
+    state.pool.length > 0
+    && !state.forceContinue
+    && state.pool.every((c) => c.progress?.status === 'mastered'),
 
   progressPercent: (state: SessionState): number =>
     state.stats.total === 0

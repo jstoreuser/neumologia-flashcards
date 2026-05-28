@@ -53,13 +53,17 @@ export class BarclDeck extends LitElement {
 
   override render() {
     const state = this._session.value;
+    const isComplete = sessionSelectors.isComplete(state);
     const isWaiting = sessionSelectors.isWaiting(state);
 
     return html`
       <div id="study-workspace" style="display: flex; flex-direction: column; width: 100%; max-width: 760px; margin: 0 auto;">
         <barcl-session-bar></barcl-session-bar>
-        
-        ${isWaiting ? html`
+
+        ${isComplete ? html`
+          <!-- All cards mastered — barcl-card renders the completion screen -->
+          <barcl-card></barcl-card>
+        ` : isWaiting ? html`
           <div style="padding: 40px; text-align: center; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; margin-top: 20px;">
             <h3 style="color: var(--text-primary); margin-bottom: 8px;">Revisión Pausada</h3>
             <p style="color: var(--text-secondary);">No hay flashcards pendientes en este momento. Algunos reaparecerán pronto de acuerdo a su tiempo de repetición.</p>
