@@ -33,5 +33,10 @@ jobs:
       - name: Unit Tests (Vitest + Zod Validators)
         run: npm run test
 
-      - name: E2E Tests (Playwright)
-        run: npx playwright test
+      # E2E Tests (Playwright) — disabled until tests exist.
+      # To re-enable:
+      #   1. npm i -D @playwright/test
+      #   2. Add at least one spec under ./e2e/
+      #   3. Uncomment the step below
+      # - name: E2E Tests (Playwright)
+      #   run: npx playwright test
