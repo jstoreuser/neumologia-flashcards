@@ -5,16 +5,17 @@ import {
   getDoc,
   query,
   limit,
-  orderBy,
-  startAfter,
   where,
-  DocumentSnapshot,
-  QueryDocumentSnapshot,
   Firestore,
 } from 'firebase/firestore';
-import { z } from 'zod';
-import { Flashcard, FlashcardSchema } from '@shared/contracts';
+import type { z } from 'zod';
+import { type Flashcard, FlashcardSchema } from '@shared/contracts';
 import { RepositoryError } from '@/core/errors';
+import { parseDoc, parseDocs } from '@/shared/utils/firestore-parse';
+
+/** Shared malformed-card reporter for this repository. */
+const onMalformed = (id: string, error: z.ZodError) =>
+  console.warn('[BARCL] Malformed flashcard skipped:', id, error.format());
 
 /**
  * Safety cap on how many cards the study app loads in one go.
@@ -26,32 +27,13 @@ import { RepositoryError } from '@/core/errors';
 export const STUDY_CARD_LIMIT = 1000;
 
 /**
- * Zod Guard: Parses a Firestore snapshot into a Flashcard.
- * Returns null for invalid/malformed documents instead of throwing,
- * so one bad card never breaks the entire list.
- */
-function parseSnapshot(doc: DocumentSnapshot | QueryDocumentSnapshot): Flashcard | null {
-  if (!doc.exists()) return null;
-
-  const data = doc.data();
-  const parsed = FlashcardSchema.safeParse({ id: doc.id, ...data });
-
-  if (!parsed.success) {
-    console.warn('[BARCL] Malformed flashcard skipped:', doc.id, parsed.error.format());
-    return null;
-  }
-
-  return parsed.data;
-}
-
-/**
  * Fetch a single flashcard by ID.
  */
 export async function getFlashcardById(db: Firestore, id: string): Promise<Flashcard> {
   try {
     const docRef = doc(db, 'flashcards', id);
     const snapshot = await getDoc(docRef);
-    const result = parseSnapshot(snapshot);
+    const result = parseDoc(snapshot, FlashcardSchema, { idField: 'id', onError: onMalformed });
     if (!result) throw new RepositoryError('Documento não encontrado ou inválido');
     return result;
   } catch (error) {
@@ -81,7 +63,7 @@ export async function getAllFlashcards(
     const snapshot = await getDocs(q);
 
     return {
-      data: snapshot.docs.map(parseSnapshot).filter((c): c is Flashcard => c !== null),
+      data: parseDocs(snapshot.docs, FlashcardSchema, { idField: 'id', onError: onMalformed }),
     };
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);

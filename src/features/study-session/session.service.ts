@@ -31,6 +31,7 @@ import { StudyProgressSchema, type StudyProgress } from '@shared/contracts';
 import { telemetry } from '@/core/services/telemetry';
 import { ProgressCache } from '@/core/cache/cache-manager';
 import { toDate } from '@/shared/utils/to-date';
+import { parseDoc } from '@/shared/utils/firestore-parse';
 
 
 
@@ -174,10 +175,8 @@ async function loadProgressMap(
 
   const map: Record<string, StudyProgress> = {};
   for (const docSnap of snapshot.docs) {
-    const parsed = StudyProgressSchema.safeParse(docSnap.data());
-    if (parsed.success) {
-      map[docSnap.id] = parsed.data;
-    }
+    const parsed = parseDoc(docSnap, StudyProgressSchema);
+    if (parsed) map[docSnap.id] = parsed;
   }
 
   ProgressCache.set(uid, map as Record<string, unknown>);
