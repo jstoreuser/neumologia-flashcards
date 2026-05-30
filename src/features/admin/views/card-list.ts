@@ -7,7 +7,7 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { StoreController } from '@/shared/utils/lit-helpers';
-import { useAdminStore, adminActions } from '../store';
+import { useAdminStore, adminActions, type CardSortField } from '../store';
 import { fetchFlashcards, toggleFlashcardDelete } from '../admin.actions';
 import { selectFlashcardsList, selectHasPendingOperation } from '../selectors';
 import { sanitizeHtml } from '@/shared/utils/sanitizer';
@@ -18,6 +18,26 @@ export class BarclCardList extends LitElement {
   override createRenderRoot() { return this; }
 
   private _admin = new StoreController(this, useAdminStore);
+
+  private _sortHeader(label: string, field: CardSortField, state: ReturnType<typeof useAdminStore.getState>) {
+    const active = state.cardSortField === field;
+    const icon = active ? (state.cardSortDir === 'asc' ? ' ▲' : ' ▼') : ' ⇅';
+    return html`
+      <th
+        @click=${() => adminActions.setCardSort(field)}
+        style="
+          padding: 16px;
+          color: ${active ? 'var(--primary)' : 'var(--text-secondary)'};
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          cursor: pointer;
+          user-select: none;
+          white-space: nowrap;
+          transition: color 0.15s;
+        "
+      >${label}<span style="opacity: ${active ? '1' : '0.4'}; font-size: 0.75em;">${icon}</span></th>
+    `;
+  }
 
   override render() {
     const state = this._admin.value;
@@ -52,9 +72,9 @@ export class BarclCardList extends LitElement {
         <table style="width: 100%; border-collapse: collapse; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem;">
           <thead>
             <tr style="border-bottom: 1px solid var(--border-color); text-align: left; background: rgba(255,255,255,0.03);">
-              <th style="padding: 16px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">ID</th>
-              <th style="padding: 16px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Pergunta</th>
-              <th style="padding: 16px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Categoria</th>
+              ${this._sortHeader('ID', 'id', state)}
+              ${this._sortHeader('Pergunta', 'createdAt', state)}
+              ${this._sortHeader('Categoria', 'category', state)}
               <th style="padding: 16px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">Status</th>
               <th style="padding: 16px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; text-align: right;">Ações</th>
             </tr>

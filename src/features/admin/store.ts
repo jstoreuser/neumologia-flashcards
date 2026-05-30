@@ -11,6 +11,8 @@ import type { QueryDocumentSnapshot } from 'firebase/firestore';
 
 export type AdminView = 'flashcards' | 'users';
 export type EditorMode = 'create' | 'edit';
+export type CardSortField = 'id' | 'createdAt' | 'category';
+export type SortDir = 'asc' | 'desc';
 
 export interface PendingOperation {
   id: string;
@@ -51,6 +53,8 @@ export interface AdminUIState {
   dirtyFields: Record<string, boolean>;
   isSaving: boolean;
   editorError: string | null;
+  cardSortField: CardSortField;
+  cardSortDir: SortDir;
 }
 
 export type AdminState = AdminServerState & AdminUIState;
@@ -84,6 +88,8 @@ const initialState: AdminState = {
   dirtyFields: {},
   isSaving: false,
   editorError: null,
+  cardSortField: 'id',
+  cardSortDir: 'asc',
 };
 
 export const useAdminStore = createStore<AdminState>(initialState);
@@ -234,5 +240,15 @@ export const adminActions = {
     useAdminStore.setState(s => ({
       users: entityAdapter.updateOne(s.users, uid, changes)
     }));
-  }
+  },
+
+  setCardSort: (field: CardSortField) => {
+    useAdminStore.setState(s => ({
+      cardSortField: field,
+      // Same column → toggle direction; new column → reset to asc
+      cardSortDir: s.cardSortField === field
+        ? (s.cardSortDir === 'asc' ? 'desc' : 'asc')
+        : 'asc',
+    }));
+  },
 };
