@@ -87,8 +87,10 @@ async function main() {
 
     if (card._error) continue;
 
-    // index i (position in sorted entries) → deterministic Firestore ID
-    const docId = firestoreId(i);
+    // Use the JSON key directly as the Firestore document ID.
+    // The original seed stored docs with their numeric key as the ID ("2", "3"…).
+    // Using index i would generate neumologia_XXXX IDs that don't match.
+    const docId = key;
 
     const updateData = {
       question: card.question || '',
