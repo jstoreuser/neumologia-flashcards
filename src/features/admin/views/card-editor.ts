@@ -65,7 +65,7 @@ export class BarclCardEditor extends LitElement {
 
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
               ${this._field('Subcategoria', 'fc-subcategory', 'text', card?.subcategory ?? '', false)}
-              
+
               <div style="margin-bottom: 16px;">
                 <label style="display: block; margin-bottom: 6px; color: var(--text-secondary); font-size: 0.8rem; text-transform: uppercase;">Dificuldade</label>
                 <select id="fc-difficulty" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-color); color: white; border-radius: 4px; font-family: 'Plus Jakarta Sans', sans-serif;">
@@ -75,6 +75,8 @@ export class BarclCardEditor extends LitElement {
 
               ${this._field('Imagem (caminho ou URL)', 'fc-imageUrl', 'text', card?.imageUrl ?? '', false, 'assets/images/img_pagina_79_1.jpeg')}
             </div>
+
+            ${this._field('Tags (separadas por vírgula)', 'fc-tags', 'text', (card?.tags ?? []).join(', '), false, 'tep, arteria pulmonar, tc sem contraste')}
 
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px;">
               <input type="checkbox" id="fc-isPublished" ?checked=${card?.isPublished === true} style="width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary);">
@@ -133,7 +135,7 @@ export class BarclCardEditor extends LitElement {
       difficulty: this.querySelector<HTMLSelectElement>('#fc-difficulty')?.value ?? 'medium',
       imageUrl: get('fc-imageUrl') || null,
       isPublished: this.querySelector<HTMLInputElement>('#fc-isPublished')?.checked ?? false,
-      tags: [],
+      tags: get('fc-tags').split(',').map(t => t.trim()).filter(t => t.length > 0),
     };
   }
 
